@@ -89,7 +89,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator*=(const matrix& other) -> matrix&
+	auto matrix::operator*(const matrix& other) -> matrix&
 	{
 		assertMultiplicativeRule(other);
 
