@@ -19,6 +19,11 @@ namespace math
 		return columns_;
 	}
 
+	auto matrix::set(const std::size_t row, const std::size_t col, const float value) -> void
+	{
+		values_[row * columns_ + col] = value;
+	}
+
 	auto matrix::get(const std::size_t row, const std::size_t col) -> float&
 	{
 		return values_[row * columns_ + col];
@@ -89,15 +94,40 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator*(const matrix& other) -> matrix&
+	auto matrix::operator*=(const matrix& other) -> matrix&
 	{
 		assertMultiplicativeRule(other);
 
+		// The new matrix that is created from multiplication has the number of rows of this (current) matrix
+		// and the number of columns of the other matrix
+		auto new_matrix = std::make_unique<matrix>(rows_, other.columns());
+
+		// (this) row * (other) column
+		for (std::size_t row = 0; row < rows_; ++row)
+		{
+			std::size_t column = 0;
+
+			float multiplication_result_accumulator = 0;
+			
+			for (; column < columns_; ++column)
+			{
+				const auto this_row_val = (*this)(row, column);
+				const auto other_column_val = other(column, row);
+
+				multiplication_result_accumulator += this_row_val * other_column_val;
+			}
+
+			new_matrix->set(row, column, multiplication_result_accumulator);
+		}
+
+		(*this).values_ = new_matrix->values_;
+
+		return *this;
 	}
 
 	auto matrix::assertAdditiveRule(const matrix& other) const -> void
 	{
-		assert(other.rows() == rows_ && other.columns() == columns_);
+		assert(rows_ == other.rows()  && columns_ == other.columns());
 	}
 
 	auto matrix::assertMultiplicativeRule(const matrix& other) const -> void

@@ -18,6 +18,8 @@ namespace math
 
 		auto columns() const noexcept -> std::size_t;
 
+		auto set(std::size_t row, std::size_t col, float value) -> void;
+
 		auto get(std::size_t row, std::size_t col) -> float&;
 
 		auto get(std::size_t row, std::size_t col) const -> float const&;
@@ -67,7 +69,7 @@ namespace math
 		/// </summary>
 		/// <param name="other">The other matrix.</param>
 		/// <returns>The multiplication result.</returns>
-		auto operator*(const matrix& other) -> matrix&;
+		auto operator*=(const matrix& other) -> matrix&;
 
 	private:
 		/// <remarks>
