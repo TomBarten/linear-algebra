@@ -26,13 +26,13 @@ TEST_CASE("Matrix values should be at correct coordinates")
 
 	auto test_matrix = std::make_unique<math::matrix>(n_rows, n_columns);
 
-	float new_values[n_rows][n_columns] = { 0.f };
+	float new_values[n_rows][n_columns];
 
 	for(auto row = 0; row < test_matrix->rows(); ++row)
 	{
-		for(auto column = 0; column < test_matrix->rows(); ++column)
+		for(auto column = 0; column < test_matrix->columns(); ++column)
 		{
-			const auto new_value = row * column + column + 1.f;
+			const auto new_value = row * column + column + row + 1.f;
 			
 			test_matrix->operator()(row, column) = new_value;
 
@@ -42,7 +42,7 @@ TEST_CASE("Matrix values should be at correct coordinates")
 
 	for (auto row = 0; row < test_matrix->rows(); ++row)
 	{
-		for (auto column = 0; column < test_matrix->rows(); ++column)
+		for (auto column = 0; column < test_matrix->columns(); ++column)
 		{
 			const auto& added_value = new_values[row][column];
 			const auto& retrieved_value = test_matrix->operator()(row, column);
