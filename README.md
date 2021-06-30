@@ -1,0 +1,1 @@
+Added "/Zc:hiddenFriend-" command line parameter to the Test project, workaround see: https://developercommunity.visualstudio.com/t/wrong-diagnostic-of-ambiguous-operator-call-c2593/1403523?#T-N1455197
