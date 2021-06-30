@@ -4,7 +4,7 @@
 
 namespace math
 {
-	matrix::matrix(const std::size_t rows, const std::size_t columns, float const& init)
+	matrix::matrix(const std::size_t rows, const std::size_t columns, const float &init)
 		: rows_(rows), columns_(columns), values_(rows_ * columns_, init)
 	{
 	}
@@ -17,11 +17,6 @@ namespace math
 	auto matrix::columns() const noexcept -> std::size_t
 	{
 		return columns_;
-	}
-
-	auto matrix::set(const std::size_t row, const std::size_t col, const float value) -> void
-	{
-		values_[row * columns_ + col] = value;
 	}
 
 	auto matrix::get(const std::size_t row, const std::size_t col) -> float&
@@ -107,17 +102,17 @@ namespace math
 		{
 			std::size_t column = 0;
 
-			float multiplication_result_accumulator = 0;
+			auto multiplication_accumulator = 0.f;
 			
 			for (; column < columns_; ++column)
 			{
 				const auto this_row_val = (*this)(row, column);
 				const auto other_column_val = other(column, row);
 
-				multiplication_result_accumulator += this_row_val * other_column_val;
+				multiplication_accumulator += this_row_val * other_column_val;
 			}
 
-			new_matrix->set(row, column, multiplication_result_accumulator);
+			new_matrix->get(row, column) = multiplication_accumulator;
 		}
 
 		(*this).values_ = new_matrix->values_;

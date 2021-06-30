@@ -13,15 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Catch2">
+      <UniqueIdentifier>{23bb8c98-56c5-4fca-8f14-eb92b5108966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Catch2">
+      <UniqueIdentifier>{b8a2b517-2c31-4492-88b1-026d4df1213b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="catch_amalgamated.cpp">
+    <ClInclude Include="catch.hpp">
+      <Filter>Header Files\Catch2</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="catch.cpp">
+      <Filter>Source Files\Catch2</Filter>
+    </ClCompile>
+    <ClCompile Include="catch_define.cpp">
+      <Filter>Source Files\Catch2</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="catch_amalgamated.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

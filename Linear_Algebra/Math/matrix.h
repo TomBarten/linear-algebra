@@ -12,21 +12,19 @@ namespace math
 		std::vector<float> values_;
 
 	public:
-		matrix(std::size_t rows, std::size_t columns, float const &init = float{});
+		matrix(std::size_t rows, std::size_t columns, const float& init = float{});
 
 		auto rows() const noexcept -> std::size_t;
 
 		auto columns() const noexcept -> std::size_t;
 
-		auto set(std::size_t row, std::size_t col, float value) -> void;
-
 		auto get(std::size_t row, std::size_t col) -> float&;
 
-		auto get(std::size_t row, std::size_t col) const -> float const&;
+		auto get(std::size_t row, std::size_t col) const -> const float&;
 
 		auto operator()(std::size_t row, std::size_t col) -> float&;
 
-		auto operator()(std::size_t row, std::size_t col) const -> float const&;
+		auto operator()(std::size_t row, std::size_t col) const -> const float&;
 
 		/// <summary>
 		/// Multiply the current matrix with a scalar.
