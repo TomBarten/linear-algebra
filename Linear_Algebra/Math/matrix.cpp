@@ -20,6 +20,14 @@ namespace math
 		return columns_;
 	}
 
+	auto matrix::resize(const std::size_t new_row, const std::size_t new_col) -> void
+	{
+		rows_ = new_row;
+		columns_ = new_col;
+
+		values_.resize(rows_ * columns_);
+	}
+
 	auto matrix::get(const std::size_t row, const std::size_t col) -> float&
 	{
 		return values_[row * columns_ + col];

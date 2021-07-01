@@ -3,6 +3,10 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <iostream>
+#include "vector2d.h"
+
+const auto WIDTH = 525.f;
+const auto HEIGHT = 525.f;
 
 auto main() -> int
 {
@@ -19,12 +23,15 @@ auto main() -> int
 
 	SDL_Renderer* renderer = nullptr;
 
-	if(SDL_CreateWindowAndRenderer(1000, 900, 0, &window, &renderer) != 0)
+	if(SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, 0, &window, &renderer) != 0)
 	{
 		std::cout << "Could not create window, SDL Error: " << SDL_GetError();
 
 		return 1;
 	}
+
+	const float origin_x = WIDTH / 2.f;
+	const float origin_y = HEIGHT / 2.f;
 
 	SDL_bool done = SDL_FALSE;
 
@@ -33,12 +40,26 @@ auto main() -> int
 		SDL_Event event;
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+		
 		SDL_RenderClear(renderer);
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLine(renderer, 320, 200, 300, 240);
-		SDL_RenderDrawLine(renderer, 300, 240, 340, 240);
-		SDL_RenderDrawLine(renderer, 340, 240, 320, 200);
+
+		//SDL_RenderDrawLineF(renderer, 0, origin_y, 1000, origin_y);
+		//SDL_RenderDrawLineF(renderer, origin_x, 0, origin_x, 900);
+
+		const auto vector_x_norm = std::make_unique<math::vector2d>(origin_x + 50, origin_y + 0);
+
+		const auto vector_y_norm = std::make_unique<math::vector2d>(origin_x + 0, origin_y - 50);
+
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+
+		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_x_norm->x(), vector_x_norm->y());
+
+		SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
+		
+		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_y_norm->x(), vector_y_norm->y());
+
 		SDL_RenderPresent(renderer);
 
 		while (SDL_PollEvent(&event))
@@ -62,7 +83,5 @@ auto main() -> int
 
 	SDL_Quit();
 	
-	std::cin.get();
-
 	return 0;
 }

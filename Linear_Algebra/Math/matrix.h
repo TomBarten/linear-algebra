@@ -17,6 +17,8 @@ namespace math
 
 		auto columns() const noexcept -> std::size_t;
 
+		auto resize(std::size_t new_row, std::size_t new_col) -> void;
+
 		auto get(std::size_t row, std::size_t col) -> float&;
 
 		auto get(std::size_t row, std::size_t col) const -> const float&;
