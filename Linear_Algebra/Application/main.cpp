@@ -45,20 +45,20 @@ auto main() -> int
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-		//SDL_RenderDrawLineF(renderer, 0, origin_y, 1000, origin_y);
-		//SDL_RenderDrawLineF(renderer, origin_x, 0, origin_x, 900);
+		SDL_RenderDrawLineF(renderer, 0, origin_y, WIDTH, origin_y);
+		SDL_RenderDrawLineF(renderer, origin_x, 0, origin_x, HEIGHT);
 
-		const auto vector_x_norm = std::make_unique<math::vector2d>(origin_x + 50, origin_y + 0);
+		const auto vector_x = std::make_unique<math::vector2d>(origin_x + 50, origin_y + 0);
 
-		const auto vector_y_norm = std::make_unique<math::vector2d>(origin_x + 0, origin_y - 50);
+		const auto vector_y = std::make_unique<math::vector2d>(origin_x + 0, origin_y - 50);
 
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 
-		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_x_norm->x(), vector_x_norm->y());
+		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_x->x(), vector_x->y());
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
 		
-		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_y_norm->x(), vector_y_norm->y());
+		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_y->x(), vector_y->y());
 
 		SDL_RenderPresent(renderer);
 
