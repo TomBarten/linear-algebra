@@ -1,5 +1,7 @@
 #include "vector2d.h"
 
+#include <sstream>
+
 namespace math
 {
 	vector2d::vector2d()
@@ -106,5 +108,10 @@ namespace math
 	auto vector2d::y() const -> const float&
 	{
 		return (*matrix_)(1, 0);
+	}
+
+	auto vector2d::print() const -> std::string
+	{
+		return "X: \"" + std::to_string(x()) + "\" Y: \"" + std::to_string(y()) + "\"";
 	}
 }

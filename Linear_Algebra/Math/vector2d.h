@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 
 #include "matrix.h"
 
@@ -30,6 +31,8 @@ namespace math
 
 		auto x() const -> const float&;
 		auto y() const -> const float&;
+
+		auto print() const -> std::string;
 	
 	private:
 		auto copy_matrix_values(const std::unique_ptr<matrix>& other) const -> std::unique_ptr<matrix>

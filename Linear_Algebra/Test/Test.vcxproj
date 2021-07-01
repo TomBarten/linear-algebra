@@ -162,6 +162,7 @@
     <ClCompile Include="catch.cpp" />
     <ClCompile Include="catch_define.cpp" />
     <ClCompile Include="matrix_test.cpp" />
+    <ClCompile Include="vector_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="catch.hpp" />
