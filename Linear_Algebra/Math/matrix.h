@@ -35,16 +35,16 @@ namespace math
 		/// </summary>
 		/// <param name="scalar">The scalar value.</param>
 		/// <returns>The scalar multiplication result.</returns>
-		auto operator*=(std::size_t scalar) -> matrix&;
-		auto operator*(std::size_t scalar) -> std::unique_ptr<matrix>;
+		auto operator*=(float scalar) -> matrix&;
+		auto operator*(float scalar) -> std::unique_ptr<matrix>;
 
 		/// <summary>
 		/// Divide the current matrix with a scalar.
 		/// </summary>
 		/// <param name="scalar">The scalar value.</param>
 		/// <returns>The scalar division result.</returns>
-		auto operator/=(std::size_t scalar) -> matrix&;
-		auto operator/(std::size_t scalar) -> std::unique_ptr<matrix>;
+		auto operator/=(float scalar) -> matrix&;
+		auto operator/(float scalar) -> std::unique_ptr<matrix>;
 
 		/// <remarks>
 		/// The other matrix should have the same amount of rows and columns as the current matrix.<br/>

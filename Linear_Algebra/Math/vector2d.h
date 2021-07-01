@@ -18,10 +18,10 @@ namespace math
 		virtual ~vector2d() = default;
 		
 		operator const matrix&() const;
-		virtual auto operator*=(std::size_t scalar) -> vector2d&;
-		virtual auto operator*(std::size_t scalar)->std::unique_ptr<vector2d>;
-		virtual auto operator/=(std::size_t scalar) -> vector2d&;
-		virtual auto operator/(std::size_t scalar)->std::unique_ptr<vector2d>;
+		virtual auto operator*=(float scalar) -> vector2d&;
+		virtual auto operator*(float scalar)->std::unique_ptr<vector2d>;
+		virtual auto operator/=(float scalar) -> vector2d&;
+		virtual auto operator/(float scalar)->std::unique_ptr<vector2d>;
 		virtual auto operator+=(const matrix& other) -> vector2d&;
 		virtual auto operator+(const matrix& other) -> std::unique_ptr<vector2d>;
 		virtual auto operator-=(const matrix& other) -> vector2d&;

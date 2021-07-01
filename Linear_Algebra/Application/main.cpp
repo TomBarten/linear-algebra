@@ -30,8 +30,8 @@ auto main() -> int
 		return 1;
 	}
 
-	const float origin_x = WIDTH / 2.f;
-	const float origin_y = HEIGHT / 2.f;
+	const float origin_x = 0;
+	const float origin_y = 0;
 
 	SDL_bool done = SDL_FALSE;
 
@@ -45,8 +45,8 @@ auto main() -> int
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-		SDL_RenderDrawLineF(renderer, 0, origin_y, WIDTH, origin_y);
-		SDL_RenderDrawLineF(renderer, origin_x, 0, origin_x, HEIGHT);
+		//SDL_RenderDrawLineF(renderer, 0, origin_y, WIDTH, origin_y);
+		//SDL_RenderDrawLineF(renderer, origin_x, 0, origin_x, HEIGHT);
 
 		const auto vector_x = std::make_unique<math::vector2d>(origin_x + 50, origin_y + 0);
 
@@ -55,18 +55,21 @@ auto main() -> int
 		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_x->x(), vector_x->y());
 		
 
-		const auto vector_y = std::make_unique<math::vector2d>(origin_x + 0, origin_y - 50);
+		const auto vector_y = std::make_unique<math::vector2d>(origin_x + 0, origin_y + 50);
 
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
 		
 		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_y->x(), vector_y->y());
 
 		
-		const auto vector_xy = (*vector_x) + (*vector_y);
+		const auto vector_xy_addition = (*vector_x) + (*vector_y);
+
+		(*vector_xy_addition) *= 0.5f;
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
 
-		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_xy->x() - 50, 0);
+		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_xy_addition->x(), vector_xy_addition->y());
+
 
 		
 		SDL_RenderPresent(renderer);

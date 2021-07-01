@@ -72,7 +72,7 @@ namespace math
 		return true;
 	}
 
-	auto matrix::operator*=(const std::size_t scalar) -> matrix&
+	auto matrix::operator*=(const float scalar) -> matrix&
 	{
 		for (auto& value : values_)
 		{
@@ -82,7 +82,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator*(const std::size_t scalar) -> std::unique_ptr<matrix>
+	auto matrix::operator*(const float scalar) -> std::unique_ptr<matrix>
 	{
 		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
 
@@ -97,7 +97,7 @@ namespace math
 		return std::move(new_matrix);
 	}
 
-	auto matrix::operator/=(const std::size_t scalar) -> matrix&
+	auto matrix::operator/=(const float scalar) -> matrix&
 	{
 		for (auto& value : values_)
 		{
@@ -107,7 +107,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator/(const std::size_t scalar) -> std::unique_ptr<matrix>
+	auto matrix::operator/(const float scalar) -> std::unique_ptr<matrix>
 	{
 		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
 

@@ -30,28 +30,28 @@ namespace math
 		return *matrix_;
 	}
 
-	auto vector2d::operator*=(const std::size_t scalar) -> vector2d&
+	auto vector2d::operator*=(const float scalar) -> vector2d&
 	{
 		(*matrix_) *= scalar;
 		
 		return *this;
 	}
 
-	auto vector2d::operator*(const std::size_t scalar) -> std::unique_ptr<vector2d>
+	auto vector2d::operator*(const float scalar) -> std::unique_ptr<vector2d>
 	{
 		auto new_vector = std::make_unique<vector2d>((*matrix_) * scalar);
 
 		return std::move(new_vector);
 	}
 
-	auto vector2d::operator/=(const std::size_t scalar) -> vector2d&
+	auto vector2d::operator/=(const float scalar) -> vector2d&
 	{
 		(*matrix_) /= scalar;
 
 		return *this;
 	}
 
-	auto vector2d::operator/(const std::size_t scalar) -> std::unique_ptr<vector2d>
+	auto vector2d::operator/(const float scalar) -> std::unique_ptr<vector2d>
 	{
 		auto new_vector = std::make_unique<vector2d>((*matrix_) / scalar);
 
