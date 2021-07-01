@@ -7,6 +7,7 @@ namespace math
     {
     public:
         vector3d(float x, float y, float z);
+        explicit vector3d(std::unique_ptr<matrix> matrix_init);
 
         auto z() const -> const float&;
     };

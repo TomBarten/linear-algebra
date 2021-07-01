@@ -50,7 +50,7 @@ auto main() -> int
 
 		const auto vector_x = std::make_unique<math::vector2d>(origin_x + 50, origin_y + 0);
 
-		const auto vector_y = std::make_unique<math::vector2d>(origin_x + 0, origin_y - 50);
+		const auto vector_y = std::make_unique<math::vector2d>(origin_x + 0, origin_y + 50);
 
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 
@@ -59,6 +59,12 @@ auto main() -> int
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
 		
 		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_y->x(), vector_y->y());
+
+		const auto vector_xy = (*vector_x) + (*vector_y);
+
+		SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
+
+		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_xy->x(), vector_xy->y());
 
 		SDL_RenderPresent(renderer);
 

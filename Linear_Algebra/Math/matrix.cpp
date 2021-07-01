@@ -82,6 +82,21 @@ namespace math
 		return *this;
 	}
 
+	auto matrix::operator*(const std::size_t scalar) -> std::unique_ptr<matrix>
+	{
+		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
+
+		for (std::size_t row = 0; row < rows_; ++row)
+		{
+			for (std::size_t column = 0; column < columns_; ++column)
+			{
+				(*new_matrix)(row, column) = (*this)(row, column) * scalar;
+			}
+		}
+
+		return std::move(new_matrix);
+	}
+
 	auto matrix::operator/=(const std::size_t scalar) -> matrix&
 	{
 		for (auto& value : values_)
@@ -90,6 +105,21 @@ namespace math
 		}
 
 		return *this;
+	}
+
+	auto matrix::operator/(const std::size_t scalar) -> std::unique_ptr<matrix>
+	{
+		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
+
+		for (std::size_t row = 0; row < rows_; ++row)
+		{
+			for (std::size_t column = 0; column < columns_; ++column)
+			{
+				(*new_matrix)(row, column) = (*this)(row, column) / scalar;
+			}
+		}
+
+		return std::move(new_matrix);
 	}
 
 	auto matrix::operator+=(const matrix& other) -> matrix&
@@ -107,6 +137,23 @@ namespace math
 		return *this;
 	}
 
+	auto matrix::operator+(const matrix& other) -> std::unique_ptr<matrix>
+	{
+		assertAdditiveRule(other);
+
+		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
+
+		for (std::size_t row = 0; row < rows_; ++row)
+		{
+			for (std::size_t column = 0; column < columns_; ++column)
+			{
+				(*new_matrix)(row, column) = (*this)(row, column) + other(row, column);
+			}
+		}
+
+		return std::move(new_matrix);
+	}
+
 	auto matrix::operator-=(const matrix& other) -> matrix&
 	{
 		assertAdditiveRule(other);
@@ -120,6 +167,23 @@ namespace math
 		}
 
 		return *this;
+	}
+
+	auto matrix::operator-(const matrix& other) -> std::unique_ptr<matrix>
+	{
+		assertAdditiveRule(other);
+
+		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
+
+		for (std::size_t row = 0; row < rows_; ++row)
+		{
+			for (std::size_t column = 0; column < columns_; ++column)
+			{
+				(*new_matrix)(row, column) = (*this)(row, column) - other(row, column);
+			}
+		}
+
+		return std::move(new_matrix);
 	}
 
 	auto matrix::operator*=(const matrix& other) -> matrix&
@@ -152,6 +216,36 @@ namespace math
 		*this = *new_matrix;
 
 		return *this;
+	}
+
+	auto matrix::operator*(const matrix& other) -> std::unique_ptr<matrix>
+	{
+		assertMultiplicativeRule(other);
+
+		// The new matrix that is created from multiplication has the number of rows of this (current) matrix
+		// and the number of columns of the other matrix
+		auto new_matrix = std::make_unique<matrix>(rows_, other.columns());
+
+		// (this) row * (other) column
+		for (std::size_t row = 0; row < new_matrix->rows(); ++row)
+		{
+			for (std::size_t column = 0; column < new_matrix->columns(); ++column)
+			{
+				auto multiplication_accumulator = 0.f;
+
+				for (std::size_t i = 0; i < columns_; ++i)
+				{
+					const auto row_val = (*this)(row, i);
+					const auto col_val = other(i, column);
+
+					multiplication_accumulator += row_val * col_val;
+				}
+
+				(*new_matrix)(row, column) = multiplication_accumulator;
+			}
+		}
+		
+		return std::move(new_matrix);
 	}
 
 	auto matrix::assertAdditiveRule(const matrix& other) const -> void
