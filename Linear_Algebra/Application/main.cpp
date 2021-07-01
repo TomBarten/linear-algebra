@@ -71,7 +71,6 @@ auto main() -> int
 		SDL_RenderDrawLineF(renderer, origin_x, origin_y, vector_xy_addition->x(), vector_xy_addition->y());
 
 
-		
 		SDL_RenderPresent(renderer);
 
 		while (SDL_PollEvent(&event))
