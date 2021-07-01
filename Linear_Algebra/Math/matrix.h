@@ -12,7 +12,7 @@ namespace math
 		std::vector<float> values_;
 
 	public:
-		matrix(std::size_t rows, std::size_t columns, const float& init = float{});
+		matrix(std::size_t rows, std::size_t columns, float init = float{});
 
 		auto rows() const noexcept -> std::size_t;
 
@@ -25,6 +25,8 @@ namespace math
 		auto operator()(std::size_t row, std::size_t col) -> float&;
 
 		auto operator()(std::size_t row, std::size_t col) const -> const float&;
+
+		auto has_equal_values(const matrix& other) const -> bool;
 
 		/// <summary>
 		/// Multiply the current matrix with a scalar.
