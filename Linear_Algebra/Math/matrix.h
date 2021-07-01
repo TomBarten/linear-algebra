@@ -1,12 +1,11 @@
 #pragma once
-#include <cassert>
 #include <vector>
 
 namespace math
 {
 	class matrix
 	{
-	private:
+	protected:
 		std::size_t rows_;
 		std::size_t columns_;
 		std::vector<float> values_;

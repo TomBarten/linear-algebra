@@ -1,5 +1,6 @@
 #include "matrix.h"
 
+#include <cassert>
 #include <memory>
 
 namespace math
