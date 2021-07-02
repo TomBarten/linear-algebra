@@ -88,9 +88,9 @@ namespace matrix
 
 		*test_matrix *= multiplicator;
 
-		for (auto row = 0; row < test_matrix->rows(); ++row)
+		for (std::size_t row = 0; row < test_matrix->rows(); ++row)
 		{
-			for (auto column = 0; column < test_matrix->columns(); ++column)
+			for (std::size_t column = 0; column < test_matrix->columns(); ++column)
 			{
 				const auto& value = values_vector[row * test_matrix->columns() + column];
 				const auto& multiplied_value = test_matrix->get(row, column);
@@ -112,9 +112,9 @@ namespace matrix
 
 		*test_matrix /= divisor;
 
-		for (auto row = 0; row < test_matrix->rows(); ++row)
+		for (std::size_t row = 0; row < test_matrix->rows(); ++row)
 		{
-			for (auto column = 0; column < test_matrix->columns(); ++column)
+			for (std::size_t column = 0; column < test_matrix->columns(); ++column)
 			{
 				const auto& value = values_vector[row * test_matrix->columns() + column];
 				const auto& divided_value = test_matrix->get(row, column);
@@ -136,9 +136,9 @@ namespace matrix
 
 		*test_matrix_1 += *test_matrix_2;
 
-		for (auto row = 0; row < test_matrix_1->rows(); ++row)
+		for (std::size_t row = 0; row < test_matrix_1->rows(); ++row)
 		{
-			for (auto column = 0; column < test_matrix_1->columns(); ++column)
+			for (std::size_t column = 0; column < test_matrix_1->columns(); ++column)
 			{
 				const auto& addition_value = test_matrix_2->get(row, column);
 				const auto& result_value = test_matrix_1->get(row, column);
@@ -161,9 +161,9 @@ namespace matrix
 
 		*test_matrix_1 -= *test_matrix_2;
 
-		for (auto row = 0; row < test_matrix_1->rows(); ++row)
+		for (std::size_t row = 0; row < test_matrix_1->rows(); ++row)
 		{
-			for (auto column = 0; column < test_matrix_1->columns(); ++column)
+			for (std::size_t column = 0; column < test_matrix_1->columns(); ++column)
 			{
 				const auto& subtraction_value = test_matrix_2->get(row, column);
 				const auto& result_value = test_matrix_1->get(row, column);

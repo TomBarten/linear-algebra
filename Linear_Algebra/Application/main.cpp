@@ -64,7 +64,7 @@ auto main() -> int
 		
 		const auto vector_xy_addition = (*vector_x) + (*vector_y);
 
-		(*vector_xy_addition) *= 0.5f;
+		(*vector_xy_addition) *= 2.f;
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
 
