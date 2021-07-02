@@ -378,6 +378,7 @@ MigrationBackup/
 *.la
 *.a
 *.lib
+!*/Includes/SDL2-2.0.14/*
 
 # Executables
 *.exe
