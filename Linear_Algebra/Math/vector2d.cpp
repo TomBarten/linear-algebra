@@ -4,11 +4,6 @@
 
 namespace math
 {
-	vector2d::vector2d()
-		: vector_base()
-	{
-	}
-
 	vector2d::vector2d(const float x, const float y)
 		: vector_base<vector2d>(2, 1)
 	{

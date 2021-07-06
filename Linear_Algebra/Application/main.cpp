@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <iostream>
 #include "vector2d.h"
+#include "vector3d.h"
 
 const auto WIDTH = 500;
 const auto HEIGHT = 500;
@@ -70,6 +71,8 @@ auto main() -> int
 		SDL_RenderClear(renderer);
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
+		const auto vector_z = std::make_unique<math::vector3d>(0, 0, 50);
 
 		const auto vector_x = std::make_unique<math::vector2d>(50, 0);
 

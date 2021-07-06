@@ -95,5 +95,21 @@ namespace math::base
 
 			return std::move(new_vector);
 		}
+
+	protected:
+		auto copy_matrix_values(const std::unique_ptr<matrix>& other) const -> std::unique_ptr<matrix>
+		{
+			auto matrix_copy = std::make_unique<matrix>(other->rows(), other->columns());
+
+			for (std::size_t row = 0; row < other->rows(); ++row)
+			{
+				for (std::size_t column = 0; column < other->columns(); ++column)
+				{
+					(*matrix_copy)(row, column) = (*other)(row, column);
+				}
+			}
+
+			return std::move(matrix_copy);
+		}
 	};
 }
