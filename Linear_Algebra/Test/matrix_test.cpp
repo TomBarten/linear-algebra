@@ -76,7 +76,11 @@ namespace matrix
 		const auto n_columns = 3;
 		const auto multiplicator = 5;
 
-		const std::vector<float> values_vector{ 1,2,3,4,5,6 };
+		const std::vector<float> values_vector
+		{
+			1,2,3,
+			4,5,6
+		};
 
 		auto test_matrix = create_test_matrix(n_rows, n_columns, values_vector);
 
@@ -100,7 +104,11 @@ namespace matrix
 		const auto n_columns = 3;
 		const auto divisor = 5;
 
-		const std::vector<float> values_vector{ 1,2,3,4,5,6 };
+		const std::vector<float> values_vector
+		{
+			1,2,3,
+			4,5,6
+		};
 
 		auto test_matrix = create_test_matrix(n_rows, n_columns, values_vector);
 
@@ -123,7 +131,11 @@ namespace matrix
 		const auto n_rows = 2;
 		const auto n_columns = 3;
 
-		const std::vector<float> values_vector{ 1,2,3,4,5,6 };
+		const std::vector<float> values_vector
+		{
+			1,2,3,
+			4,5,6
+		};
 
 		const auto test_matrix_1 = create_test_matrix(n_rows, n_columns, values_vector);
 		const auto test_matrix_2 = create_test_matrix(n_rows, n_columns, values_vector);
@@ -148,7 +160,11 @@ namespace matrix
 		const auto n_rows = 2;
 		const auto n_columns = 3;
 
-		const std::vector<float> values_vector{ 1,2,3,4,5,6 };
+		const std::vector<float> values_vector
+		{
+			1,2,3,
+			4,5,6
+		};
 
 		const auto test_matrix_1 = create_test_matrix(n_rows, n_columns, values_vector);
 		const auto test_matrix_2 = create_test_matrix(n_rows, n_columns, values_vector);
@@ -176,8 +192,18 @@ namespace matrix
 		const auto n_rows_2 = n_columns_1;
 		const auto n_columns_2 = n_rows_1;
 
-		const std::vector<float> values_1{ 1,-2,4,0,-1,7 };
-		const std::vector<float> values_2{ 3,-4,5,0,-2,1 };
+		const std::vector<float> values_1
+		{
+			1,-2,
+			4,0,
+			-1,7
+		};
+		
+		const std::vector<float> values_2
+		{
+			3,-4,5,
+			0,-2,1
+		};
 
 		const auto test_matrix_1 = create_test_matrix(n_rows_1, n_columns_1, values_1);
 		const auto test_matrix_2 = create_test_matrix(n_rows_2, n_columns_2, values_2);
@@ -199,8 +225,16 @@ namespace matrix
 		const auto n_rows_2 = n_columns_1;
 		const auto n_columns_2 = n_rows_1;
 
-		const std::vector<float> values_1{ 1,2 };
-		const std::vector<float> values_2{ 3,4 };
+		const std::vector<float> values_1
+		{
+			1,2
+		};
+		
+		const std::vector<float> values_2
+		{
+			3,
+			4
+		};
 
 		const auto test_matrix_1 = create_test_matrix(n_rows_1, n_columns_1, values_1);
 		const auto test_matrix_2 = create_test_matrix(n_rows_2, n_columns_2, values_2);
@@ -222,8 +256,16 @@ namespace matrix
 		const auto n_rows_2 = n_columns_1;
 		const auto n_columns_2 = n_rows_1;
 
-		const std::vector<float> values_1{ 1,2 };
-		const std::vector<float> values_2{ 3,4 };
+		const std::vector<float> values_1
+		{
+			1,2
+		};
+		
+		const std::vector<float> values_2
+		{
+			3,
+			4
+		};
 
 		const auto test_matrix_1 = create_test_matrix(n_rows_1, n_columns_1, values_1);
 		const auto test_matrix_2 = create_test_matrix(n_rows_2, n_columns_2, values_2);
