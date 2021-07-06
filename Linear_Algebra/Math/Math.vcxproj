@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h" />
+    <ClInclude Include="matrix_helpers.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="vector3d.h" />
     <ClInclude Include="vector_base.h" />

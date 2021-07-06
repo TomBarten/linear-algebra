@@ -50,5 +50,8 @@
     <ClInclude Include="matrix.h">
       <Filter>Header Files\Matrix</Filter>
     </ClInclude>
+    <ClInclude Include="matrix_helpers.h">
+      <Filter>Header Files\Matrix</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

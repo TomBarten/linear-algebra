@@ -3,23 +3,17 @@
 
 namespace matrix
 {
-	inline auto create_test_matrix(const std::size_t n_rows, const std::size_t n_columns, std::vector<float> values = {}) -> std::unique_ptr<math::matrix>
+	inline auto create_test_matrix(const std::size_t n_rows, const std::size_t n_columns, const std::vector<float> values = {}) -> std::unique_ptr<math::matrix>
 	{
-		auto test_matrix = std::make_unique<math::matrix>(n_rows, n_columns);
+		std::unique_ptr<math::matrix> test_matrix;
 
 		if(values.size() > 0)
 		{
-			assert(values.size() == n_rows * n_columns);
-
-			for (auto row = 0; row < test_matrix->rows(); ++row)
-			{
-				for (auto column = 0; column < test_matrix->columns(); ++column)
-				{
-					const auto new_value = values[row * test_matrix->columns() + column];
-
-					test_matrix->get(row, column) = new_value;
-				}
-			}
+			test_matrix = std::make_unique<math::matrix>(n_rows, n_columns, values);
+		}
+		else
+		{
+			test_matrix = std::make_unique<math::matrix>(n_rows, n_columns);
 		}
 		
 		return std::move(test_matrix);

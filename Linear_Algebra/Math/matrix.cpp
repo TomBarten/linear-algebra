@@ -9,6 +9,12 @@ namespace math
 	{
 	}
 
+	matrix::matrix(const std::size_t rows, const std::size_t columns, std::vector<float> values)
+		: matrix(rows, columns)
+	{
+		set_values(values);
+	}
+
 	auto matrix::rows() const noexcept -> std::size_t
 	{
 		return rows_;
@@ -35,6 +41,24 @@ namespace math
 	auto matrix::get(const std::size_t row, const std::size_t col) const -> float const&
 	{
 		return values_[row * columns_ + col];
+	}
+
+	auto matrix::set_values(std::vector<float> values) -> void
+	{
+		if(values.size() != rows_ * columns_)
+		{
+			throw std::exception("Unable to set values; invalid new values size");
+		}
+		
+		for (auto row = 0; row < rows_; ++row)
+		{
+			for (auto column = 0; column < columns_; ++column)
+			{
+				const auto new_value = values[row * columns_ + column];
+
+				(*this)(row, column) = new_value;
+			}
+		}
 	}
 
 	auto matrix::operator()(const std::size_t row, const std::size_t col) -> float&

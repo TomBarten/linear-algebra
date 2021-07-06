@@ -13,6 +13,7 @@ namespace math
 
 	public:
 		matrix(std::size_t rows, std::size_t columns, float init = float{});
+		matrix(std::size_t rows, std::size_t columns, std::vector<float> values);
 
 		auto rows() const noexcept -> std::size_t;
 
@@ -79,6 +80,8 @@ namespace math
 		auto operator*(const matrix& other) -> std::unique_ptr<matrix>;
 
 	private:
+		auto set_values(std::vector<float> values = {}) -> void;
+		
 		/// <remarks>
 		/// Additive rules apply to + and - operations.
 		/// <summary>
