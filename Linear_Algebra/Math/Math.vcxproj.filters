@@ -13,36 +13,36 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Main">
-      <UniqueIdentifier>{823af00b-0aed-4e7d-8c36-b17682efb6dd}</UniqueIdentifier>
+    <Filter Include="Header Files\Vector">
+      <UniqueIdentifier>{2f282e71-0739-46fe-9c08-64b9a1f72411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vector">
+      <UniqueIdentifier>{9c328951-0114-4243-a6f1-b9e74a62854c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files\Main</Filter>
-    </ClCompile>
     <ClCompile Include="vector2d.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
     <ClCompile Include="vector3d.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Vector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vector_base.h">
+      <Filter>Header Files\Vector</Filter>
+    </ClInclude>
     <ClInclude Include="vector2d.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Vector</Filter>
     </ClInclude>
     <ClInclude Include="vector3d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vector_base.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Vector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
