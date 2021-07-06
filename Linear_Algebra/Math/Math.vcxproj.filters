@@ -19,22 +19,25 @@
     <Filter Include="Source Files\Vector">
       <UniqueIdentifier>{9c328951-0114-4243-a6f1-b9e74a62854c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Matrix">
+      <UniqueIdentifier>{cede891f-83ef-46b0-8b74-480d73c9c2d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Matrix">
+      <UniqueIdentifier>{b3028f65-47ea-4054-bf08-4ddbfae48dd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="matrix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vector2d.cpp">
       <Filter>Source Files\Vector</Filter>
     </ClCompile>
     <ClCompile Include="vector3d.cpp">
       <Filter>Source Files\Vector</Filter>
     </ClCompile>
+    <ClCompile Include="matrix.cpp">
+      <Filter>Source Files\Matrix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="matrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vector_base.h">
       <Filter>Header Files\Vector</Filter>
     </ClInclude>
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="vector3d.h">
       <Filter>Header Files\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>Header Files\Matrix</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
