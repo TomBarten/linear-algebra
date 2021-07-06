@@ -1,7 +1,5 @@
 #include "vector2d.h"
 
-#include <sstream>
-
 namespace math
 {
 	vector2d::vector2d(const float x, const float y)

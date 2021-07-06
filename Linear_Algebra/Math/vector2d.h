@@ -1,6 +1,4 @@
 #pragma once
-#include <memory>
-
 #include "vector_base.h"
 
 namespace math
