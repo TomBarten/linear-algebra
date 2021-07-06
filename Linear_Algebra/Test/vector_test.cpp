@@ -4,7 +4,7 @@
 
 namespace vector
 {
-	TEST_CASE("Vector addition should work properly")
+	TEST_CASE("Vector2d addition should work properly")
 	{
 		const auto vector2d_x = std::make_unique<math::vector2d>(1.f, 0.f);
 		const auto vector2d_y = std::make_unique<math::vector2d>(0.f, 1.f);
@@ -15,7 +15,7 @@ namespace vector
 		REQUIRE(vector2d_xy->y() == 1.f);
 	}
 
-	TEST_CASE("Vector assignment addition should work properly")
+	TEST_CASE("Vector2d assignment addition should work properly")
 	{
 		const auto vector2d_x = std::make_unique<math::vector2d>(1.f, 0.f);
 		const auto vector2d_y = std::make_unique<math::vector2d>(0.f, 1.f);

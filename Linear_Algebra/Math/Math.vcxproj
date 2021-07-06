@@ -28,6 +28,7 @@
     <ClInclude Include="matrix.h" />
     <ClInclude Include="vector2d.h" />
     <ClInclude Include="vector3d.h" />
+    <ClInclude Include="vector_base.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
