@@ -124,7 +124,7 @@ namespace math
 
 	auto matrix::operator+=(const matrix& other) -> matrix&
 	{
-		assertAdditiveRule(other);
+		checkAdditiveRule(other);
 
 		for (std::size_t row = 0; row < rows_; ++row)
 		{
@@ -139,7 +139,7 @@ namespace math
 
 	auto matrix::operator+(const matrix& other) -> std::unique_ptr<matrix>
 	{
-		assertAdditiveRule(other);
+		checkAdditiveRule(other);
 
 		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
 
@@ -156,7 +156,7 @@ namespace math
 
 	auto matrix::operator-=(const matrix& other) -> matrix&
 	{
-		assertAdditiveRule(other);
+		checkAdditiveRule(other);
 
 		for (std::size_t row = 0; row < rows_; ++row)
 		{
@@ -171,7 +171,7 @@ namespace math
 
 	auto matrix::operator-(const matrix& other) -> std::unique_ptr<matrix>
 	{
-		assertAdditiveRule(other);
+		checkAdditiveRule(other);
 
 		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
 
@@ -188,7 +188,7 @@ namespace math
 
 	auto matrix::operator*=(const matrix& other) -> matrix&
 	{
-		assertMultiplicativeRule(other);
+		checkMultiplicativeRule(other);
 
 		// The new matrix that is created from multiplication has the number of rows of this (current) matrix
 		// and the number of columns of the other matrix
@@ -220,7 +220,7 @@ namespace math
 
 	auto matrix::operator*(const matrix& other) -> std::unique_ptr<matrix>
 	{
-		assertMultiplicativeRule(other);
+		checkMultiplicativeRule(other);
 
 		// The new matrix that is created from multiplication has the number of rows of this (current) matrix
 		// and the number of columns of the other matrix
@@ -248,13 +248,19 @@ namespace math
 		return std::move(new_matrix);
 	}
 
-	auto matrix::assertAdditiveRule(const matrix& other) const -> void
+	auto matrix::checkAdditiveRule(const matrix& other) const -> void
 	{
-		assert(rows_ == other.rows()  && columns_ == other.columns());
+		if(rows_ != other.rows() || columns_ != other.columns())
+		{
+			throw std::exception("Additive rule violated");
+		}
 	}
 
-	auto matrix::assertMultiplicativeRule(const matrix& other) const -> void
+	auto matrix::checkMultiplicativeRule(const matrix& other) const -> void
 	{
-		assert(columns_ == other.rows());
+		if(columns_ != other.rows())
+		{
+			throw std::exception("Multiplicative rule violated");
+		}
 	}
 }

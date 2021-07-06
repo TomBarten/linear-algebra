@@ -82,7 +82,7 @@ namespace math::base
 			return std::move(new_vector);
 		}
 
-		auto operator*=(const matrix& other) -> TVector&
+		auto operator*=(const matrix& other) -> vector_base<TVector>&
 		{
 			(*matrix_) *= other;
 

@@ -82,17 +82,17 @@ namespace math
 		/// <remarks>
 		/// Additive rules apply to + and - operations.
 		/// <summary>
-		/// Asserts that the additive rule (equal rows and columns to both matrixes) is correct or not.
+		/// Checks that the additive rule (equal rows and columns to both matrixes) is intact.
 		/// </summary>
 		/// <param name="other">The other matrix.</param>
-		auto assertAdditiveRule(const matrix& other) const -> void;
+		auto checkAdditiveRule(const matrix& other) const -> void;
 
 		/// <remarks>
 		/// Multiplicative rules apply to /, * and % operations.
 		/// <summary>
-		/// 
+		/// Checks that the multiplicative rule (left side columns equal to right side rows) is intact.
 		/// </summary>
 		/// <param name="other">The other matrix.</param>
-		auto assertMultiplicativeRule(const matrix& other) const -> void;
+		auto checkMultiplicativeRule(const matrix& other) const -> void;
 	};
 }
