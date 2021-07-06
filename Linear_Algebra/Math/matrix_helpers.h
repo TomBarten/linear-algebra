@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "matrix.h"
 
-namespace math::helpers
+namespace math
 {
 	inline auto scaling_matrix_2d(const float scaling_x, const float scaling_y) -> std::unique_ptr<matrix>
 	{

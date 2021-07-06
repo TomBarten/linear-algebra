@@ -19,7 +19,7 @@ namespace math::base
 		{
 			matrix_ = std::make_unique<matrix>(rows, columns);
 		}
-		
+	
 		// ReSharper disable once CppNonExplicitConversionOperator
 		operator const matrix& () const
 		{

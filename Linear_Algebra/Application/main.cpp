@@ -3,6 +3,8 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <iostream>
+
+#include "matrix_helpers.h"
 #include "vector2d.h"
 #include "vector3d.h"
 
@@ -87,8 +89,8 @@ auto main() -> int
 
 		draw_sdl_line(renderer, 0 , 0, vector_xy->x(), vector_xy->y(), 255, 255, 0);
 
-		(*vector_xy) *= -1;
-
+		(*vector_xy).scale(2, 2);
+		
 		draw_sdl_line(renderer, 0 , 0, vector_xy->x(), vector_xy->y(), 0, 0, 255);
 
 
