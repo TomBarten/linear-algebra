@@ -9,7 +9,7 @@ namespace math
 		vector2d(float x, float y);
 		explicit vector2d(std::unique_ptr<matrix> matrix_init);
 
-		auto scale(float scale_x, float scale_y) -> void;
+		auto scale(const matrix& m_matrix) const -> std::unique_ptr<vector2d>;
 		
 		auto x() const -> const float&;
 		auto y() const -> const float&;

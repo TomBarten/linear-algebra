@@ -105,7 +105,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator*(const float scalar) -> std::unique_ptr<matrix>
+	auto matrix::operator*(const float scalar) const -> std::unique_ptr<matrix>
 	{
 		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
 
@@ -130,7 +130,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator/(const float scalar) -> std::unique_ptr<matrix>
+	auto matrix::operator/(const float scalar) const -> std::unique_ptr<matrix>
 	{
 		auto new_matrix = std::make_unique<matrix>(rows_, columns_);
 
@@ -160,7 +160,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator+(const matrix& other) -> std::unique_ptr<matrix>
+	auto matrix::operator+(const matrix& other) const -> std::unique_ptr<matrix>
 	{
 		checkAdditiveRule(other);
 
@@ -192,7 +192,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator-(const matrix& other) -> std::unique_ptr<matrix>
+	auto matrix::operator-(const matrix& other) const -> std::unique_ptr<matrix>
 	{
 		checkAdditiveRule(other);
 
@@ -202,7 +202,10 @@ namespace math
 		{
 			for (std::size_t column = 0; column < columns_; ++column)
 			{
-				(*new_matrix)(row, column) = (*this)(row, column) - other(row, column);
+				const auto& this_val = (*this)(row, column);
+				const auto& other_val = other(row, column);
+				
+				(*new_matrix)(row, column) = this_val - other_val;
 			}
 		}
 
@@ -226,8 +229,8 @@ namespace math
 
 				for(std::size_t i = 0; i < columns_; ++i)
 				{
-					const auto row_val = (*this)(row, i);
-					const auto col_val = other(i, column);
+					const auto& row_val = (*this)(row, i);
+					const auto& col_val = other(i, column);
 					
 					multiplication_accumulator += row_val * col_val;
 				}
@@ -241,7 +244,7 @@ namespace math
 		return *this;
 	}
 
-	auto matrix::operator*(const matrix& other) -> std::unique_ptr<matrix>
+	auto matrix::operator*(const matrix& other) const -> std::unique_ptr<matrix>
 	{
 		checkMultiplicativeRule(other);
 
@@ -258,8 +261,8 @@ namespace math
 
 				for (std::size_t i = 0; i < columns_; ++i)
 				{
-					const auto row_val = (*this)(row, i);
-					const auto col_val = other(i, column);
+					const auto& row_val = (*this)(row, i);
+					const auto& col_val = other(i, column);
 
 					multiplication_accumulator += row_val * col_val;
 				}

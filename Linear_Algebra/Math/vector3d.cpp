@@ -20,6 +20,24 @@ namespace math
 		matrix_ = std::move(matrix_init);
 	}
 
+	auto vector3d::scale(const matrix& m_matrix) const -> std::unique_ptr<vector3d>
+	{
+		// Add 1 extra row so it can be multiplied by M matrix
+		// Extra value 1 in new row
+		(*matrix_).resize(4, 1);
+		(*matrix_)(3, 0) = 1;
+
+		auto result_matrix = m_matrix * (*matrix_);
+
+		// Remove extra row, will also remove extra value automaticaly
+		(*matrix_).resize(3, 1);
+		(*result_matrix).resize(3, 1);
+
+		auto result = std::make_unique<vector3d>(std::move(result_matrix));
+
+		return std::move(result);
+	}
+
 	auto vector3d::x() const -> const float&
 	{
 		return (*matrix_)(0, 0);

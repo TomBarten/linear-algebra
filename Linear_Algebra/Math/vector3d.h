@@ -9,6 +9,8 @@ namespace math
         vector3d(float x, float y, float z);
         explicit vector3d(std::unique_ptr<matrix> matrix_init);
 
+        auto scale(const matrix& m_matrix) const -> std::unique_ptr<vector3d>;
+
         auto x() const -> const float&;
         auto y() const -> const float&;
         auto z() const -> const float&;

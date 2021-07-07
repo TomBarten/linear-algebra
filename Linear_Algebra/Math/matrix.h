@@ -37,7 +37,7 @@ namespace math
 		/// <param name="scalar">The scalar value.</param>
 		/// <returns>The scalar multiplication result.</returns>
 		auto operator*=(float scalar) -> matrix&;
-		auto operator*(float scalar) -> std::unique_ptr<matrix>;
+		auto operator*(float scalar) const-> std::unique_ptr<matrix>;
 
 		/// <summary>
 		/// Divide the current matrix with a scalar.
@@ -45,7 +45,7 @@ namespace math
 		/// <param name="scalar">The scalar value.</param>
 		/// <returns>The scalar division result.</returns>
 		auto operator/=(float scalar) -> matrix&;
-		auto operator/(float scalar) -> std::unique_ptr<matrix>;
+		auto operator/(float scalar) const-> std::unique_ptr<matrix>;
 
 		/// <remarks>
 		/// The other matrix should have the same amount of rows and columns as the current matrix.<br/>
@@ -57,7 +57,7 @@ namespace math
 		/// <param name="other">The other matrix.</param>
 		/// <returns>The addition result.</returns>
 		auto operator+=(const matrix& other) -> matrix&;
-		auto operator+(const matrix& other) -> std::unique_ptr<matrix>;
+		auto operator+(const matrix& other) const-> std::unique_ptr<matrix>;
 
 		/// <remarks>
 		/// The other matrix should have the same amount of rows and columns as the current matrix.<br/>
@@ -69,7 +69,7 @@ namespace math
 		/// <param name="other">The other matrix.</param>
 		/// <returns>The subtraction result.</returns>
 		auto operator-=(const matrix& other) -> matrix&;
-		auto operator-(const matrix& other) -> std::unique_ptr<matrix>;
+		auto operator-(const matrix& other) const -> std::unique_ptr<matrix>;
 
 		/// <summary>
 		/// Multiplies the current matrix's values with the other matrix's values.
@@ -77,7 +77,7 @@ namespace math
 		/// <param name="other">The other matrix.</param>
 		/// <returns>The multiplication result.</returns>
 		auto operator*=(const matrix& other) -> matrix&;
-		auto operator*(const matrix& other) -> std::unique_ptr<matrix>;
+		auto operator*(const matrix& other) const -> std::unique_ptr<matrix>;
 
 	private:
 		auto set_values(std::vector<float> values = {}) -> void;

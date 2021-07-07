@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <iostream>
 
-#include "matrix_helpers.h"
+#include "matrix_helper_2d.h"
 #include "vector2d.h"
 #include "vector3d.h"
 
@@ -87,11 +87,12 @@ auto main() -> int
 
 		auto vector_xy = (*vector_x) + (*vector_y);
 
-		draw_sdl_line(renderer, 0 , 0, vector_xy->x(), vector_xy->y(), 255, 255, 0);
+		const auto m_matrix = math::create_scale_matrix_2d(2, 2);
 
-		(*vector_xy).scale(2, 2);
+		const auto scaled_vector_xy = vector_xy->scale((*m_matrix));
 		
-		draw_sdl_line(renderer, 0 , 0, vector_xy->x(), vector_xy->y(), 0, 0, 255);
+		draw_sdl_line(renderer, 0 , 0, scaled_vector_xy->x(), scaled_vector_xy->y(), 0, 0, 255);
+		draw_sdl_line(renderer, 0, 0, vector_xy->x(), vector_xy->y(), 255, 255, 0);
 
 
 		vector_xy = (*vector_x) - (*vector_y);

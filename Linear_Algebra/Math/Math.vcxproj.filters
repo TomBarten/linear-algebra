@@ -50,7 +50,10 @@
     <ClInclude Include="matrix.h">
       <Filter>Header Files\Matrix</Filter>
     </ClInclude>
-    <ClInclude Include="matrix_helpers.h">
+    <ClInclude Include="matrix_helper_2d.h">
+      <Filter>Header Files\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix_helper_3d.h">
       <Filter>Header Files\Matrix</Filter>
     </ClInclude>
   </ItemGroup>
