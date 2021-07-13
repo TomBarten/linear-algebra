@@ -20,16 +20,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="matrix.cpp" />
-    <ClCompile Include="vector2d.cpp" />
-    <ClCompile Include="vector3d.cpp" />
+    <ClCompile Include="matrix2d.cpp" />
+    <ClCompile Include="matrix3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h" />
     <ClInclude Include="matrix_helper_2d.h" />
     <ClInclude Include="matrix_helper_3d.h" />
-    <ClInclude Include="vector2d.h" />
-    <ClInclude Include="vector3d.h" />
-    <ClInclude Include="vector_base.h" />
+    <ClInclude Include="matrix2d.h" />
+    <ClInclude Include="matrix3d.h" />
+    <ClInclude Include="dimensional_matrix.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

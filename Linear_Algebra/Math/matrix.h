@@ -81,6 +81,8 @@ namespace math
 
 	private:
 		auto set_values(std::vector<float> values = {}) -> void;
+
+		auto get_matrix_multiplication_result(const matrix& other) const -> std::unique_ptr<matrix>;
 		
 		/// <remarks>
 		/// Additive rules apply to + and - operations.

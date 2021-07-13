@@ -5,8 +5,8 @@
 #include <iostream>
 
 #include "matrix_helper_2d.h"
-#include "vector2d.h"
-#include "vector3d.h"
+#include "matrix2d.h"
+#include "matrix3d.h"
 
 const auto WIDTH = 500;
 const auto HEIGHT = 500;
@@ -74,14 +74,14 @@ auto main() -> int
 
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-		const auto vector_z = std::make_unique<math::vector3d>(0, 0, 50);
+		const auto vector_z = std::make_unique<math::matrix3d>(0, 0, 50);
 
-		const auto vector_x = std::make_unique<math::vector2d>(50, 0);
+		const auto vector_x = std::make_unique<math::matrix2d>(50, 0);
 
 		draw_sdl_line(renderer, 0,  0, vector_x->x(), vector_x->y(), 255, 0, 0);
 
 
-		const auto vector_y = std::make_unique<math::vector2d>(0, 50);
+		const auto vector_y = std::make_unique<math::matrix2d>(0, 50);
 
 		draw_sdl_line(renderer, 0,  0, vector_y->x(), vector_y->y(), 0, 255, 0);
 

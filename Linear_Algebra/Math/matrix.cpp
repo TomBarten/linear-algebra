@@ -71,30 +71,6 @@ namespace math
 		return get(row, col);
 	}
 
-	auto matrix::has_equal_values(const matrix& other) const -> bool
-	{
-		if(rows_ != other.rows() || columns_ != other.columns())
-		{
-			return false;
-		}
-
-		for(std::size_t row = 0; row < rows_; ++row)
-		{
-			for(std::size_t column = 0; column < columns_; ++column)
-			{
-				const auto& this_value = (*this)(row, column);
-				const auto& other_value = other(row, column);
-
-				if(this_value != other_value)
-				{
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-
 	auto matrix::operator*=(const float scalar) -> matrix&
 	{
 		for (auto& value : values_)
@@ -214,31 +190,8 @@ namespace math
 
 	auto matrix::operator*=(const matrix& other) -> matrix&
 	{
-		checkMultiplicativeRule(other);
+		const auto new_matrix = get_matrix_multiplication_result(other);
 
-		// The new matrix that is created from multiplication has the number of rows of this (current) matrix
-		// and the number of columns of the other matrix
-		const auto new_matrix = std::make_unique<matrix>(rows_, other.columns());
-
-		// (this) row * (other) column
-		for(std::size_t row = 0; row < new_matrix->rows(); ++row)
-		{
-			for(std::size_t column = 0; column < new_matrix->columns(); ++column)
-			{
-				auto multiplication_accumulator = 0.f;
-
-				for(std::size_t i = 0; i < columns_; ++i)
-				{
-					const auto& row_val = (*this)(row, i);
-					const auto& col_val = other(i, column);
-					
-					multiplication_accumulator += row_val * col_val;
-				}
-
-				(*new_matrix)(row, column) = multiplication_accumulator;
-			}
-		}
-		
 		*this = *new_matrix;
 
 		return *this;
@@ -246,12 +199,57 @@ namespace math
 
 	auto matrix::operator*(const matrix& other) const -> std::unique_ptr<matrix>
 	{
-		checkMultiplicativeRule(other);
+		return std::move(get_matrix_multiplication_result(other));
+	}
 
+	auto matrix::checkAdditiveRule(const matrix& other) const -> void
+	{
+		if(rows_ != other.rows() || columns_ != other.columns())
+		{
+			throw std::exception("Additive rule violated");
+		}
+	}
+
+	auto matrix::checkMultiplicativeRule(const matrix& other) const -> void
+	{
+		if(columns_ != other.rows())
+		{
+			throw std::exception("Multiplicative rule violated");
+		}
+	}
+
+	auto matrix::has_equal_values(const matrix& other) const -> bool
+	{
+		if (rows_ != other.rows() || columns_ != other.columns())
+		{
+			return false;
+		}
+
+		for (std::size_t row = 0; row < rows_; ++row)
+		{
+			for (std::size_t column = 0; column < columns_; ++column)
+			{
+				const auto& this_value = (*this)(row, column);
+				const auto& other_value = other(row, column);
+
+				if (this_value != other_value)
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	auto matrix::get_matrix_multiplication_result(const matrix& other) const -> std::unique_ptr<matrix>
+	{
+		checkMultiplicativeRule(other);
+		
 		// The new matrix that is created from multiplication has the number of rows of this (current) matrix
 		// and the number of columns of the other matrix
 		auto new_matrix = std::make_unique<matrix>(rows_, other.columns());
-
+		
 		// (this) row * (other) column
 		for (std::size_t row = 0; row < new_matrix->rows(); ++row)
 		{
@@ -270,23 +268,7 @@ namespace math
 				(*new_matrix)(row, column) = multiplication_accumulator;
 			}
 		}
-		
+
 		return std::move(new_matrix);
-	}
-
-	auto matrix::checkAdditiveRule(const matrix& other) const -> void
-	{
-		if(rows_ != other.rows() || columns_ != other.columns())
-		{
-			throw std::exception("Additive rule violated");
-		}
-	}
-
-	auto matrix::checkMultiplicativeRule(const matrix& other) const -> void
-	{
-		if(columns_ != other.rows())
-		{
-			throw std::exception("Multiplicative rule violated");
-		}
 	}
 }
