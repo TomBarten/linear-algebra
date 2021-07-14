@@ -172,11 +172,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="program.cpp" />
+    <ClCompile Include="sdl_deleter.cpp" />
+    <ClCompile Include="sdl_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Math\Math.vcxproj">
       <Project>{0ebad770-d11f-4432-836b-7d2760876919}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="console_helpers.h" />
+    <ClInclude Include="progam_state.h" />
+    <ClInclude Include="program.h" />
+    <ClInclude Include="sdl_deleter.h" />
+    <ClInclude Include="sdl_manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
