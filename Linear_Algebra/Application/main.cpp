@@ -143,8 +143,6 @@ program_state current_progam_state{program_state::running};
 const auto WIDTH = 500;
 const auto HEIGHT = 500;
 
-auto run_program() -> void;
-
 static auto handle_exception(const std::exception_ptr& exception_ptr) -> void
 {
     try

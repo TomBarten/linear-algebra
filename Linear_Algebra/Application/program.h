@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+#include "mesh.h"
 #include "progam_state.h"
 #include "sdl_manager.h"
 
@@ -9,8 +10,9 @@ namespace application
 	class program
 	{
 	private:
-		std::unique_ptr<sdl::sdl_manager> sdl_manager_;
 		util::program_state current_state_;
+		std::unique_ptr<sdl::sdl_manager> sdl_manager_;
+		shape::mesh meshCube;
 	
 	public:
 		program(int window_width, int window_height);
@@ -18,7 +20,9 @@ namespace application
 		auto run() -> void;
 
 	private:
-		auto start() const -> void;
+		auto setup() -> void;
+		auto setup_controls() const -> void;
+		auto start() -> void;
 	};
 }
 

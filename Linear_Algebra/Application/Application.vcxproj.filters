@@ -22,6 +22,9 @@
     <Filter Include="Source Files\SDL">
       <UniqueIdentifier>{1288a7a8-51a4-4ece-9254-e731e6680000}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SDL\Controls">
+      <UniqueIdentifier>{4298419d-5972-4663-bdda-af80196014d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -35,6 +38,12 @@
     </ClCompile>
     <ClCompile Include="sdl_deleter.cpp">
       <Filter>Source Files\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +61,15 @@
     </ClInclude>
     <ClInclude Include="sdl_deleter.h">
       <Filter>Header Files\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdl_input.h">
+      <Filter>Header Files\SDL\Controls</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
