@@ -25,6 +25,12 @@
     <Filter Include="Header Files\SDL\Controls">
       <UniqueIdentifier>{4298419d-5972-4663-bdda-af80196014d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Shape">
+      <UniqueIdentifier>{05289152-30ff-4814-a75c-cc5a0f63aeac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shape">
+      <UniqueIdentifier>{ca42c59c-538d-4f1f-8496-291801f671e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,10 +46,10 @@
       <Filter>Source Files\SDL</Filter>
     </ClCompile>
     <ClCompile Include="triangle.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shape</Filter>
     </ClCompile>
     <ClCompile Include="mesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,14 +68,14 @@
     <ClInclude Include="sdl_deleter.h">
       <Filter>Header Files\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="triangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sdl_input.h">
       <Filter>Header Files\SDL\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle.h">
+      <Filter>Header Files\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Header Files\Shape</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

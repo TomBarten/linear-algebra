@@ -41,8 +41,11 @@ namespace application::sdl
 		
 		auto draw_pixel(float x, float y, uint8_t r, uint8_t g, uint8_t b) const -> void;
 		auto draw_line(float x1, float y1, float x2, float y2, uint8_t r, uint8_t g, uint8_t b) const -> void;
+		auto draw_line(float x1, float y1, float x2, float y2) const -> void;
 
-		auto handle_input() -> void;
+		auto clear_renderer() const -> void;
+		auto present_renderer() const -> void;
+
 		auto add_input_listener(SDL_Scancode code, input_handler_fn listener_callback) -> bool;
 
 		auto start_loop() -> void;
@@ -54,5 +57,8 @@ namespace application::sdl
 		
 		auto initialize() -> void;
 		auto execute_input_listener(int scancode_val, const SDL_Event& sdl_event) -> void;
+		
+		auto handle_input() -> void;
+		auto draw_background() const -> void;
 	};
 }

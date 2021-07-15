@@ -5,6 +5,9 @@
 #include <ostream>
 #include <string>
 
+#include "matrix2d.h"
+#include "matrix3d.h"
+
 using namespace math;
 using namespace application::shape;
 
@@ -12,7 +15,8 @@ namespace application
 {
 	program::program(const int window_width, const int window_height):
 		current_state_(util::program_state::running),
-		sdl_manager_{std::make_unique<sdl::sdl_manager>(window_width, window_height, current_state_)}
+		sdl_manager_{std::make_unique<sdl::sdl_manager>(window_width, window_height, current_state_)},
+		meshCube{std::make_unique<mesh>()}
 	{
 	}
 
@@ -31,56 +35,29 @@ namespace application
 	{
 		setup_controls();
 
-		auto test1a = std::make_unique<matrix3d>(0.0f, 0.0f, 0.0f);
-		auto test2a = std::make_unique<matrix3d>(0.0f, 0.0f, 0.0f);
-		auto test3a = std::make_unique<matrix3d>(0.0f, 0.0f, 0.0f);
-		
-		//std::unique_ptr<matrix3d> pa[3] = { std::move(test1a), std::move(test2a), std::move(test3a) };
+		// SOUTH
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f)));
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f)));
 
-		struct test
-		{
-			std::unique_ptr<matrix3d> p[3];
-		};
+		// EAST
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f)));
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f)));
 
-		// TODO this is bad
-		//std::vector testb = { std::move(testa) };
+		// NORTH
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f)));
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f)));
 
-		auto test1 = matrix3d(0.0f, 0.0f, 0.0f);
-		auto test2 = matrix3d(0.0f, 1.0f, 0.0f);
-		auto test3 = matrix3d(1.0f, 1.0f, 0.0f);
+		// WEST
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f)));
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f)));
 
-		matrix3d p[3] = { (std::move(matrix3d(0.0f, 0.0f, 0.0f))), (std::move(matrix3d(0.0f, 1.0f, 0.0f))), (std::move(matrix3d(1.0f, 1.0f, 0.0f))) };
-		
-		
-		//const auto item1 = p[0];
-		
-		//meshCube.tris = 
-		//{
-			// SOUTH
-			/*{ (std::move(matrix3d(0.0f, 0.0f, 0.0f))), (std::move(matrix3d(0.0f, 1.0f, 0.0f))), (std::move(matrix3d(1.0f, 1.0f, 0.0f))) },*/
-			/*{ std::move(std::make_unique<matrix3d>(0.0f, 0.0f, 0.0f)), std::move(std::make_unique<matrix3d>(0.0f, 1.0f, 0.0f)), std::move(std::make_unique<matrix3d>(1.0f, 1.0f, 0.0f)) },*/
-			//{ matrix3d(0.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 0.0f, 0.0f) },
+		// TOP
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f)));
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f)));
 
-			//// EAST                                                      
-			//{ matrix3d(1.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 1.0f) },
-			//{ matrix3d(1.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 1.0f), matrix3d(1.0f, 0.0f, 1.0f) },
-
-			//// NORTH                                                     
-			//{ matrix3d(1.0f, 0.0f, 1.0f), matrix3d(1.0f, 1.0f, 1.0f), matrix3d(0.0f, 1.0f, 1.0f) },
-			//{ matrix3d(1.0f, 0.0f, 1.0f), matrix3d(0.0f, 1.0f, 1.0f), matrix3d(0.0f, 0.0f, 1.0f) },
-
-			//// WEST                                                      
-			//{ matrix3d(0.0f, 0.0f, 1.0f), matrix3d(0.0f, 1.0f, 1.0f), matrix3d(0.0f, 1.0f, 0.0f) },
-			//{ matrix3d(0.0f, 0.0f, 1.0f), matrix3d(0.0f, 1.0f, 0.0f), matrix3d(0.0f, 0.0f, 0.0f) },
-
-			//// TOP                                                       
-			//{ matrix3d(0.0f, 1.0f, 0.0f), matrix3d(0.0f, 1.0f, 1.0f), matrix3d(1.0f, 1.0f, 1.0f) },
-			//{ matrix3d(0.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 1.0f), matrix3d(1.0f, 1.0f, 0.0f) },
-
-			//// BOTTOM                                                    
-			//{ matrix3d(1.0f, 0.0f, 1.0f), matrix3d(0.0f, 0.0f, 1.0f), matrix3d(0.0f, 0.0f, 0.0f) },
-			//{ matrix3d(1.0f, 0.0f, 1.0f), matrix3d(0.0f, 0.0f, 0.0f), matrix3d(1.0f, 0.0f, 0.0f) },
-		//};
+		// BOTTOM
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f)));
+		meshCube->emplace_back(std::move(std::make_unique<triangle>(1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f)));
 	}
 
 	auto program::setup_controls() const -> void
@@ -105,9 +82,17 @@ namespace application
 		 * PAGE UP: UP
 		 * PAGE DOWN: DOWN
 		 */
+
+		auto vector_x = std::make_unique<matrix2d>(50, 0);
+
+		auto& test = vector_x;
 		
-		auto callback_method_example = [](const SDL_Event& e)
+		auto callback_method_example = [vector_x = test.get(), this](const SDL_Event& e)
 		{
+			*vector_x *= 2;
+
+			sdl_manager_->draw_line(0, 0, vector_x->x(), vector_x->y(), 255, 0, 0);
+			
 			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
 		};
 

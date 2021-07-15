@@ -12,7 +12,7 @@ namespace application
 	private:
 		util::program_state current_state_;
 		std::unique_ptr<sdl::sdl_manager> sdl_manager_;
-		shape::mesh meshCube;
+		std::unique_ptr<shape::mesh> meshCube;
 	
 	public:
 		program(int window_width, int window_height);

@@ -78,24 +78,23 @@ namespace application::sdl
 		SDL_RenderDrawLineF(&(*renderer_), x1, y1, x2, y2);
 	}
 
-	auto sdl_manager::handle_input() -> void
+	auto sdl_manager::draw_line(float x1, float y1, float x2, float y2) const -> void
 	{
-		SDL_Event sdl_event;
+		offset_xy(x1, y1);
 
-		while(SDL_PollEvent(&sdl_event) != 0)
-		{
-			switch(sdl_event.type)
-			{
-			case SDL_QUIT:
-				*program_state_ = util::program_state::stopping;
-				break;
-			case SDL_KEYDOWN:
-				execute_input_listener(sdl_event.key.keysym.scancode, sdl_event);
-				break;
-			default:
-				break;
-			}
-		}
+		offset_xy(x2, y2);
+
+		SDL_RenderDrawLineF(&(*renderer_), x1, y1, x2, y2);
+	}
+
+	auto sdl_manager::clear_renderer() const -> void
+	{
+		SDL_RenderClear(&(*renderer_));
+	}
+
+	auto sdl_manager::present_renderer() const -> void
+	{
+		SDL_RenderPresent(&(*renderer_));
 	}
 
 	auto sdl_manager::add_input_listener(const SDL_Scancode code, input_handler_fn listener_callback) -> bool
@@ -112,7 +111,11 @@ namespace application::sdl
 
 		while (*program_state_ != util::program_state::stopping)
 		{
+			draw_background();
+			
 			handle_input();
+			
+			present_renderer();
 			
 			// Calculate delta time since last frame
 			auto currentTime{ std::chrono::high_resolution_clock::now() };
@@ -180,5 +183,34 @@ namespace application::sdl
 		auto& [_, callback] = *it;
 
 		callback(sdl_event);
+	}
+
+	auto sdl_manager::handle_input() -> void
+	{
+		SDL_Event sdl_event;
+
+		while (SDL_PollEvent(&sdl_event) != 0)
+		{
+			switch (sdl_event.type)
+			{
+			case SDL_QUIT:
+				*program_state_ = util::program_state::stopping;
+				break;
+			case SDL_KEYDOWN:
+				execute_input_listener(sdl_event.key.keysym.scancode, sdl_event);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	auto sdl_manager::draw_background() const -> void
+	{
+		set_draw_color(0, 0, 0);
+
+		clear_renderer();
+
+		set_draw_color(255, 255, 255);
 	}
 }
