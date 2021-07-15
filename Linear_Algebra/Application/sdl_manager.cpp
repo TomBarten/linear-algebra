@@ -167,14 +167,9 @@ namespace application::sdl
 
 	auto sdl_manager::execute_input_listener(const int scancode_val, const SDL_Event& sdl_event) -> void
 	{
-		const auto sdl_scancode = reinterpret_cast<SDL_Scancode*>(scancode_val);
-
-		if(sdl_scancode == nullptr)
-		{
-			throw std::runtime_error("Invalid SDL scancode value: " + std::to_string(scancode_val));
-		}
+		const auto sdl_scancode = static_cast<SDL_Scancode>(scancode_val);
 		
-		const auto it = controls_.find(*sdl_scancode);
+		const auto it = controls_.find(sdl_scancode);
 
 		// Not found
 		if(it == controls_.end())

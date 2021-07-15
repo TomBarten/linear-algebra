@@ -108,7 +108,7 @@ namespace application
 		
 		auto callback_method_example = [](const SDL_Event& e)
 		{
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << std::endl;
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
 		};
 
 		// CAMERA CONTROLS
@@ -116,8 +116,8 @@ namespace application
 		sdl_manager_->add_input_listener(SDL_SCANCODE_DOWN, callback_method_example);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_LEFT, callback_method_example);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_method_example);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_method_example); // SAME CALLBACK AS UP
+		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_method_example); // SAME CALLBACK AS DOWN
 
 		// SPACECRAFT CONTROLS
 		sdl_manager_->add_input_listener(SDL_SCANCODE_W, callback_method_example); // CHECK SHIFT MODIFIER
