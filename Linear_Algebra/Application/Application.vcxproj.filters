@@ -51,6 +51,12 @@
     <ClCompile Include="mesh.cpp">
       <Filter>Source Files\Shape</Filter>
     </ClCompile>
+    <ClCompile Include="triangle_simple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_simple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_helpers.h">
@@ -76,6 +82,12 @@
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Header Files\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle_simple.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_simple.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

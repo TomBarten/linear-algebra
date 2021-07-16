@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 
-#include "mesh.h"
 #include "progam_state.h"
 #include "sdl_manager.h"
 
@@ -10,9 +9,9 @@ namespace application
 	class program
 	{
 	private:
+		typedef std::pair<SDL_Scancode, sdl::input_handler_fn> sdl_scancode_callback_pair;
 		util::program_state current_state_;
 		std::unique_ptr<sdl::sdl_manager> sdl_manager_;
-		std::unique_ptr<shape::mesh> meshCube;
 	
 	public:
 		program(int window_width, int window_height);
@@ -21,7 +20,6 @@ namespace application
 
 	private:
 		auto setup() -> void;
-		auto setup_controls() const -> void;
 		auto start() -> void;
 	};
 }

@@ -1,4 +1,7 @@
 #pragma once
+#include <stdexcept>
+
+#include "math_helper.h"
 #include "matrix.h"
 
 namespace math
@@ -44,5 +47,22 @@ namespace math
 		auto m_matrix = (*t2_matrix) * (*((*s_matrix) * (*t1_matrix)));
 
 		return std::move(m_matrix);
+	}
+
+	// TODO WIP
+	inline auto get_projection_matrix(float near, float far, const float fov, float aspect_ratio) -> std::unique_ptr<matrix>
+	{
+		throw std::runtime_error("not implemented \"get_projection_matrix\"");
+		auto fov_radius = 1.0f / tanf(degrees_to_radial((fov * 0.5f)));
+
+		const std::vector<float> projection_values
+		{
+			//1, 0, 0, translate_x,
+			//0, 1, 0, translate_y,
+			//0, 0, 1, translate_z,
+			//0, 0, 0, 1,
+		};
+
+		return std::move(std::make_unique<matrix>(4, 4, projection_values));
 	}
 }

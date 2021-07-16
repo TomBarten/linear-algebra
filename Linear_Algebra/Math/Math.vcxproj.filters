@@ -56,5 +56,8 @@
     <ClInclude Include="matrix_helper_3d.h">
       <Filter>Header Files\Matrix</Filter>
     </ClInclude>
+    <ClInclude Include="math_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,6 +4,8 @@
 #include <chrono>
 #include <sstream>
 
+#include "matrix_helper_3d.h"
+
 namespace application::sdl
 {
 	constexpr auto NANO_SECONDS_IN_ONE_SECOND{ 1000000000.0F };
@@ -57,49 +59,20 @@ namespace application::sdl
 	{
 		color_alpha_value_ = a;
 	}
-
-	auto sdl_manager::draw_pixel(float x, float y, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
-	{
-		offset_xy(x, y);
 	
-		set_draw_color(r, g, b);
-	
-		SDL_RenderDrawPointF(&(*renderer_), x, y);
-	}
-
-	auto sdl_manager::draw_line(float x1, float y1, float x2, float y2, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
+	auto sdl_manager::add_mesh(std::shared_ptr<mesh_simple> mesh) -> void
 	{
-		offset_xy(x1, y1);
-
-		offset_xy(x2, y2);
-		
-		set_draw_color(r, g, b);
-
-		SDL_RenderDrawLineF(&(*renderer_), x1, y1, x2, y2);
-	}
-
-	auto sdl_manager::draw_line(float x1, float y1, float x2, float y2) const -> void
-	{
-		offset_xy(x1, y1);
-
-		offset_xy(x2, y2);
-
-		SDL_RenderDrawLineF(&(*renderer_), x1, y1, x2, y2);
-	}
-
-	auto sdl_manager::clear_renderer() const -> void
-	{
-		SDL_RenderClear(&(*renderer_));
-	}
-
-	auto sdl_manager::present_renderer() const -> void
-	{
-		SDL_RenderPresent(&(*renderer_));
+		meshes_.push_back(std::move(mesh));
 	}
 
 	auto sdl_manager::add_input_listener(const SDL_Scancode code, input_handler_fn listener_callback) -> bool
 	{
-		const auto [_, result] = controls_.insert(std::pair(code, listener_callback));
+		return add_input_listener(std::pair(code, listener_callback));
+	}
+
+	auto sdl_manager::add_input_listener(std::pair<SDL_Scancode, input_handler_fn> sdl_code_callback_pair) -> bool
+	{
+		const auto [_, result] = controls_.insert(sdl_code_callback_pair);
 
 		return result;
 	}
@@ -114,6 +87,8 @@ namespace application::sdl
 			draw_background();
 			
 			handle_input();
+
+			render_meshes();
 			
 			present_renderer();
 			
@@ -205,6 +180,45 @@ namespace application::sdl
 		}
 	}
 
+	auto sdl_manager::draw_pixel(float x, float y, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
+	{
+		//offset_xy(x, y);
+
+		set_draw_color(r, g, b);
+
+		SDL_RenderDrawPointF(&(*renderer_), x, y);
+	}
+
+	auto sdl_manager::draw_line(float x1, float y1, float x2, float y2, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
+	{
+		//offset_xy(x1, y1);
+
+		//offset_xy(x2, y2);
+
+		set_draw_color(r, g, b);
+
+		SDL_RenderDrawLineF(&(*renderer_), x1, y1, x2, y2);
+	}
+
+	auto sdl_manager::draw_line(float x1, float y1, float x2, float y2) const -> void
+	{
+		//offset_xy(x1, y1);
+
+		//offset_xy(x2, y2);
+
+		SDL_RenderDrawLineF(&(*renderer_), x1, y1, x2, y2);
+	}
+
+	auto sdl_manager::draw_triangle(
+		const float x1, const float y1, 
+		const float x2, const float y2, 
+		const float x3, const float y3) const -> void
+	{
+		draw_line(x1, y1, x2, y2);
+		draw_line(x2, y2, x3, y3);
+		draw_line(x3, y3, x1, y1);
+	}
+	
 	auto sdl_manager::draw_background() const -> void
 	{
 		set_draw_color(0, 0, 0);
@@ -212,5 +226,35 @@ namespace application::sdl
 		clear_renderer();
 
 		set_draw_color(255, 255, 255);
+	}
+
+	auto sdl_manager::clear_renderer() const -> void
+	{
+		SDL_RenderClear(&(*renderer_));
+	}
+	
+	auto sdl_manager::present_renderer() const -> void
+	{
+		SDL_RenderPresent(&(*renderer_));
+	}
+
+	auto sdl_manager::render_meshes() const -> void
+	{
+		auto matrix_test = std::make_unique<math::matrix3d>(1, 2, 3);
+
+		for(auto& mesh : meshes_)
+		{
+			for(auto &[point] : mesh->tris)
+			{
+				const auto first_point = point[0];
+				const auto second_point = point[1];
+				const auto third_point = point[2];
+
+				draw_triangle(
+					first_point.x(), first_point.y(),
+					second_point.x(), second_point.y(),
+					third_point.x(), third_point.y());
+			}
+		}
 	}
 }

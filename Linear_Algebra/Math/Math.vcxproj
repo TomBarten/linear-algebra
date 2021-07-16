@@ -24,6 +24,7 @@
     <ClCompile Include="matrix3d.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="math_helper.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="matrix_helper_2d.h" />
     <ClInclude Include="matrix_helper_3d.h" />

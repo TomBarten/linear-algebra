@@ -138,8 +138,6 @@
 
 using namespace application::util;
 
-program_state current_progam_state{program_state::running};
-
 const auto WIDTH = 500;
 const auto HEIGHT = 500;
 
@@ -169,8 +167,6 @@ static auto run_program() -> void
     try
     {
         program->run();
-
-        current_progam_state = program->get_state();
     }
     catch (...)
     {
@@ -190,12 +186,6 @@ auto main() -> int
     _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 
     run_program();
-
-	// TODO: put run_program() back into loop
-    //while (current_progam_state == program_state::running)
-    //{
-
-    //}
 	
     _CrtDumpMemoryLeaks();
 
