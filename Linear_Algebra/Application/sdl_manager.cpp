@@ -182,22 +182,21 @@ namespace application::sdl
 
 	auto sdl_manager::draw_pixel(float x, float y, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
 	{
-		//offset_xy(x, y);
+		offset_xy(x, y);
 
 		set_draw_color(r, g, b);
 
 		SDL_RenderDrawPointF(&(*renderer_), x, y);
 	}
 
-	auto sdl_manager::draw_line(float x1, float y1, float x2, float y2, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
+	auto sdl_manager::draw_line(
+		const float x1, const float y1, 
+		const float x2, const float y2, 
+		const uint8_t r, const uint8_t g, const uint8_t b) const -> void
 	{
-		//offset_xy(x1, y1);
-
-		//offset_xy(x2, y2);
-
 		set_draw_color(r, g, b);
 
-		SDL_RenderDrawLineF(&(*renderer_), x1, y1, x2, y2);
+		draw_line(x1, y1, x2, y2);
 	}
 
 	auto sdl_manager::draw_line(float x1, float y1, float x2, float y2) const -> void
@@ -240,15 +239,13 @@ namespace application::sdl
 
 	auto sdl_manager::render_meshes() const -> void
 	{
-		auto matrix_test = std::make_unique<math::matrix3d>(1, 2, 3);
-
 		for(auto& mesh : meshes_)
 		{
 			for(auto &[point] : mesh->tris)
 			{
-				const auto first_point = point[0];
-				const auto second_point = point[1];
-				const auto third_point = point[2];
+				const auto& first_point = point[0];
+				const auto& second_point = point[1];
+				const auto& third_point = point[2];
 
 				draw_triangle(
 					first_point.x(), first_point.y(),
