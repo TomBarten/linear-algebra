@@ -86,7 +86,7 @@ namespace application
 		auto vector_x = std::make_unique<matrix2d>(50, 0);
 
 		
-		auto callback_method_example = [&vector_x = *vector_x, this](const SDL_Event& e) mutable
+		auto callback_method_example = [vector_x = *vector_x, this](const SDL_Event& e) mutable
 		{
 			vector_x *= 2;
 
