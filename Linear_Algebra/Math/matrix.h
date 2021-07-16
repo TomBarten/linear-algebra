@@ -14,7 +14,7 @@ namespace math
 	public:
 		matrix();
 		matrix(std::size_t rows, std::size_t columns, float init = float{});
-		matrix(std::size_t rows, std::size_t columns, std::vector<float> values);
+		matrix(std::size_t rows, std::size_t columns, const std::vector<float>& values);
 
 		auto rows() const noexcept -> std::size_t;
 
@@ -81,7 +81,7 @@ namespace math
 		auto operator*(const matrix& other) const -> std::unique_ptr<matrix>;
 
 	private:
-		auto set_values(std::vector<float> values = {}) -> void;
+		auto set_values(const std::vector<float>& values = {}) -> void;
 
 		auto get_matrix_multiplication_result(const matrix& other) const -> std::unique_ptr<matrix>;
 		

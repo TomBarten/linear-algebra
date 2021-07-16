@@ -2,6 +2,8 @@
 
 #include "matrix.h"
 
+#include <stdexcept>
+
 namespace math
 {
 	matrix::matrix()
@@ -14,7 +16,7 @@ namespace math
 	{
 	}
 
-	matrix::matrix(const std::size_t rows, const std::size_t columns, std::vector<float> values)
+	matrix::matrix(const std::size_t rows, const std::size_t columns, const std::vector<float>& values)
 		: matrix(rows, columns)
 	{
 		set_values(values);
@@ -48,11 +50,11 @@ namespace math
 		return values_[row * columns_ + col];
 	}
 
-	auto matrix::set_values(std::vector<float> values) -> void
+	auto matrix::set_values(const std::vector<float>& values) -> void
 	{
 		if(values.size() != rows_ * columns_)
 		{
-			throw std::exception("Unable to set values; invalid new values size");
+			throw std::runtime_error("Unable to set values; invalid new values size");
 		}
 		
 		for (auto row = 0; row < rows_; ++row)
@@ -211,7 +213,7 @@ namespace math
 	{
 		if(rows_ != other.rows() || columns_ != other.columns())
 		{
-			throw std::exception("Additive rule violated");
+			throw std::runtime_error("Additive rule violated");
 		}
 	}
 
@@ -219,7 +221,7 @@ namespace math
 	{
 		if(columns_ != other.rows())
 		{
-			throw std::exception("Multiplicative rule violated");
+			throw std::runtime_error("Multiplicative rule violated");
 		}
 	}
 
