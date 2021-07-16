@@ -12,6 +12,7 @@ namespace math
 		std::vector<float> values_;
 
 	public:
+		matrix();
 		matrix(std::size_t rows, std::size_t columns, float init = float{});
 		matrix(std::size_t rows, std::size_t columns, std::vector<float> values);
 

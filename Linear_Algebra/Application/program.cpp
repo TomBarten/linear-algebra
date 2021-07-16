@@ -80,18 +80,17 @@ namespace application
 		 *
 		 * ARROW KEYS: UP, DOWN, LEFT, RIGHT
 		 * PAGE UP: UP
-		 * PAGE DOWN: DOWN
+		 * PAGE DOWN: DOWN 
 		 */
 
 		auto vector_x = std::make_unique<matrix2d>(50, 0);
 
-		auto& test = vector_x;
 		
-		auto callback_method_example = [vector_x = test.get(), this](const SDL_Event& e)
+		auto callback_method_example = [&vector_x = *vector_x, this](const SDL_Event& e) mutable
 		{
-			*vector_x *= 2;
+			vector_x *= 2;
 
-			sdl_manager_->draw_line(0, 0, vector_x->x(), vector_x->y(), 255, 0, 0);
+			sdl_manager_->draw_line(0, 0, vector_x.x(), vector_x.y(), 255, 0, 0);
 			
 			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
 		};

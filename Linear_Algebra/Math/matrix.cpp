@@ -4,6 +4,11 @@
 
 namespace math
 {
+	matrix::matrix()
+		: rows_(0), columns_(0), values_(0)
+	{
+	}
+
 	matrix::matrix(const std::size_t rows, const std::size_t columns, const float init)
 		: rows_(rows), columns_(columns), values_(rows_ * columns_, init)
 	{
