@@ -21,14 +21,14 @@ namespace math
 		}
 	}
 
-	auto matrix3d::scale(const matrix& m_matrix) -> std::unique_ptr<matrix3d>
+	auto matrix3d::multiply_by_4X4(const matrix& matrix_4X4) -> std::unique_ptr<matrix3d>
 	{
 		// Add 1 extra row so it can be multiplied by M matrix
 		// Extra value 1 in new row
 		matrix_.resize(4, 1);
 		matrix_(3, 0) = 1;
 
-		auto result_matrix = m_matrix * matrix_;
+		auto result_matrix = matrix_4X4 * matrix_;
 
 		// Remove extra row, will also remove extra value automatically
 		matrix_.resize(3, 1);

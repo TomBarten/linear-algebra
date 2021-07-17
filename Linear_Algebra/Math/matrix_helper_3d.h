@@ -49,6 +49,11 @@ namespace math
 		return std::move(m_matrix);
 	}
 
+	inline auto create_scale_matrix_3d(const float scaling) -> std::unique_ptr<matrix>
+	{
+		return std::move(create_scale_matrix_3d(scaling, scaling, scaling));
+	}
+
 	// TODO WIP
 	inline auto get_projection_matrix(float near, float far, const float fov, float aspect_ratio) -> std::unique_ptr<matrix>
 	{
