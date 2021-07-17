@@ -79,6 +79,6 @@ namespace application::sdl
 		
 		auto clear_renderer() const -> void;
 		auto present_renderer() const -> void;
-		auto render_meshes() const -> void;
+		auto render_meshes(float elapsed_time) const -> void;
 	};
 }

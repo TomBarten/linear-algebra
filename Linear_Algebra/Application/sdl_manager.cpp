@@ -93,7 +93,7 @@ namespace application::sdl
 			
 			handle_input();
 
-			render_meshes();
+			render_meshes(deltaTimeSeconds);
 			
 			present_renderer();
 			
@@ -241,7 +241,7 @@ namespace application::sdl
 		SDL_RenderPresent(&(*renderer_));
 	}
 
-	auto sdl_manager::render_meshes() const -> void
+	auto sdl_manager::render_meshes(float elapsed_time) const -> void
 	{
 		const auto projection_matrix = math::get_projection_matrix(fov_y_, z_near_, z_far_);
 		
@@ -249,9 +249,18 @@ namespace application::sdl
 		{
 			for(auto &[point] : mesh->tris)
 			{
-				const auto& first_point = point[0].get_projection(*projection_matrix, x_center_, y_center_);
-				const auto& second_point = point[1].get_projection(*projection_matrix, x_center_, y_center_);
-				const auto& third_point = point[2].get_projection(*projection_matrix, x_center_, y_center_);
+				auto point_1 = point[0];
+				auto point_2 = point[1];
+				auto point_3 = point[2];
+
+				// Add depth
+				point_1.z() += 3.0f;
+				point_2.z() += 3.0f;
+				point_3.z() += 3.0f;
+				
+				const auto& first_point = point_1.get_projection(*projection_matrix, x_center_, y_center_);
+				const auto& second_point = point_2.get_projection(*projection_matrix, x_center_, y_center_);
+				const auto& third_point = point_3.get_projection(*projection_matrix, x_center_, y_center_);
 
 				draw_triangle(
 					first_point->x(), first_point->y(),
