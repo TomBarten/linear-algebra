@@ -18,9 +18,19 @@ namespace math
     	 */
         auto multiply_by_4X4(const matrix& matrix_4X4) -> std::unique_ptr<matrix3d>;
 
+        auto get_projection(const matrix& projection_matrix, int screen_center_x, int screen_center_y) -> std::unique_ptr<matrix3d>;
+
         auto x() const -> const float&;
+        auto x() -> float&;
+    	
         auto y() const -> const float&;
+        auto y() -> float&;
+    	
         auto z() const -> const float&;
+        auto z() -> float&;
+
+    protected:
+        auto w() const -> const float&;
     };
 }
 

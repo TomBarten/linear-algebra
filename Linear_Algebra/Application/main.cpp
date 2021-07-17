@@ -138,8 +138,12 @@
 
 using namespace application::util;
 
-const auto WIDTH = 500;
-const auto HEIGHT = 500;
+constexpr auto WIDTH = 500;
+constexpr auto HEIGHT = 500;
+
+constexpr float FOV_DEGREES = 90.f;
+constexpr float Z_NEAR = 0.1f;
+constexpr float Z_FAR = 100.f;
 
 static auto handle_exception(const std::exception_ptr& exception_ptr) -> void
 {
@@ -162,7 +166,7 @@ static auto handle_exception(const std::exception_ptr& exception_ptr) -> void
 
 static auto run_program() -> void
 {
-    const auto program = std::make_unique<application::program>(WIDTH, HEIGHT);
+    const auto program = std::make_unique<application::program>(WIDTH, HEIGHT, FOV_DEGREES, Z_NEAR, Z_FAR);
 
     try
     {

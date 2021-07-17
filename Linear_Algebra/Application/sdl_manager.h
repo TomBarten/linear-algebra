@@ -21,8 +21,13 @@ namespace application::sdl
 		int window_width_;
 		int window_height_;
 
-		float x_origin_;
-		float y_origin_;
+		float fov_y_;
+		
+		float z_near_;
+		float z_far_;
+
+		float x_center_;
+		float y_center_;
 
 		uint8_t color_alpha_value_;
 
@@ -30,14 +35,20 @@ namespace application::sdl
 		std::vector<std::shared_ptr<mesh_simple>> meshes_;
 
 	public:
-		sdl_manager(int window_width, int window_height, util::program_state& intial_state);
+		sdl_manager
+		(
+			int window_width, int window_height,
+			float fov_y, float z_near, float z_far,
+			util::program_state& intial_state
+		);
+		
 		~sdl_manager();
 
 		auto window_width() const -> int;
 		auto window_height() const -> int;
 
-		auto x_origin() const -> float;
-		auto y_origin() const -> float;
+		auto x_center() const -> float;
+		auto y_center() const -> float;
 
 		auto set_draw_color(uint8_t r, uint8_t g, uint8_t b) const -> void;
 		auto set_alpha_value(uint8_t a) -> void;

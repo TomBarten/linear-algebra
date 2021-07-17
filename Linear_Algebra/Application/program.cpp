@@ -10,9 +10,11 @@ using namespace math;
 
 namespace application
 {
-	program::program(const int window_width, const int window_height):
+	program::program(
+		const int window_width, const int window_height,
+		const float fov_y, const float z_near, const float z_far):
 		current_state_(util::program_state::running),
-		sdl_manager_{std::make_unique<sdl::sdl_manager>(window_width, window_height, current_state_)}
+		sdl_manager_{std::make_unique<sdl::sdl_manager>(window_width, window_height, fov_y, z_near, z_far, current_state_)}
 	{
 	}
 
@@ -56,6 +58,30 @@ namespace application
 			// BOTTOM
 			{ matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0f) },
 			{ matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0), matrix3d(1.0f, 0.0f, 0.0f) },
+
+			//// SOUTH
+			//{ {{0.0f, 0.0f, 0.0f},    {0.0f, 1.0f, 0.0f},    {1.0f, 1.0f, 0.0f}} },
+			//{ {{0.0f, 0.0f, 0.0f},    {1.0f, 1.0f, 0.0f},    {1.0f, 0.0f, 0.0f}} },
+
+			//// EAST                                                      
+			//{ {{1.0f, 0.0f, 0.0f},    {1.0f, 1.0f, 0.0f},    {1.0f, 1.0f, 1.0f}} },
+			//{ {{1.0f, 0.0f, 0.0f},    {1.0f, 1.0f, 1.0f},    {1.0f, 0.0f, 1.0f}} },
+
+			//// NORTH                                                     
+			//{ {{1.0f, 0.0f, 1.0f},    {1.0f, 1.0f, 1.0f},    {0.0f, 1.0f, 1.0f}} },
+			//{ {{1.0f, 0.0f, 1.0f},    {0.0f, 1.0f, 1.0f},    {0.0f, 0.0f, 1.0f}} },
+
+			//// WEST                                                      
+			//{ {{0.0f, 0.0f, 1.0f},    {0.0f, 1.0f, 1.0f},    {0.0f, 1.0f, 0.0f}} },
+			//{ {{0.0f, 0.0f, 1.0f},    {0.0f, 1.0f, 0.0f},    {0.0f, 0.0f, 0.0f}} },
+
+			//// TOP                                                       
+			//{ {{0.0f, 1.0f, 0.0f},    {0.0f, 1.0f, 1.0f},    {1.0f, 1.0f, 1.0f}} },
+			//{ {{0.0f, 1.0f, 0.0f},    {1.0f, 1.0f, 1.0f},    {1.0f, 1.0f, 0.0f}} },
+
+			//// BOTTOM                                                    
+			//{ {{1.0f, 0.0f, 1.0f},    {0.0f, 0.0f, 1.0f},    {0.0f, 0.0f, 0.0f}} },
+			//{ {{1.0f, 0.0f, 1.0f},    {0.0f, 0.0f, 0.0f},    {1.0f, 0.0f, 0.0f}} },
 		};
 
 		auto callback_method_example = [mesh = mesh_cube, this](const SDL_Event& e) mutable

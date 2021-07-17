@@ -3,6 +3,7 @@
 
 #include "math_helper.h"
 #include "matrix.h"
+#include "matrix3d.h"
 
 namespace math
 {
@@ -35,16 +36,16 @@ namespace math
 	inline auto create_scale_matrix_3d(const float scaling_x, const float scaling_y, const float scaling_z) -> std::unique_ptr<matrix>
 	{
 		// T1
-		const auto t1_matrix = get_translation_matrix_3d(-scaling_x, -scaling_y, -scaling_z);
+		const auto t1_matrix = *get_translation_matrix_3d(-scaling_x, -scaling_y, -scaling_z);
 
 		// S
-		const auto s_matrix = get_scaling_matrix_3d(scaling_x, scaling_y, scaling_z);
+		const auto s_matrix = *get_scaling_matrix_3d(scaling_x, scaling_y, scaling_z);
 
 		// T2
-		const auto t2_matrix = get_translation_matrix_3d(scaling_x, scaling_y, scaling_z);
+		const auto t2_matrix = *get_translation_matrix_3d(scaling_x, scaling_y, scaling_z);
 
 		// T2 (S * T1)
-		auto m_matrix = (*t2_matrix) * (*((*s_matrix) * (*t1_matrix)));
+		auto m_matrix = t2_matrix * (*(s_matrix * t1_matrix));
 
 		return std::move(m_matrix);
 	}
@@ -54,18 +55,16 @@ namespace math
 		return std::move(create_scale_matrix_3d(scaling, scaling, scaling));
 	}
 
-	// TODO WIP
-	inline auto get_projection_matrix(float near, float far, const float fov, float aspect_ratio) -> std::unique_ptr<matrix>
+	inline auto get_projection_matrix(const float fov_y, const float near, const float far) -> std::unique_ptr<matrix>
 	{
-		throw std::runtime_error("not implemented \"get_projection_matrix\"");
-		auto fov_radius = 1.0f / tanf(degrees_to_radial((fov * 0.5f)));
+		const float scale = near * tanf(degrees_to_radial(fov_y * 0.5));
 
 		const std::vector<float> projection_values
 		{
-			//1, 0, 0, translate_x,
-			//0, 1, 0, translate_y,
-			//0, 0, 1, translate_z,
-			//0, 0, 0, 1,
+			scale, 0, 0, 0,
+			0, scale, 0, 0,
+			0, 0, -far / (far - near), -1, /* -1 to put w = -z */
+			0, 0, (-far * near) / (far - near), 0,
 		};
 
 		return std::move(std::make_unique<matrix>(4, 4, projection_values));

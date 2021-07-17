@@ -39,7 +39,38 @@ namespace math
 		return std::move(result);
 	}
 
+	auto matrix3d::get_projection(const matrix& projection_matrix, const int screen_center_x, const int screen_center_y) -> std::unique_ptr<matrix3d>
+	{
+		matrix_.resize(4, 1);
+		matrix_(3, 0) = 1;
+
+		auto result_matrix = projection_matrix * matrix_;
+
+		if(const auto w = result_matrix->get(3, 0); w != 0.f)
+		{
+			// x
+			auto& x = result_matrix->get(0, 0);
+			x = screen_center_x + (x / w) * screen_center_x;
+
+			// y
+			auto& y = result_matrix->get(1, 0);
+			y = screen_center_y + (y / w) * screen_center_y;
+		}
+
+		matrix_.resize(3, 1);
+		result_matrix->resize(3, 1);
+
+		auto result = std::make_unique<matrix3d>(std::move(result_matrix));
+
+		return std::move(result);
+	}
+
 	auto matrix3d::x() const -> const float&
+	{
+		return matrix_(0, 0);
+	}
+
+	auto matrix3d::x() -> float&
 	{
 		return matrix_(0, 0);
 	}
@@ -49,8 +80,32 @@ namespace math
 		return matrix_(1, 0);
 	}
 
+	auto matrix3d::y() -> float&
+	{
+		return matrix_(1, 0);
+	}
+
 	auto matrix3d::z() const -> const float&
 	{
 		return matrix_(2, 0);
+	}
+
+	auto matrix3d::z() -> float&
+	{
+		return matrix_(2, 0);
+	}
+
+	auto matrix3d::w() const -> const float&
+	{
+		if(matrix_.rows() != 4)
+		{
+			throw std::runtime_error("no 'w' row available; resize first");
+		}
+		
+		// 1, x
+		// 2, y
+		// 3, z
+		// (this) 4, w
+		return matrix_(3, 0);
 	}
 }

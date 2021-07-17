@@ -10,14 +10,19 @@ namespace application::sdl
 {
 	constexpr auto NANO_SECONDS_IN_ONE_SECOND{ 1000000000.0F };
 	
-	sdl_manager::sdl_manager(const int window_width, const int window_height, util::program_state& intial_state):
+	sdl_manager::sdl_manager
+	(
+		const int window_width, const int window_height,
+		const float fov_y, const float z_near, const float z_far,
+		util::program_state& intial_state
+	):
 		program_state_(&intial_state),
-		window_width_(window_width),
-		window_height_(window_height),
+		window_width_(window_width), window_height_(window_height),
+		fov_y_(fov_y), z_near_(z_near), z_far_(z_far),
 		color_alpha_value_(SDL_ALPHA_OPAQUE)
-	{
-		x_origin_ = window_width_ / 2.f;
-		y_origin_ = window_height_ / 2.f;
+	{		
+		x_center_ = window_width_ * 0.5f;
+		y_center_ = window_height_ * 0.5f;
 
 		initialize();
 	}
@@ -40,14 +45,14 @@ namespace application::sdl
 		return window_height_;
 	}
 
-	auto sdl_manager::x_origin() const -> float
+	auto sdl_manager::x_center() const -> float
 	{
-		return x_origin_;
+		return x_center_;
 	}
 
-	auto sdl_manager::y_origin() const -> float
+	auto sdl_manager::y_center() const -> float
 	{
-		return y_origin_;
+		return y_center_;
 	}
 
 	auto sdl_manager::set_draw_color(const uint8_t r, const uint8_t g, const uint8_t b) const -> void
@@ -103,13 +108,12 @@ namespace application::sdl
 
 	auto sdl_manager::offset_x(float& x) const -> void
 	{
-		x += x_origin_;
+		x += x_center_;
 	}
 
 	auto sdl_manager::offset_y(float& y) const -> void
 	{
-		y += y_origin_;
-		y = window_height_ - 1 - y;
+		y += y_center_;
 	}
 
 	auto sdl_manager::offset_xy(float& x, float& y) const -> void
@@ -239,18 +243,20 @@ namespace application::sdl
 
 	auto sdl_manager::render_meshes() const -> void
 	{
+		const auto projection_matrix = math::get_projection_matrix(fov_y_, z_near_, z_far_);
+		
 		for(auto& mesh : meshes_)
 		{
 			for(auto &[point] : mesh->tris)
 			{
-				const auto& first_point = point[0];
-				const auto& second_point = point[1];
-				const auto& third_point = point[2];
+				const auto& first_point = point[0].get_projection(*projection_matrix, x_center_, y_center_);
+				const auto& second_point = point[1].get_projection(*projection_matrix, x_center_, y_center_);
+				const auto& third_point = point[2].get_projection(*projection_matrix, x_center_, y_center_);
 
 				draw_triangle(
-					first_point.x(), first_point.y(),
-					second_point.x(), second_point.y(),
-					third_point.x(), third_point.y());
+					first_point->x(), first_point->y(),
+					second_point->x(), second_point->y(),
+					third_point->x(), third_point->y());
 			}
 		}
 	}
