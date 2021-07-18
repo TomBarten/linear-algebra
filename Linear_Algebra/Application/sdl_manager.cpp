@@ -84,25 +84,25 @@ namespace application::sdl
 
 	auto sdl_manager::start_loop() -> void
 	{
-		auto timeOfLastFrame{ std::chrono::high_resolution_clock::now() };
-		auto deltaTimeSeconds{ 0.0F };
+
+		auto tp1 = std::chrono::system_clock::now();
+		auto tp2 = std::chrono::system_clock::now();
+		
 
 		while (*program_state_ != util::program_state::stopping)
 		{
+			tp2 = std::chrono::system_clock::now();
+			std::chrono::duration<float> elapsedTime = tp2 - tp1;
+			tp1 = tp2;
+			const float elapsed_time = elapsedTime.count();
+			
 			draw_background();
 			
 			handle_input();
 
-			render_meshes(deltaTimeSeconds);
+			render_meshes(elapsed_time);
 			
 			present_renderer();
-			
-			// Calculate delta time since last frame
-			auto currentTime{ std::chrono::high_resolution_clock::now() };
-			auto frameTime{ currentTime - timeOfLastFrame };
-			auto frameTimeNs{ std::chrono::duration_cast<std::chrono::nanoseconds>(frameTime) };
-			deltaTimeSeconds = frameTimeNs.count() / NANO_SECONDS_IN_ONE_SECOND;
-			timeOfLastFrame = currentTime;
 		}
 	}
 
@@ -241,31 +241,56 @@ namespace application::sdl
 		SDL_RenderPresent(&(*renderer_));
 	}
 
-	auto sdl_manager::render_meshes(float elapsed_time) const -> void
+	auto sdl_manager::render_meshes(const float elapsed_time) const -> void
 	{
-		const auto projection_matrix = math::get_projection_matrix(fov_y_, z_near_, z_far_);
+		f_theta += 20.f * elapsed_time;
 		
+		const auto projection_matrix = math::get_projection_matrix(fov_y_, z_near_, z_far_);
+
+		const auto rot_x = math::get_rot_matrix_x(f_theta);
+		const auto rot_z = math::get_rot_matrix_z(f_theta);
+
+		const auto rot_matrix = (*rot_x * *rot_z);
+
 		for(auto& mesh : meshes_)
 		{
 			for(auto &[point] : mesh->tris)
 			{
+				// Do not use reference; make copies
 				auto point_1 = point[0];
 				auto point_2 = point[1];
 				auto point_3 = point[2];
 
-				// Add depth
-				point_1.z() += 3.0f;
-				point_2.z() += 3.0f;
-				point_3.z() += 3.0f;
+				auto point_1_rot = point_1.multiply_by_4X4(*rot_matrix);
+				auto point_2_rot = point_2.multiply_by_4X4(*rot_matrix);
+				auto point_3_rot = point_3.multiply_by_4X4(*rot_matrix);
 				
-				const auto& first_point = point_1.get_projection(*projection_matrix, x_center_, y_center_);
-				const auto& second_point = point_2.get_projection(*projection_matrix, x_center_, y_center_);
-				const auto& third_point = point_3.get_projection(*projection_matrix, x_center_, y_center_);
+				//// Add depth, translation
+				//point_1.z() += 3.0f;
+				//point_2.z() += 3.0f;
+				//point_3.z() += 3.0f;
+				
+				point_1_rot->z() += 3.0f;
+				point_2_rot->z() += 3.0f;
+				point_3_rot->z() += 3.0f;
+				
+				//const auto point_1_proj = point_1.get_projection(*projection_matrix, x_center_, y_center_);
+				//const auto point_2_proj = point_2.get_projection(*projection_matrix, x_center_, y_center_);
+				//const auto point_3_proj = point_3.get_projection(*projection_matrix, x_center_, y_center_);
+				
+				const auto point_1_proj = point_1_rot->get_projection(*projection_matrix, x_center_, y_center_);
+				const auto point_2_proj = point_2_rot->get_projection(*projection_matrix, x_center_, y_center_);
+				const auto point_3_proj = point_3_rot->get_projection(*projection_matrix, x_center_, y_center_);
 
 				draw_triangle(
-					first_point->x(), first_point->y(),
-					second_point->x(), second_point->y(),
-					third_point->x(), third_point->y());
+					point_1_proj->x(), point_1_proj->y(),
+					point_2_proj->x(), point_2_proj->y(),
+					point_3_proj->x(), point_3_proj->y());
+
+				//draw_triangle(
+				//	point_1_rot->x(), point_1_rot->y(),
+				//	point_2_rot->x(), point_2_rot->y(),
+				//	point_3_rot->x(), point_3_rot->y());
 			}
 		}
 	}

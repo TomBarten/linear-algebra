@@ -1,9 +1,7 @@
 #pragma once
-#include <stdexcept>
 
 #include "math_helper.h"
 #include "matrix.h"
-#include "matrix3d.h"
 
 namespace math
 {
@@ -36,16 +34,16 @@ namespace math
 	inline auto create_scale_matrix_3d(const float scaling_x, const float scaling_y, const float scaling_z) -> std::unique_ptr<matrix>
 	{
 		// T1
-		const auto t1_matrix = *get_translation_matrix_3d(-scaling_x, -scaling_y, -scaling_z);
+		const auto t1_matrix = get_translation_matrix_3d(-scaling_x, -scaling_y, -scaling_z);
 
 		// S
-		const auto s_matrix = *get_scaling_matrix_3d(scaling_x, scaling_y, scaling_z);
+		const auto s_matrix = get_scaling_matrix_3d(scaling_x, scaling_y, scaling_z);
 
 		// T2
-		const auto t2_matrix = *get_translation_matrix_3d(scaling_x, scaling_y, scaling_z);
+		const auto t2_matrix = get_translation_matrix_3d(scaling_x, scaling_y, scaling_z);
 
 		// T2 (S * T1)
-		auto m_matrix = t2_matrix * (*(s_matrix * t1_matrix));
+		auto m_matrix = (*t2_matrix) * *((*s_matrix) * (*t1_matrix));
 
 		return std::move(m_matrix);
 	}
@@ -53,6 +51,51 @@ namespace math
 	inline auto create_scale_matrix_3d(const float scaling) -> std::unique_ptr<matrix>
 	{
 		return std::move(create_scale_matrix_3d(scaling, scaling, scaling));
+	}
+
+	inline auto get_rot_matrix_x(const float degrees) -> std::unique_ptr<matrix>
+	{
+		const auto radial = degrees_to_radial(degrees);
+		
+		const std::vector<float> rot_x_values
+		{
+			1, 0, 0, 0,
+			0, cosf(radial), -sinf(radial), 0,
+			0, sinf(radial), cosf(radial), 0,
+			0, 0, 0, 1,
+		};
+
+		return std::move(std::make_unique<matrix>(4, 4, rot_x_values));
+	}
+
+	inline auto get_rot_matrix_y(const float degrees) -> std::unique_ptr<matrix>
+	{
+		const auto radial = degrees_to_radial(degrees);
+
+		const std::vector<float> rot_y_values
+		{
+			cosf(radial), 0, sinf(radial), 0,
+			0, 1, 0, 0,
+			-sinf(radial), 0, cosf(radial), 0,
+			0, 0, 0, 1,
+		};
+
+		return std::move(std::make_unique<matrix>(4, 4, rot_y_values));
+	}
+
+	inline auto get_rot_matrix_z(const float degrees) -> std::unique_ptr<matrix>
+	{
+		const auto radial = degrees_to_radial(degrees);
+
+		const std::vector<float> rot_z_values
+		{
+			cosf(radial), -sinf(radial), 0, 0,
+			sinf(radial), cosf(radial), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		};
+
+		return std::move(std::make_unique<matrix>(4, 4, rot_z_values));
 	}
 
 	inline auto get_projection_matrix(const float fov_y, const float near, const float far) -> std::unique_ptr<matrix>

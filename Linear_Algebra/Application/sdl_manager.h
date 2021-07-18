@@ -31,6 +31,8 @@ namespace application::sdl
 
 		uint8_t color_alpha_value_;
 
+		mutable float f_theta;
+
 		std::map<SDL_Scancode, input_handler_fn> controls_;
 		std::vector<std::shared_ptr<mesh_simple>> meshes_;
 
