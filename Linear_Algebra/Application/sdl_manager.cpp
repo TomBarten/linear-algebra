@@ -265,18 +265,10 @@ namespace application::sdl
 				auto point_2_rot = point_2.multiply_by_4X4(*rot_matrix);
 				auto point_3_rot = point_3.multiply_by_4X4(*rot_matrix);
 				
-				//// Add depth, translation
-				//point_1.z() += 3.0f;
-				//point_2.z() += 3.0f;
-				//point_3.z() += 3.0f;
-				
-				point_1_rot->z() += 3.0f;
-				point_2_rot->z() += 3.0f;
-				point_3_rot->z() += 3.0f;
-				
-				//const auto point_1_proj = point_1.get_projection(*projection_matrix, x_center_, y_center_);
-				//const auto point_2_proj = point_2.get_projection(*projection_matrix, x_center_, y_center_);
-				//const auto point_3_proj = point_3.get_projection(*projection_matrix, x_center_, y_center_);
+				// Add depth, translation
+				point_1_rot->z() += 10.0f;
+				point_2_rot->z() += 10.0f;
+				point_3_rot->z() += 10.0f;
 				
 				const auto point_1_proj = point_1_rot->get_projection(*projection_matrix, x_center_, y_center_);
 				const auto point_2_proj = point_2_rot->get_projection(*projection_matrix, x_center_, y_center_);
@@ -286,11 +278,6 @@ namespace application::sdl
 					point_1_proj->x(), point_1_proj->y(),
 					point_2_proj->x(), point_2_proj->y(),
 					point_3_proj->x(), point_3_proj->y());
-
-				//draw_triangle(
-				//	point_1_rot->x(), point_1_rot->y(),
-				//	point_2_rot->x(), point_2_rot->y(),
-				//	point_3_rot->x(), point_3_rot->y());
 			}
 		}
 	}

@@ -4,6 +4,11 @@
 
 namespace math
 {
+	matrix3d::matrix3d()
+		:dimensional_matrix<matrix3d>(3, 1)
+	{
+	}
+
 	matrix3d::matrix3d(const float x, const float y, const float z)
 		: dimensional_matrix<matrix3d>(3, 1)
 	{

@@ -1,5 +1,7 @@
 #pragma once
+
 #include <memory>
+#include <string>
 
 #include "progam_state.h"
 #include "sdl_manager.h"
@@ -21,6 +23,8 @@ namespace application
 	private:
 		auto setup() -> void;
 		auto start() -> void;
+
+		auto parse_obj_file(const std::string& obj_file_location, std::vector<triangle_simple>& tris) const -> bool;
 	};
 }
 
