@@ -8,6 +8,8 @@
 #include <sstream>
 
 #include "matrix3d.h"
+#include "matrix_helper_3d.h"
+#include "space_ship.h"
 
 using namespace math;
 
@@ -34,10 +36,7 @@ namespace application
 
 	auto program::setup() -> void
 	{
-		auto mesh_cube = std::make_shared<mesh_simple>();
-		
-		parse_obj_file(R"(C:\Repositories\Avans\Minor\LINAL\space_ship.obj)", mesh_cube->tris);
-
+		setup_spaceship();
 		//mesh_cube->tris =
 		//{
 		//	// SOUTH
@@ -65,18 +64,6 @@ namespace application
 		//	{ matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0), matrix3d(1.0f, 0.0f, 0.0f) },
 		//};
 
-		auto callback_method_example = [mesh = mesh_cube, this](const SDL_Event& e) mutable
-		{
-			for(auto &[p] : mesh->tris)
-			{
-				for(auto& matrix : p)
-				{
-					matrix *= 1.5;
-				}
-			}
-			
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
-		};
 
 		// TODO: controls handling
 		/*
@@ -100,24 +87,12 @@ namespace application
 		 */
 
 		// CAMERA CONTROLS
-		sdl_manager_->add_input_listener(SDL_SCANCODE_UP, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_DOWN, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_LEFT, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_method_example); // SAME CALLBACK AS UP
-		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_method_example); // SAME CALLBACK AS DOWN
-
-		// SPACECRAFT CONTROLS
-		sdl_manager_->add_input_listener(SDL_SCANCODE_W, callback_method_example); // CHECK SHIFT MODIFIER
-		sdl_manager_->add_input_listener(SDL_SCANCODE_A, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_S, callback_method_example); // CHECK SHIFT MODIFIER
-		sdl_manager_->add_input_listener(SDL_SCANCODE_D, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_Q, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_E, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_SPACE, callback_method_example);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_H, callback_method_example); // OPTIONAL
-
-		sdl_manager_->add_mesh(std::move(mesh_cube));
+		//sdl_manager_->add_input_listener(SDL_SCANCODE_UP, callback_method_example);
+		//sdl_manager_->add_input_listener(SDL_SCANCODE_DOWN, callback_method_example);
+		//sdl_manager_->add_input_listener(SDL_SCANCODE_LEFT, callback_method_example);
+		//sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_method_example);
+		//sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_method_example); // SAME CALLBACK AS UP
+		//sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_method_example); // SAME CALLBACK AS DOWN		
 	}
 
 	auto program::start() -> void
@@ -125,47 +100,196 @@ namespace application
 		sdl_manager_->start_loop();
 	}
 
-	auto program::parse_obj_file(const std::string& obj_file_location, std::vector<triangle_simple>& tris) const -> bool
+	auto program::setup_spaceship() -> void
 	{
-		std::ifstream file_stream(obj_file_location);
+		auto space_ship_obj = std::make_unique<space_ship>(R"(C:\Repositories\Avans\Minor\LINAL\space_ship_rblx.obj)");
 
-		if (!file_stream.is_open())
+		auto callback_w = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
 		{
-			return false;
-		}
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
 
-		auto vectors = std::vector<matrix3d>();
+			const auto rot_matrix_x = get_rot_matrix_x(-4);
 
-		std::string file_line;
+			for (auto& [points] : mesh.shape().triangles())
+			{
+				for (auto& matrix : points)
+				{
+					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_x);
 
-		while (std::getline(file_stream, file_line))
+					matrix.x() = rot_result->x();
+					matrix.y() = rot_result->y();
+					matrix.z() = rot_result->z();
+				}
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_a = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
 		{
-			std::stringstream ss;
-
-			ss << file_line;
-
-			char identifier;
-
-			if (file_line[0] == 'v')
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
 			{
-				matrix3d vector;
-
-				ss >> identifier >> vector.x() >> vector.y() >> vector.z();
-
-				vectors.push_back(vector);
+				return;
 			}
-			else if (file_line[0] == 'f')
+
+			const auto rot_matrix_y = get_rot_matrix_y(-4);
+
+			for (auto& [points] : mesh.shape().triangles())
 			{
-				// triangle has 3 points
-				int vector_indexes[3]{};
+				for (auto& matrix : points)
+				{
+					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_y);
 
-				ss >> identifier >> vector_indexes[0] >> vector_indexes[1] >> vector_indexes[2];
-
-				// file index starts counting at 1 not 0 so - 1
-				tris.push_back({ vectors[vector_indexes[0] - 1], vectors[vector_indexes[1] - 1], vectors[vector_indexes[2] - 1] });
+					matrix.x() = rot_result->x();
+					matrix.y() = rot_result->y();
+					matrix.z() = rot_result->z();
+				}
 			}
-		}
 
-		return true;
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_s = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		{
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
+
+			const auto rot_matrix_x = get_rot_matrix_x(4);
+
+			for (auto& [points] : mesh.shape().triangles())
+			{
+				for (auto& matrix : points)
+				{
+					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_x);
+
+					matrix.x() = rot_result->x();
+					matrix.y() = rot_result->y();
+					matrix.z() = rot_result->z();
+				}
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_d = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		{
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
+
+			const auto rot_matrix_y = get_rot_matrix_y(4);
+
+			for (auto& [points] : mesh.shape().triangles())
+			{
+				for (auto& matrix : points)
+				{
+					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_y);
+
+					matrix.x() = rot_result->x();
+					matrix.y() = rot_result->y();
+					matrix.z() = rot_result->z();
+				}
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_q = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		{
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
+
+			const auto rot_matrix_z = get_rot_matrix_z(-4);
+
+			for (auto& [points] : mesh.shape().triangles())
+			{
+				for (auto& matrix : points)
+				{
+					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_z);
+
+					matrix.x() = rot_result->x();
+					matrix.y() = rot_result->y();
+					matrix.z() = rot_result->z();
+				}
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_e = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		{
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
+
+			const auto rot_matrix_z = get_rot_matrix_z(4);
+
+			for (auto& [points] : mesh.shape().triangles())
+			{
+				for (auto& matrix : points)
+				{
+					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_z);
+
+					matrix.x() = rot_result->x();
+					matrix.y() = rot_result->y();
+					matrix.z() = rot_result->z();
+				}
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_space = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		{
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_shift = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		{
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		auto callback_h = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		{
+			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			{
+				return;
+			}
+
+			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+		};
+
+		// SPACECRAFT CONTROLS
+		sdl_manager_->add_input_listener(SDL_SCANCODE_W, callback_w);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_A, callback_a);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_S, callback_s);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_D, callback_d);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_Q, callback_q);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_E, callback_e);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_SPACE, callback_space);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_LSHIFT, callback_shift);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_RSHIFT, callback_shift);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_H, callback_h); // OPTIONAL
+
+		sdl_manager_->add_obj(std::move(space_ship_obj));
 	}
 }

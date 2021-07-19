@@ -171,14 +171,15 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bounding_box.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
-    <ClCompile Include="mesh_simple.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="sdl_deleter.cpp" />
     <ClCompile Include="sdl_manager.cpp" />
+    <ClCompile Include="space_ship.cpp" />
     <ClCompile Include="triangle.cpp" />
-    <ClCompile Include="triangle_simple.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Math\Math.vcxproj">
@@ -186,16 +187,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bounding_box.h" />
     <ClInclude Include="console_helpers.h" />
     <ClInclude Include="mesh.h" />
-    <ClInclude Include="mesh_simple.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="progam_state.h" />
     <ClInclude Include="program.h" />
     <ClInclude Include="sdl_deleter.h" />
     <ClInclude Include="sdl_input.h" />
     <ClInclude Include="sdl_manager.h" />
+    <ClInclude Include="space_ship.h" />
     <ClInclude Include="triangle.h" />
-    <ClInclude Include="triangle_simple.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

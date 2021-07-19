@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Shape">
       <UniqueIdentifier>{ca42c59c-538d-4f1f-8496-291801f671e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Object">
+      <UniqueIdentifier>{fd7f0b55-76f7-45dc-8bfd-e73f59c480d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Object">
+      <UniqueIdentifier>{e406f304-23ec-4923-b344-e08119e13723}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,17 +51,20 @@
     <ClCompile Include="sdl_deleter.cpp">
       <Filter>Source Files\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="triangle.cpp">
-      <Filter>Source Files\Shape</Filter>
-    </ClCompile>
     <ClCompile Include="mesh.cpp">
       <Filter>Source Files\Shape</Filter>
     </ClCompile>
-    <ClCompile Include="triangle_simple.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="triangle.cpp">
+      <Filter>Source Files\Shape</Filter>
     </ClCompile>
-    <ClCompile Include="mesh_simple.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="object.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="space_ship.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="bounding_box.cpp">
+      <Filter>Source Files\Shape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,17 +86,20 @@
     <ClInclude Include="sdl_input.h">
       <Filter>Header Files\SDL\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="triangle.h">
-      <Filter>Header Files\Shape</Filter>
-    </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Header Files\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="triangle_simple.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="triangle.h">
+      <Filter>Header Files\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="mesh_simple.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="object.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="space_ship.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="bounding_box.h">
+      <Filter>Header Files\Shape</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

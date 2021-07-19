@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "matrix_helper_3d.h"
+#include "object.h"
 
 namespace application::sdl
 {
@@ -65,9 +66,9 @@ namespace application::sdl
 		color_alpha_value_ = a;
 	}
 	
-	auto sdl_manager::add_mesh(std::shared_ptr<mesh_simple> mesh) -> void
+	auto sdl_manager::add_obj(std::unique_ptr<object> obj) -> void
 	{
-		meshes_.push_back(std::move(mesh));
+		objects_.push_back(std::move(obj));
 	}
 
 	auto sdl_manager::add_input_listener(const SDL_Scancode code, input_handler_fn listener_callback) -> bool
@@ -84,23 +85,39 @@ namespace application::sdl
 
 	auto sdl_manager::start_loop() -> void
 	{
+		const auto draw_line_fn = [&](
+			const float x1, const float y1, 
+			const float x2, const float y2, 
+			const uint8_t r, const uint8_t g, const uint8_t b)
+		{
+			draw_line(x1, y1, x2, y2, r, g, b);
+		};
 
-		auto tp1 = std::chrono::system_clock::now();
-		auto tp2 = std::chrono::system_clock::now();
+		const auto draw_triangle_fn = [&](
+			const float x1, const float y1,
+			const float x2, const float y2,
+			const float x3, const float y3)
+		{
+			draw_triangle(x1, y1, x2, y2, x3, y3);
+		};
+
+		const auto projection_matrix = math::get_projection_matrix(fov_y_, z_near_, z_far_);
+
+		auto time_point_1 = std::chrono::system_clock::now();
+		auto time_point_2 = std::chrono::system_clock::now();
 		
-
 		while (*program_state_ != util::program_state::stopping)
 		{
-			tp2 = std::chrono::system_clock::now();
-			std::chrono::duration<float> elapsedTime = tp2 - tp1;
-			tp1 = tp2;
+			time_point_2 = std::chrono::system_clock::now();
+			std::chrono::duration<float> elapsedTime = time_point_2 - time_point_1;
+			time_point_1 = time_point_2;
 			const float elapsed_time = elapsedTime.count();
 			
 			draw_background();
 			
 			handle_input();
 
-			render_meshes(elapsed_time);
+			render_meshes(elapsed_time, draw_triangle_fn, draw_line_fn, *projection_matrix, true);
 			
 			present_renderer();
 		}
@@ -186,10 +203,15 @@ namespace application::sdl
 
 	auto sdl_manager::draw_pixel(float x, float y, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
 	{
-		offset_xy(x, y);
+		//offset_xy(x, y);
 
 		set_draw_color(r, g, b);
 
+		SDL_RenderDrawPointF(&(*renderer_), x, y);
+	}
+
+	auto sdl_manager::draw_pixel(float x, float y) const -> void
+	{
 		SDL_RenderDrawPointF(&(*renderer_), x, y);
 	}
 
@@ -241,44 +263,16 @@ namespace application::sdl
 		SDL_RenderPresent(&(*renderer_));
 	}
 
-	auto sdl_manager::render_meshes(const float elapsed_time) const -> void
+	auto sdl_manager::render_meshes(
+		const float elapsed_time, 
+		const draw_triangle_fn draw_triangle_function,
+		const draw_line_fn draw_line_function,
+		const math::matrix& projection_matrix,
+		const bool debug) const -> void
 	{
-		f_theta += 20.f * elapsed_time;
-		
-		const auto projection_matrix = math::get_projection_matrix(fov_y_, z_near_, z_far_);
-
-		const auto rot_x = math::get_rot_matrix_x(f_theta);
-		const auto rot_z = math::get_rot_matrix_z(f_theta);
-
-		const auto rot_matrix = (*rot_x * *rot_z);
-
-		for(auto& mesh : meshes_)
+		for(auto& object : objects_)
 		{
-			for(auto &[point] : mesh->tris)
-			{
-				// Do not use reference; make copies
-				auto point_1 = point[0];
-				auto point_2 = point[1];
-				auto point_3 = point[2];
-
-				auto point_1_rot = point_1.multiply_by_4X4(*rot_matrix);
-				auto point_2_rot = point_2.multiply_by_4X4(*rot_matrix);
-				auto point_3_rot = point_3.multiply_by_4X4(*rot_matrix);
-				
-				// Add depth, translation
-				point_1_rot->z() += 10.0f;
-				point_2_rot->z() += 10.0f;
-				point_3_rot->z() += 10.0f;
-				
-				const auto point_1_proj = point_1_rot->get_projection(*projection_matrix, x_center_, y_center_);
-				const auto point_2_proj = point_2_rot->get_projection(*projection_matrix, x_center_, y_center_);
-				const auto point_3_proj = point_3_rot->get_projection(*projection_matrix, x_center_, y_center_);
-
-				draw_triangle(
-					point_1_proj->x(), point_1_proj->y(),
-					point_2_proj->x(), point_2_proj->y(),
-					point_3_proj->x(), point_3_proj->y());
-			}
+			object->tick(debug, projection_matrix, x_center_, y_center_, draw_triangle_function, draw_line_function);
 		}
 	}
 }

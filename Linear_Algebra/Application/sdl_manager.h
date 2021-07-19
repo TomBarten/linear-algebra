@@ -3,8 +3,7 @@
 #include <map>
 #include <memory>
 
-#include "matrix2d.h"
-#include "mesh_simple.h"
+#include "object.h"
 #include "progam_state.h"
 #include "sdl_deleter.h"
 #include "sdl_input.h"
@@ -14,6 +13,8 @@ namespace application::sdl
 	class sdl_manager
 	{
 	private:
+		typedef std::function<void(float, float, float, float, float, float)> draw_triangle_fn;
+		typedef std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn;
 		util::program_state* program_state_;
 		std::unique_ptr<SDL_Window, sdl_deleter> window_;
 		std::unique_ptr<SDL_Renderer, sdl_deleter> renderer_;
@@ -34,7 +35,7 @@ namespace application::sdl
 		mutable float f_theta;
 
 		std::map<SDL_Scancode, input_handler_fn> controls_;
-		std::vector<std::shared_ptr<mesh_simple>> meshes_;
+		std::vector<std::unique_ptr<object>> objects_;
 
 	public:
 		sdl_manager
@@ -55,7 +56,7 @@ namespace application::sdl
 		auto set_draw_color(uint8_t r, uint8_t g, uint8_t b) const -> void;
 		auto set_alpha_value(uint8_t a) -> void;
 		
-		auto add_mesh(std::shared_ptr<mesh_simple> mesh) -> void;
+		auto add_obj(std::unique_ptr<object> obj) -> void;
 		auto add_input_listener(SDL_Scancode code, input_handler_fn listener_callback) -> bool;
 		auto add_input_listener(std::pair<SDL_Scancode, input_handler_fn> sdl_code_callback_pair) -> bool;
 
@@ -72,6 +73,7 @@ namespace application::sdl
 		auto handle_input() -> void;
 
 		auto draw_pixel(float x, float y, uint8_t r, uint8_t g, uint8_t b) const -> void;
+		auto draw_pixel(float x, float y) const -> void;
 		auto draw_line(float x1, float y1, float x2, float y2, uint8_t r, uint8_t g, uint8_t b) const -> void;
 		auto draw_line(float x1, float y1, float x2, float y2) const -> void;
 
@@ -81,6 +83,11 @@ namespace application::sdl
 		
 		auto clear_renderer() const -> void;
 		auto present_renderer() const -> void;
-		auto render_meshes(float elapsed_time) const -> void;
+		auto render_meshes(
+			float elapsed_time, 
+			draw_triangle_fn draw_triangle_function,
+			draw_line_fn draw_line_function,
+			const math::matrix& projection_matrix, 
+			bool debug = false) const -> void;
 	};
 }
