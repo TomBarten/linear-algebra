@@ -15,11 +15,16 @@ namespace application::sdl
 	(
 		const int window_width, const int window_height,
 		const float fov_y, const float z_near, const float z_far,
+		const bool debug,
 		util::program_state& intial_state
 	):
 		program_state_(&intial_state),
-		window_width_(window_width), window_height_(window_height),
-		fov_y_(fov_y), z_near_(z_near), z_far_(z_far),
+		debug_(debug),
+		window_width_(window_width),
+		window_height_(window_height),
+		fov_y_(fov_y),
+		z_near_(z_near),
+		z_far_(z_far),
 		color_alpha_value_(SDL_ALPHA_OPAQUE)
 	{		
 		x_center_ = window_width_ * 0.5f;
@@ -115,9 +120,9 @@ namespace application::sdl
 			
 			draw_background();
 			
-			handle_input();
+			handle_input(elapsed_time);
 
-			render_meshes(elapsed_time, draw_triangle_fn, draw_line_fn, *projection_matrix, true);
+			render_meshes(elapsed_time, draw_triangle_fn, draw_line_fn, *projection_matrix, debug_);
 			
 			present_renderer();
 		}
@@ -164,7 +169,7 @@ namespace application::sdl
 		renderer_ = std::unique_ptr<SDL_Renderer, sdl_deleter>(renderer);
 	}
 
-	auto sdl_manager::execute_input_listener(const int scancode_val, const SDL_Event& sdl_event) -> void
+	auto sdl_manager::execute_input_listener(const int scancode_val, const SDL_Event& sdl_event, const float elapsed_time) -> void
 	{
 		const auto sdl_scancode = static_cast<SDL_Scancode>(scancode_val);
 		
@@ -178,10 +183,10 @@ namespace application::sdl
 
 		auto& [_, callback] = *it;
 
-		callback(sdl_event);
+		callback(sdl_event, elapsed_time);
 	}
 
-	auto sdl_manager::handle_input() -> void
+	auto sdl_manager::handle_input(const float elapsed_time) -> void
 	{
 		SDL_Event sdl_event;
 
@@ -193,7 +198,7 @@ namespace application::sdl
 				*program_state_ = util::program_state::stopping;
 				break;
 			case SDL_KEYDOWN:
-				execute_input_listener(sdl_event.key.keysym.scancode, sdl_event);
+				execute_input_listener(sdl_event.key.keysym.scancode, sdl_event, elapsed_time);
 				break;
 			default:
 				break;

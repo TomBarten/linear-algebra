@@ -5,5 +5,5 @@
 
 namespace application::sdl
 {
-	typedef std::function<void(SDL_Event)> input_handler_fn;
+	typedef std::function<void(SDL_Event, float)> input_handler_fn;
 }

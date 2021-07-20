@@ -70,6 +70,24 @@ namespace math
 		return std::move(result);
 	}
 
+	auto matrix3d::length() const -> float
+	{
+		const auto x_squared = powf(x(), 2.f);
+		const auto y_squared = powf(y(), 2.f);
+		const auto z_squared = powf(z(), 2.f);
+
+		return sqrtf(x_squared + y_squared + z_squared);
+	}
+
+	auto matrix3d::norm() const -> std::unique_ptr<matrix3d>
+	{
+		auto result = matrix_ / length();
+
+		auto result_matrix = std::make_unique<matrix3d>(std::move(result));
+
+		return std::move(result_matrix);
+	}
+
 	auto matrix3d::x() const -> const float&
 	{
 		return matrix_(0, 0);
@@ -102,15 +120,11 @@ namespace math
 
 	auto matrix3d::w() const -> const float&
 	{
-		if(matrix_.rows() != 4)
-		{
-			throw std::runtime_error("no 'w' row available; resize first");
-		}
-		
-		// 1, x
-		// 2, y
-		// 3, z
-		// (this) 4, w
+		return matrix_(3, 0);
+	}
+
+	auto matrix3d::w() -> float&
+	{
 		return matrix_(3, 0);
 	}
 }

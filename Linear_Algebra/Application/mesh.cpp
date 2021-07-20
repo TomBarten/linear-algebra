@@ -14,12 +14,6 @@ namespace application
 			auto& point_2 = vertices[1];
 			auto& point_3 = vertices[2];
 
-			// TODO REMOVE THIS
-			// Add depth, translation
-			point_1.z() += 50.0f;
-			point_2.z() += 50.0f;
-			point_3.z() += 50.0f;
-
 			const auto point_1_proj = point_1.get_projection(projection_matrix, x_center, y_center);
 			const auto point_2_proj = point_2.get_projection(projection_matrix, x_center, y_center);
 			const auto point_3_proj = point_3.get_projection(projection_matrix, x_center, y_center);
@@ -28,12 +22,6 @@ namespace application
 				point_1_proj->x(), point_1_proj->y(),
 				point_2_proj->x(), point_2_proj->y(),
 				point_3_proj->x(), point_3_proj->y());
-
-			// TODO REMOVE THIS
-			// Add depth, translation
-			point_1.z() -= 50.0f;
-			point_2.z() -= 50.0f;
-			point_3.z() -= 50.0f;
 		}
 	}
 

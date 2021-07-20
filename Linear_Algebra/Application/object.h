@@ -11,15 +11,13 @@ namespace application
 	protected:
 		typedef std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn;
 		typedef std::function<void(float, float, float, float, float, float)> draw_triangle_fn;
+		
 		mesh shape_;
 		bounding_box bounding_box_;
 		math::matrix3d location_;
-
-		math::matrix3d x_normalised;
-		math::matrix3d y_normalised;
-		math::matrix3d z_normalised;
-
+	
 	public:
+		object();
 		explicit object(const std::string& obj_file_location);
 		virtual ~object() noexcept = default;
 
@@ -40,6 +38,7 @@ namespace application
 		auto parse_obj_file(const std::string& obj_file_location) -> bool;
 
 		auto calc_bounding_box() -> void;
+		auto print_location(const math::matrix& projection_matrix, float x_center, float y_center, draw_line_fn draw_line) -> void;
 	};
 }
 

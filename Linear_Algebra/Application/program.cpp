@@ -1,13 +1,7 @@
 #include "program.h"
 
 #include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <ostream>
-#include <string>
-#include <sstream>
 
-#include "matrix3d.h"
 #include "matrix_helper_3d.h"
 #include "space_ship.h"
 
@@ -17,9 +11,11 @@ namespace application
 {
 	program::program(
 		const int window_width, const int window_height,
-		const float fov_y, const float z_near, const float z_far):
+		const float fov_y, const float z_near, const float z_far, bool debug):
 		current_state_(util::program_state::running),
-		sdl_manager_{std::make_unique<sdl::sdl_manager>(window_width, window_height, fov_y, z_near, z_far, current_state_)}
+		sdl_manager_{
+			std::make_unique<sdl::sdl_manager>(window_width, window_height, fov_y, z_near, z_far, debug, current_state_)
+		}
 	{
 	}
 
@@ -102,180 +98,90 @@ namespace application
 
 	auto program::setup_spaceship() -> void
 	{
-		auto space_ship_obj = std::make_unique<space_ship>(R"(C:\Repositories\Avans\Minor\LINAL\space_ship_rblx.obj)");
+		auto space_ship_obj = std::make_unique<space_ship>(R"(C:\Repositories\Avans\Minor\LINAL\axis_rblx.obj)");
 
-		auto callback_w = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_w = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
 
-			const auto rot_matrix_x = get_rot_matrix_x(-4);
-
-			for (auto& [points] : mesh.shape().triangles())
-			{
-				for (auto& matrix : points)
-				{
-					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_x);
-
-					matrix.x() = rot_result->x();
-					matrix.y() = rot_result->y();
-					matrix.z() = rot_result->z();
-				}
-			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+			space_ship.pitch(true, elapsed_time);
 		};
 
-		auto callback_a = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_a = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
 
-			const auto rot_matrix_y = get_rot_matrix_y(-4);
-
-			for (auto& [points] : mesh.shape().triangles())
-			{
-				for (auto& matrix : points)
-				{
-					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_y);
-
-					matrix.x() = rot_result->x();
-					matrix.y() = rot_result->y();
-					matrix.z() = rot_result->z();
-				}
-			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+			space_ship.yaw(false, elapsed_time);
 		};
 
-		auto callback_s = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_s = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
 
-			const auto rot_matrix_x = get_rot_matrix_x(4);
-
-			for (auto& [points] : mesh.shape().triangles())
-			{
-				for (auto& matrix : points)
-				{
-					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_x);
-
-					matrix.x() = rot_result->x();
-					matrix.y() = rot_result->y();
-					matrix.z() = rot_result->z();
-				}
-			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+			space_ship.pitch(false, elapsed_time);
 		};
 
-		auto callback_d = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_d = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
 
-			const auto rot_matrix_y = get_rot_matrix_y(4);
-
-			for (auto& [points] : mesh.shape().triangles())
-			{
-				for (auto& matrix : points)
-				{
-					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_y);
-
-					matrix.x() = rot_result->x();
-					matrix.y() = rot_result->y();
-					matrix.z() = rot_result->z();
-				}
-			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+			space_ship.yaw(true, elapsed_time);
 		};
 
-		auto callback_q = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_q = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
 
-			const auto rot_matrix_z = get_rot_matrix_z(-4);
-
-			for (auto& [points] : mesh.shape().triangles())
-			{
-				for (auto& matrix : points)
-				{
-					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_z);
-
-					matrix.x() = rot_result->x();
-					matrix.y() = rot_result->y();
-					matrix.z() = rot_result->z();
-				}
-			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+			space_ship.roll(true, elapsed_time);
 		};
 
-		auto callback_e = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_e = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
 
-			const auto rot_matrix_z = get_rot_matrix_z(4);
-
-			for (auto& [points] : mesh.shape().triangles())
-			{
-				for (auto& matrix : points)
-				{
-					auto rot_result = matrix.multiply_by_4X4(*rot_matrix_z);
-
-					matrix.x() = rot_result->x();
-					matrix.y() = rot_result->y();
-					matrix.z() = rot_result->z();
-				}
-			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
+			space_ship.roll(false, elapsed_time);
 		};
 
-		auto callback_space = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_space = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
 		};
 
-		auto callback_shift = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_shift = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
 		};
 
-		auto callback_h = [&mesh = *space_ship_obj, this](const SDL_Event& e) mutable
+		auto callback_h = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &mesh; mesh_ptr == nullptr)
+			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
-
-			std::cout << "KEY EVENT: " << std::to_string(e.key.keysym.scancode) << " MODIFIER: " << std::to_string(e.key.keysym.mod) << std::endl;
 		};
 
 		// SPACECRAFT CONTROLS

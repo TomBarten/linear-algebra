@@ -15,7 +15,7 @@ namespace application
 		std::unique_ptr<sdl::sdl_manager> sdl_manager_;
 	
 	public:
-		program(int window_width, int window_height, float fov_y, float z_near, float z_far);
+		program(int window_width, int window_height, float fov_y, float z_near, float z_far, bool debug = false);
 		auto get_state() const -> util::program_state;
 		auto run() -> void;
 

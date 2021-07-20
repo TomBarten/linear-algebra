@@ -19,6 +19,8 @@ namespace application::sdl
 		std::unique_ptr<SDL_Window, sdl_deleter> window_;
 		std::unique_ptr<SDL_Renderer, sdl_deleter> renderer_;
 
+		bool debug_;
+
 		int window_width_;
 		int window_height_;
 
@@ -32,7 +34,7 @@ namespace application::sdl
 
 		uint8_t color_alpha_value_;
 
-		mutable float f_theta;
+		math::matrix3d camera_;
 
 		std::map<SDL_Scancode, input_handler_fn> controls_;
 		std::vector<std::unique_ptr<object>> objects_;
@@ -42,6 +44,7 @@ namespace application::sdl
 		(
 			int window_width, int window_height,
 			float fov_y, float z_near, float z_far,
+			bool debug,
 			util::program_state& intial_state
 		);
 		
@@ -68,9 +71,9 @@ namespace application::sdl
 		auto offset_xy(float& x, float& y) const -> void;
 		
 		auto initialize() -> void;
-		auto execute_input_listener(int scancode_val, const SDL_Event& sdl_event) -> void;
+		auto execute_input_listener(const int scancode_val, const SDL_Event& sdl_event, const float elapsed_time) -> void;
 		
-		auto handle_input() -> void;
+		auto handle_input(const float elapsed_time) -> void;
 
 		auto draw_pixel(float x, float y, uint8_t r, uint8_t g, uint8_t b) const -> void;
 		auto draw_pixel(float x, float y) const -> void;

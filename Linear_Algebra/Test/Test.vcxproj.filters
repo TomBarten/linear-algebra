@@ -38,5 +38,8 @@
     <ClCompile Include="dimensional_matrix_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="matrix3d_helper_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

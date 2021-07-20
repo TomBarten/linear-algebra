@@ -1,10 +1,16 @@
 #include "object.h"
 
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 namespace application
 {
+	object::object()
+		: shape_(), location_(math::matrix3d(0, 0, 0))
+	{
+	}
+
 	object::object(const std::string& obj_file_location)
 		: location_(math::matrix3d(0, 0, 0))
 	{
@@ -38,10 +44,11 @@ namespace application
 	{
 		shape_.draw(projection_matrix, x_center, y_center, draw_triangle);
 
+		calc_bounding_box();
+
 		if (debug)
 		{
-			calc_bounding_box();
-
+			print_location(projection_matrix, x_center, y_center, draw_line);
 			bounding_box_.draw(projection_matrix, x_center, y_center, draw_line);
 		}
 	}
@@ -147,7 +154,27 @@ namespace application
 		bounding_box_.vertices[6].z() = max_z;
 
 		bounding_box_.vertices[7].x() = max_x;
-		bounding_box_.vertices[7].y() = min_y;
+		bounding_box_.vertices[7].y() = min_y; 
 		bounding_box_.vertices[7].z() = max_z;
+	}
+
+	auto object::print_location(
+		const math::matrix& projection_matrix,
+		const float x_center, const float y_center,
+		std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line) -> void
+	{
+		const auto& x = location_.x();
+		const auto& y = location_.y();
+		const auto& z = location_.z();
+
+		//const auto location_projected = location_.get_projection(projection_matrix, x_center, y_center);
+
+		//draw_line(location_projected->x(), location_projected->y(), 0, 0, 255, 0, 0);
+		
+		std::cout
+		<< "space_ship: "
+		<< "x: \"" + std::to_string(x) + "\" "
+		<< "y: \"" + std::to_string(y) + "\" "
+		<< "z: \"" + std::to_string(z) + "\"" << std::endl;
 	}
 }

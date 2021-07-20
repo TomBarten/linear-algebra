@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="catch.cpp" />
     <ClCompile Include="catch_define.cpp" />
+    <ClCompile Include="matrix3d_helper_test.cpp" />
     <ClCompile Include="matrix_test.cpp" />
     <ClCompile Include="dimensional_matrix_test.cpp" />
   </ItemGroup>

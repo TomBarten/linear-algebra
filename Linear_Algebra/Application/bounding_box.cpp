@@ -9,9 +9,7 @@ namespace application
 	{
 		const int8_t r = 255;
 		const int8_t g = 0;
-		const int8_t b = 0;
-
-		const auto depth_temp = 50.f;
+		const int8_t b = 255;
 		
 		// TODO make data structure that has a "connected to" property, this is "temporary" dirty fix
 		// 
@@ -26,18 +24,6 @@ namespace application
 		auto& back_top_left = vertices[5];
 		auto& back_top_right = vertices[6];
 		auto& back_bottom_right = vertices[7];
-
-		// TODO REMOVE THIS
-		front_bottom_left.z() += depth_temp;
-		front_top_left.z() += depth_temp;
-		front_top_right.z() += depth_temp;
-		front_bottom_right.z() += depth_temp;
-
-		// TODO REMOVE THIS
-		back_bottom_left.z() += depth_temp;
-		back_top_left.z() += depth_temp;
-		back_top_right.z() += depth_temp;
-		back_bottom_right.z() += depth_temp;
 
 		const auto front_bottom_left_proj = front_bottom_left.get_projection(projection_matrix, x_center, y_center);
 		const auto front_top_left_proj = front_top_left.get_projection(projection_matrix, x_center, y_center);
