@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "camera.h"
 #include "progam_state.h"
 #include "sdl_manager.h"
 
@@ -12,6 +13,7 @@ namespace application
 	private:
 		typedef std::pair<SDL_Scancode, sdl::input_handler_fn> sdl_scancode_callback_pair;
 		util::program_state current_state_;
+		std::unique_ptr<camera> camera_;
 		std::unique_ptr<sdl::sdl_manager> sdl_manager_;
 	
 	public:
@@ -24,6 +26,8 @@ namespace application
 		auto start() -> void;
 		
 		auto setup_spaceship() -> void;
+		auto setup_camera() -> void;
+		auto setup_target() -> void;
 	};
 }
 

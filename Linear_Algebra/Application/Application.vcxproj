@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="bounding_box.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="object.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="bounding_box.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="console_helpers.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="progam_state.h" />

@@ -15,6 +15,7 @@ namespace application::sdl
 	(
 		const int window_width, const int window_height,
 		const float fov_y, const float z_near, const float z_far,
+		camera& camera,
 		const bool debug,
 		util::program_state& intial_state
 	):
@@ -25,7 +26,8 @@ namespace application::sdl
 		fov_y_(fov_y),
 		z_near_(z_near),
 		z_far_(z_far),
-		color_alpha_value_(SDL_ALPHA_OPAQUE)
+		color_alpha_value_(SDL_ALPHA_OPAQUE),
+		camera_{camera}
 	{		
 		x_center_ = window_width_ * 0.5f;
 		y_center_ = window_height_ * 0.5f;
@@ -106,7 +108,15 @@ namespace application::sdl
 			draw_triangle(x1, y1, x2, y2, x3, y3);
 		};
 
-		const auto projection_matrix = math::get_projection_matrix(fov_y_, z_near_, z_far_);
+		proj_matrix_ = std::move(math::get_projection_matrix(fov_y_, z_near_, z_far_));
+		camera_matrix_ = camera_.get_camera_matrix();
+
+		for(auto& object : objects_)
+		{
+			object->set_proj_matrix(proj_matrix_);
+			object->set_camera_matrix(camera_matrix_);
+			object->set_xy_center(x_center_, y_center_);
+		}
 
 		auto time_point_1 = std::chrono::system_clock::now();
 		auto time_point_2 = std::chrono::system_clock::now();
@@ -122,7 +132,7 @@ namespace application::sdl
 			
 			handle_input(elapsed_time);
 
-			render_meshes(elapsed_time, draw_triangle_fn, draw_line_fn, *projection_matrix, debug_);
+			render_meshes(draw_triangle_fn, draw_line_fn, debug_);
 			
 			present_renderer();
 		}
@@ -269,15 +279,13 @@ namespace application::sdl
 	}
 
 	auto sdl_manager::render_meshes(
-		const float elapsed_time, 
 		const draw_triangle_fn draw_triangle_function,
 		const draw_line_fn draw_line_function,
-		const math::matrix& projection_matrix,
 		const bool debug) const -> void
 	{
 		for(auto& object : objects_)
 		{
-			object->tick(debug, projection_matrix, x_center_, y_center_, draw_triangle_function, draw_line_function);
+			object->tick(debug, draw_triangle_function, draw_line_function);
 		}
 	}
 }

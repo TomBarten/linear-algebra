@@ -32,6 +32,12 @@ namespace math
 
 		auto has_equal_values(const matrix& other) const -> bool;
 
+		auto set_values(const std::vector<float>& values = {}) -> void;
+		
+		auto get_values() const -> std::vector<float>;
+		
+		auto get_values() -> std::vector<float>&;
+
 		/// <summary>
 		/// Multiply the current matrix with a scalar.
 		/// </summary>
@@ -81,8 +87,6 @@ namespace math
 		auto operator*(const matrix& other) const -> std::unique_ptr<matrix>;
 
 	private:
-		auto set_values(const std::vector<float>& values = {}) -> void;
-
 		auto get_matrix_multiplication_result(const matrix& other) const -> std::unique_ptr<matrix>;
 		
 		/// <remarks>

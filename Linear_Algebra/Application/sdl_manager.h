@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 
+#include "camera.h"
 #include "object.h"
 #include "progam_state.h"
 #include "sdl_deleter.h"
@@ -18,6 +19,7 @@ namespace application::sdl
 		util::program_state* program_state_;
 		std::unique_ptr<SDL_Window, sdl_deleter> window_;
 		std::unique_ptr<SDL_Renderer, sdl_deleter> renderer_;
+		std::unique_ptr<math::matrix3d> world_matrix_;
 
 		bool debug_;
 
@@ -34,16 +36,19 @@ namespace application::sdl
 
 		uint8_t color_alpha_value_;
 
-		math::matrix3d camera_;
+		camera& camera_;
 
 		std::map<SDL_Scancode, input_handler_fn> controls_;
 		std::vector<std::unique_ptr<object>> objects_;
+		std::shared_ptr<math::matrix> camera_matrix_;
+		std::shared_ptr<math::matrix> proj_matrix_;
 
 	public:
 		sdl_manager
 		(
 			int window_width, int window_height,
 			float fov_y, float z_near, float z_far,
+			camera& camera,
 			bool debug,
 			util::program_state& intial_state
 		);
@@ -87,10 +92,8 @@ namespace application::sdl
 		auto clear_renderer() const -> void;
 		auto present_renderer() const -> void;
 		auto render_meshes(
-			float elapsed_time, 
 			draw_triangle_fn draw_triangle_function,
 			draw_line_fn draw_line_function,
-			const math::matrix& projection_matrix, 
 			bool debug = false) const -> void;
 	};
 }

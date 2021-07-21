@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "cube.h"
 #include "matrix_helper_3d.h"
 #include "space_ship.h"
 
@@ -13,9 +14,8 @@ namespace application
 		const int window_width, const int window_height,
 		const float fov_y, const float z_near, const float z_far, bool debug):
 		current_state_(util::program_state::running),
-		sdl_manager_{
-			std::make_unique<sdl::sdl_manager>(window_width, window_height, fov_y, z_near, z_far, debug, current_state_)
-		}
+		camera_{ std::make_unique<camera>() },
+		sdl_manager_{std::make_unique<sdl::sdl_manager>(window_width, window_height, fov_y, z_near, z_far, *camera_, debug, current_state_)}
 	{
 	}
 
@@ -32,63 +32,11 @@ namespace application
 
 	auto program::setup() -> void
 	{
+		setup_camera();
+		
 		setup_spaceship();
-		//mesh_cube->tris =
-		//{
-		//	// SOUTH
-		//	{ matrix3d(0.0f, 0.0f, 0.0f), matrix3d(0.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f) },
-		//	{ matrix3d(0.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 0.0f, 0.0f) },
-
-		//	// EAST
-		//	{ matrix3d(1.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 1.0f) },
-		//	{ matrix3d(1.0f, 0.0f, 0.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(1.0f, 0.0f, 1.0f) },
-
-		//	// NORTH
-		//	{ matrix3d(1.0f, 0.0f, 1.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0f) },
-		//	{ matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(0.0f, 0.0f, 1.0f) },
-
-		//	// WEST
-		//	{ matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(0.0f, 1.0f, 0.0f) },
-		//	{ matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 0.0), matrix3d(0.0f, 0.0f, 0.0f) },
-
-		//	// TOP
-		//	{ matrix3d(0.0f, 1.0f, 0.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(1.0f, 1.0f, 1.0f) },
-		//	{ matrix3d(0.0f, 1.0f, 0.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(1.0f, 1.0f, 0.0f) },
-
-		//	// BOTTOM
-		//	{ matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0f) },
-		//	{ matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0), matrix3d(1.0f, 0.0f, 0.0f) },
-		//};
 
 
-		// TODO: controls handling
-		/*
-		 * Space ship controls:
-		 *
-		 * W: UP
-		 * S: DOWN
-		 * A: LEFT
-		 * D: RIGHT
-		 * Q: ROTATE LEFT
-		 * E: ROTATE RIGHT
-		 * SPACEBAR: SHOOT
-		 * (OPTIONAL) H: TOGGLE (ON/OFF) AIM-LINE FOR SHOOTING:
-		 *
-		 *
-		 * Camera controls:
-		 *
-		 * ARROW KEYS: UP, DOWN, LEFT, RIGHT
-		 * PAGE UP: UP
-		 * PAGE DOWN: DOWN
-		 */
-
-		// CAMERA CONTROLS
-		//sdl_manager_->add_input_listener(SDL_SCANCODE_UP, callback_method_example);
-		//sdl_manager_->add_input_listener(SDL_SCANCODE_DOWN, callback_method_example);
-		//sdl_manager_->add_input_listener(SDL_SCANCODE_LEFT, callback_method_example);
-		//sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_method_example);
-		//sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_method_example); // SAME CALLBACK AS UP
-		//sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_method_example); // SAME CALLBACK AS DOWN		
 	}
 
 	auto program::start() -> void
@@ -98,7 +46,7 @@ namespace application
 
 	auto program::setup_spaceship() -> void
 	{
-		auto space_ship_obj = std::make_unique<space_ship>(R"(C:\Repositories\Avans\Minor\LINAL\axis_rblx.obj)");
+		auto space_ship_obj = std::make_unique<space_ship>("space_ship_rblx.obj");
 
 		auto callback_w = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
@@ -197,5 +145,112 @@ namespace application
 		sdl_manager_->add_input_listener(SDL_SCANCODE_H, callback_h); // OPTIONAL
 
 		sdl_manager_->add_obj(std::move(space_ship_obj));
+	}
+
+	auto program::setup_camera() -> void
+	{
+		const auto raw_target = std::make_unique<matrix3d>(0.f, 0.f, 0.01f);
+
+		const auto target = camera_->position() + *raw_target;
+
+		camera_->point_at(*target);
+		
+		camera_->update_camera_matrix();
+		
+		// TODO: controls handling
+		/*
+		 * Space ship controls:
+		 *
+		 * W: UP
+		 * S: DOWN
+		 * A: LEFT
+		 * D: RIGHT
+		 * Q: ROTATE LEFT
+		 * E: ROTATE RIGHT
+		 * SPACEBAR: SHOOT
+		 * (OPTIONAL) H: TOGGLE (ON/OFF) AIM-LINE FOR SHOOTING:
+		 *
+		 *
+		 * Camera controls:
+		 *
+		 * ARROW KEYS: UP, DOWN, LEFT, RIGHT
+		 * PAGE UP: UP
+		 * PAGE DOWN: DOWN
+		 */
+
+		// TODO move copy pasted code into functions; do this after functionality testing
+		
+		auto callback_up = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
+		{
+			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			{
+				return;
+			}
+
+			camera_ref.position().z() += 200.0f * elapsed_time;
+			camera_->update_camera_matrix();
+		};
+
+		auto callback_down = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
+		{
+			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			{
+				return;
+			}
+
+			camera_ref.position().z() -= 200.0f * elapsed_time;
+			camera_->update_camera_matrix();
+		};
+
+		auto callback_left = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
+		{
+			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			{
+				return;
+			}
+
+			camera_ref.position().x() += 200.0f * elapsed_time;
+			camera_->update_camera_matrix();
+		};
+
+		auto callback_right = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
+		{
+			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			{
+				return;
+			}
+
+			camera_ref.position().x() -= 200.0f * elapsed_time;
+			camera_->update_camera_matrix();
+		};
+
+		auto callback_pgup = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
+		{
+			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			{
+				return;
+			}
+
+			camera_ref.position().y() += 200.0f * elapsed_time;
+			camera_->update_camera_matrix();
+		};
+		auto callback_pgdown = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
+		{
+			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			{
+				return;
+			}
+
+			camera_ref.position().y() -= 200.0f * elapsed_time;
+			camera_->update_camera_matrix();
+		};
+
+		// CAMERA CONTROLS
+		sdl_manager_->add_input_listener(SDL_SCANCODE_UP, callback_up);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_DOWN, callback_down);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_LEFT, callback_left);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_right);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_pgup);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_pgdown);
 	}
 }

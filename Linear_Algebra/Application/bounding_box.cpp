@@ -3,9 +3,10 @@
 namespace application
 {
 	auto bounding_box::draw(
+		const math::matrix& camera_matrix,
 		const math::matrix& projection_matrix,
 		const float x_center, const float y_center,
-		const std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn) -> void
+		const std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn) const -> void
 	{
 		const int8_t r = 255;
 		const int8_t g = 0;
@@ -15,25 +16,26 @@ namespace application
 		// 
 		// assuming frontal xy view
 		// clockwise: front_bottom_left -> front_top_right -> front_top_right -> etc.
-		auto& front_bottom_left = vertices[0];
-		auto& front_top_left = vertices[1];
-		auto& front_top_right = vertices[2];
-		auto& front_bottom_right = vertices[3];
 
-		auto& back_bottom_left = vertices[4];
-		auto& back_top_left = vertices[5];
-		auto& back_top_right = vertices[6];
-		auto& back_bottom_right = vertices[7];
+		const auto front_bottom_left = vertices[0].multiply_by_4X4(camera_matrix);
+		const auto front_top_left = vertices[1].multiply_by_4X4(camera_matrix);
+		const auto front_top_right = vertices[2].multiply_by_4X4(camera_matrix);
+		const auto front_bottom_right = vertices[3].multiply_by_4X4(camera_matrix);
 
-		const auto front_bottom_left_proj = front_bottom_left.get_projection(projection_matrix, x_center, y_center);
-		const auto front_top_left_proj = front_top_left.get_projection(projection_matrix, x_center, y_center);
-		const auto front_top_right_proj = front_top_right.get_projection(projection_matrix, x_center, y_center);
-		const auto front_bottom_right_proj = front_bottom_right.get_projection(projection_matrix, x_center, y_center);
+		const auto back_bottom_left = vertices[4].multiply_by_4X4(camera_matrix);
+		const auto back_top_left = vertices[5].multiply_by_4X4(camera_matrix);
+		const auto back_top_right = vertices[6].multiply_by_4X4(camera_matrix);
+		const auto back_bottom_right = vertices[7].multiply_by_4X4(camera_matrix);
 
-		const auto back_bottom_left_proj = back_bottom_left.get_projection(projection_matrix, x_center, y_center);
-		const auto back_top_left_proj = back_top_left.get_projection(projection_matrix, x_center, y_center);
-		const auto back_top_right_proj = back_top_right.get_projection(projection_matrix, x_center, y_center);
-		const auto back_bottom_right_proj = back_bottom_right.get_projection(projection_matrix, x_center, y_center);
+		const auto front_bottom_left_proj = front_bottom_left->get_projection(projection_matrix, x_center, y_center);
+		const auto front_top_left_proj = front_top_left->get_projection(projection_matrix, x_center, y_center);
+		const auto front_top_right_proj = front_top_right->get_projection(projection_matrix, x_center, y_center);
+		const auto front_bottom_right_proj = front_bottom_right->get_projection(projection_matrix, x_center, y_center);
+
+		const auto back_bottom_left_proj = back_bottom_left->get_projection(projection_matrix, x_center, y_center);
+		const auto back_top_left_proj = back_top_left->get_projection(projection_matrix, x_center, y_center);
+		const auto back_top_right_proj = back_top_right->get_projection(projection_matrix, x_center, y_center);
+		const auto back_bottom_right_proj = back_bottom_right->get_projection(projection_matrix, x_center, y_center);
 
 		draw_line_fn(front_bottom_left_proj->x(), front_bottom_left_proj->y(), front_top_left_proj->x(), front_top_left_proj->y(), r, g ,b);
 		draw_line_fn(front_bottom_left_proj->x(), front_bottom_left_proj->y(), front_bottom_right_proj->x(), front_bottom_right_proj->y(), r, g, b);

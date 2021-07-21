@@ -22,10 +22,10 @@ namespace application
 		mesh() = default;
 		
 		auto draw(
-			const math::matrix& projection_matrix, 
-			float x_center, 
-			float y_center,
-			std::function<void(float, float, float, float, float, float)> draw_triangle_fn) -> void;
+			const math::matrix& camera_matrix,
+			const math::matrix& projection_matrix,
+			float x_center,
+			float y_center, std::function<void(float, float, float, float, float, float)> draw_triangle_fn) -> void;
 
 		auto triangles() const -> const std::vector<triangle>&;
 

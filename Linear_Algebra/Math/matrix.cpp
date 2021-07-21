@@ -68,6 +68,16 @@ namespace math
 		}
 	}
 
+	auto matrix::get_values() const -> std::vector<float>
+	{
+		return values_;
+	}
+
+	auto matrix::get_values() -> std::vector<float>&
+	{
+		return values_;
+	}
+
 	auto matrix::operator()(const std::size_t row, const std::size_t col) -> float&
 	{
 		return get(row, col);

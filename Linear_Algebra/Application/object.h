@@ -15,6 +15,12 @@ namespace application
 		mesh shape_;
 		bounding_box bounding_box_;
 		math::matrix3d location_;
+
+		float x_center_;
+		float y_center_;
+
+		std::shared_ptr<math::matrix> projection_matrix_;
+		std::shared_ptr<math::matrix> camera_matrix_;
 	
 	public:
 		object();
@@ -25,12 +31,13 @@ namespace application
 		
 		auto shape() const -> const mesh&;
 		auto shape() -> mesh&;
+
+		auto set_xy_center(float x_center, float y_center) -> void;
+		auto set_proj_matrix(std::shared_ptr<math::matrix> projection_matrix) -> void;
+		auto set_camera_matrix(std::shared_ptr<math::matrix> camera_matrix) -> void;
 		
 		virtual auto tick(
-			bool debug, 
-			const math::matrix& projection_matrix, 
-			float x_center, 
-			float y_center,
+			bool debug,
 			draw_triangle_fn draw_triangle,
 			draw_line_fn draw_line) -> void;
 
@@ -38,7 +45,7 @@ namespace application
 		auto parse_obj_file(const std::string& obj_file_location) -> bool;
 
 		auto calc_bounding_box() -> void;
-		auto print_location(const math::matrix& projection_matrix, float x_center, float y_center, draw_line_fn draw_line) -> void;
+		auto print_location(draw_line_fn draw_line) -> void;
 	};
 }
 

@@ -7,7 +7,7 @@
 namespace application
 {
 	object::object()
-		: shape_(), location_(math::matrix3d(0, 0, 0))
+		: shape_(), location_(math::matrix3d(0, 0, 0)), x_center_(0), y_center_(0)
 	{
 	}
 
@@ -35,21 +35,35 @@ namespace application
 		return shape_;
 	}
 
+	auto object::set_xy_center(const float x_center, const float y_center) -> void
+	{
+		x_center_ = x_center;
+		y_center_ = y_center;
+	}
+
+	auto object::set_proj_matrix(const std::shared_ptr<math::matrix> projection_matrix) -> void
+	{
+		projection_matrix_ = projection_matrix;
+	}
+
+	auto object::set_camera_matrix(const std::shared_ptr<math::matrix> camera_matrix) -> void
+	{
+		camera_matrix_ = camera_matrix;
+	}
+
 	auto object::tick(
 		const bool debug, 
-		const math::matrix& projection_matrix,
-		const float x_center, const float y_center,
 		const draw_triangle_fn draw_triangle,
 		const draw_line_fn draw_line) -> void
 	{
-		shape_.draw(projection_matrix, x_center, y_center, draw_triangle);
+		shape_.draw(*camera_matrix_, *projection_matrix_, x_center_, y_center_, draw_triangle);
 
 		calc_bounding_box();
 
 		if (debug)
 		{
-			print_location(projection_matrix, x_center, y_center, draw_line);
-			bounding_box_.draw(projection_matrix, x_center, y_center, draw_line);
+			print_location(draw_line);
+			bounding_box_.draw(*camera_matrix_, *projection_matrix_, x_center_, y_center_, draw_line);
 		}
 	}
 
@@ -158,10 +172,7 @@ namespace application
 		bounding_box_.vertices[7].z() = max_z;
 	}
 
-	auto object::print_location(
-		const math::matrix& projection_matrix,
-		const float x_center, const float y_center,
-		std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line) -> void
+	auto object::print_location(std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line) -> void
 	{
 		const auto& x = location_.x();
 		const auto& y = location_.y();

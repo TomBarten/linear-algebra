@@ -17,9 +17,9 @@ namespace math
     	 *
     	 * NO: this_matrix * matrix_4X4
     	 */
-        auto multiply_by_4X4(const matrix& matrix_4X4) -> std::unique_ptr<matrix3d>;
+        auto multiply_by_4X4(const matrix& matrix_4X4) const -> std::unique_ptr<matrix3d>;
 
-        auto get_projection(const matrix& projection_matrix, int screen_center_x, int screen_center_y) -> std::unique_ptr<matrix3d>;
+        auto get_projection(const matrix& projection_matrix, int screen_center_x, int screen_center_y) const -> std::unique_ptr<matrix3d>;
 
         auto length() const -> float;
         auto norm() const -> std::unique_ptr<matrix3d>;

@@ -30,7 +30,7 @@ namespace math::base
 		{
 			return matrix_;
 		}
-
+		
 		auto operator*=(const float scalar) -> dimensional_matrix<TMatrix>&
 		{
 			matrix_ *= scalar;
@@ -40,7 +40,7 @@ namespace math::base
 
 		auto operator*(const float scalar) const -> std::unique_ptr<TMatrix>
 		{
-			auto new_matrix = std::make_unique<TMatrix>(std::move((*matrix_) * scalar));
+			auto new_matrix = std::make_unique<TMatrix>(std::move((matrix_) * scalar));
 
 			return std::move(new_matrix);
 		}
@@ -54,7 +54,7 @@ namespace math::base
 
 		auto operator/(const float scalar) const -> std::unique_ptr<TMatrix>
 		{
-			auto new_matrix = std::make_unique<TMatrix>(std::move((*matrix_) / scalar));
+			auto new_matrix = std::make_unique<TMatrix>(std::move((matrix_) / scalar));
 
 			return std::move(new_matrix);
 		}

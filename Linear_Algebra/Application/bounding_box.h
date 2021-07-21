@@ -9,10 +9,12 @@ namespace application
 	{
 		math::matrix3d vertices[8];
 
-		auto draw(const math::matrix& projection_matrix,
+		auto draw(
+			const math::matrix& camera_matrix,
+			const math::matrix& projection_matrix,
 			float x_center,
 			float y_center,
-			std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn) -> void;
+			std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn) const -> void;
 	};
 }
 

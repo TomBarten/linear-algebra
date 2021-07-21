@@ -3,6 +3,7 @@
 namespace application
 {
 	auto mesh::draw(
+		const math::matrix& camera_matrix,
 		const math::matrix& projection_matrix,
 		const float x_center, 
 		const float y_center,
@@ -10,13 +11,13 @@ namespace application
 	{
 		for (auto& [vertices] : triangles_)
 		{
-			auto& point_1 = vertices[0];
-			auto& point_2 = vertices[1];
-			auto& point_3 = vertices[2];
+			const auto point_1 = vertices[0].multiply_by_4X4(camera_matrix);
+			const auto point_2 = vertices[1].multiply_by_4X4(camera_matrix);
+			const auto point_3 = vertices[2].multiply_by_4X4(camera_matrix);
 
-			const auto point_1_proj = point_1.get_projection(projection_matrix, x_center, y_center);
-			const auto point_2_proj = point_2.get_projection(projection_matrix, x_center, y_center);
-			const auto point_3_proj = point_3.get_projection(projection_matrix, x_center, y_center);
+			const auto point_1_proj = point_1->get_projection(projection_matrix, x_center, y_center);
+			const auto point_2_proj = point_2->get_projection(projection_matrix, x_center, y_center);
+			const auto point_3_proj = point_3->get_projection(projection_matrix, x_center, y_center);
 
 			draw_triangle_fn(
 				point_1_proj->x(), point_1_proj->y(),

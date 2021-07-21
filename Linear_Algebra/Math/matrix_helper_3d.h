@@ -18,7 +18,7 @@ namespace math
 		return std::move(std::make_unique<matrix>(4, 4, scaling_values));
 	}
 	
-	inline auto get_translation_matrix_3d(const float translate_x, const float translate_y, const float translate_z) -> std::unique_ptr<matrix>
+	inline auto get_translation_matrix(const float translate_x, const float translate_y, const float translate_z) -> std::unique_ptr<matrix>
 	{
 		const std::vector<float> translation_values
 		{
@@ -34,13 +34,13 @@ namespace math
 	inline auto create_scale_matrix_3d(const float scaling_x, const float scaling_y, const float scaling_z) -> std::unique_ptr<matrix>
 	{
 		// T1
-		const auto t1_matrix = get_translation_matrix_3d(-scaling_x, -scaling_y, -scaling_z);
+		const auto t1_matrix = get_translation_matrix(-scaling_x, -scaling_y, -scaling_z);
 
 		// S
 		const auto s_matrix = get_scaling_matrix_3d(scaling_x, scaling_y, scaling_z);
 
 		// T2
-		const auto t2_matrix = get_translation_matrix_3d(scaling_x, scaling_y, scaling_z);
+		const auto t2_matrix = get_translation_matrix(scaling_x, scaling_y, scaling_z);
 
 		// T2 (S * T1)
 		auto m_matrix = (*t2_matrix) * *((*s_matrix) * (*t1_matrix));
@@ -113,7 +113,7 @@ namespace math
 		return std::move(std::make_unique<matrix>(4, 4, projection_values));
 	}
 
-	/* 
+	/*
 	 * "In product"
 	 * VECTOR MULTIPLICATION; NOT MATRIX MULTIPLICATION
 	 */
@@ -123,7 +123,9 @@ namespace math
 		const auto y_result = vector_v.y() * vector_w.y();
 		const auto z_result = vector_v.z() * vector_w.z();
 
-		return x_result + y_result + z_result;
+		const auto v_dot_w = x_result + y_result + z_result;
+
+		return v_dot_w;
 	}
 
 	/*
@@ -132,17 +134,14 @@ namespace math
 	inline auto get_angle_degrees(const matrix3d& vector_v, const matrix3d& vector_w) -> float
 	{
 		const auto dot_product = get_dot_product(vector_v, vector_w);
+		
+		const auto length_multiplied = vector_v.length() * vector_w.length();
 
-		const auto length_v = vector_v.length();
-		const auto length_w = vector_w.length();
-
-		const auto length_multiplied = length_v * length_w;
-
-		// * v is the exact same direction as w = 1
-		// * v perpendicular to w = 0
-		// * v is the exact opposite direction to w = -1
+		// v is the exact same direction as w = 1
+		// v perpendicular to w = 0
+		// v is the exact opposite direction to w = -1
 		const auto result = dot_product / length_multiplied;
-
+		
 		// acosf returns arc cosine of x (input) expressed in radians, so convert to degrees for consistency
 		return radial_to_degrees(acosf(result));
 	}
