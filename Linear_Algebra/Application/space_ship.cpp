@@ -7,7 +7,7 @@
 namespace application
 {
 	space_ship::space_ship(const std::string& obj_file_location)
-		: object(obj_file_location), rotation_modifier_(200.f)
+		: object(obj_file_location), movement_speed_(150.f), rotation_modifier_(400.f)
 	{
 	}
 
@@ -15,32 +15,34 @@ namespace application
 	{
 		const float modifier = invert_modifier(up);
 
-		auto rot_matrix_x = math::get_rot_matrix_x(modifier * elapsed_time);
+		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.x(), modifier * elapsed_time);
 
-		return std::move(rot_matrix_x);
+		return std::move(rot_matrix);
 	}
 
 	auto space_ship::get_yaw_matrix(const bool right, const float elapsed_time) const -> std::unique_ptr<math::matrix>
 	{
 		const float modifier = invert_modifier(right);
-		
-		auto rot_matrix_y = math::get_rot_matrix_y(modifier * elapsed_time);
 
-		return std::move(rot_matrix_y);
+		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.y(), modifier * elapsed_time);
+
+		const auto test = rot_matrix->to_string();
+
+		return std::move(rot_matrix);
 	}
 
 	auto space_ship::get_roll_matrix(const bool right, const float elapsed_time) const -> std::unique_ptr<math::matrix>
 	{
 		const float modifier = invert_modifier(right);
-		
-		auto rot_matrix_z = math::get_rot_matrix_z(modifier * elapsed_time);
+	
+		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.z(), modifier * elapsed_time);
 
-		return std::move(rot_matrix_z);
+		return std::move(rot_matrix);
 	}
 
 	auto space_ship::move(const float elapsed_time) -> void
 	{
-		const auto v_movement = (forward_ * (elapsed_time * rotation_modifier_));
+		const auto v_movement = (*axis_.z() * (elapsed_time * movement_speed_));
 
 		const auto move_translation = math::get_translation_matrix(v_movement->x(), v_movement->y(), v_movement->z());
 		
@@ -65,8 +67,6 @@ namespace application
 	{
 		axis_.rotate(m_matrix);
 
-		forward_ = *forward_.multiply_by_4X4(m_matrix)->norm();
-		
 		for (auto& [points, _1, _2, _3] : shape_.triangles())
 		{
 			for (auto& matrix : points)

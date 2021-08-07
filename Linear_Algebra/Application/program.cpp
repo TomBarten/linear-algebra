@@ -58,14 +58,7 @@ namespace application
 
 			const uint8_t* key_state = SDL_GetKeyboardState(nullptr);
 
-			const auto& location = space_ship.location();
-
-			auto translate_to_origin = get_translation_matrix(-location.x(), -location.y(), -location.z());
-			auto translate_back_to_location = get_translation_matrix(location.x(), location.y(), location.z());
-
 			auto matrices = std::vector<std::unique_ptr<matrix>>();
-
-			matrices.push_back(std::move(translate_to_origin));
 
 			if (key_state[SDL_SCANCODE_W])
 			{
@@ -96,8 +89,6 @@ namespace application
 			{
 				matrices.push_back(std::move(space_ship.get_roll_matrix(false, elapsed_time)));
 			}
-
-			matrices.push_back(std::move(translate_back_to_location));
 
 			const auto matrix_m = get_identity_matrix();
 

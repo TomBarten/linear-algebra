@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace math
@@ -38,6 +39,8 @@ namespace math
 		
 		auto get_values() -> std::vector<float>&;
 
+		auto operator-() const->std::unique_ptr<matrix>;
+		
 		/// <summary>
 		/// Multiply the current matrix with a scalar.
 		/// </summary>
@@ -85,6 +88,8 @@ namespace math
 		/// <returns>The multiplication result.</returns>
 		auto operator*=(const matrix& other) -> matrix&;
 		auto operator*(const matrix& other) const -> std::unique_ptr<matrix>;
+
+		auto to_string() const -> std::string;
 
 	private:
 		auto get_matrix_multiplication_result(const matrix& other) const -> std::unique_ptr<matrix>;

@@ -6,6 +6,7 @@ namespace application
 	class space_ship final : public object
 	{
 	private:
+		float movement_speed_;
 		float rotation_modifier_;
 	
 	public:

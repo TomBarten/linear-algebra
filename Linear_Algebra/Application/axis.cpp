@@ -51,6 +51,39 @@ namespace application
 		}
 	}
 
+	auto axis::x() const -> std::unique_ptr<matrix3d>
+	{
+		const auto& [from, to, _1, _2, _3] = axes_[0];
+
+		auto direction = (to - from)->norm();
+
+		direction->w() = 1;
+
+		return std::move(direction);
+	}
+
+	auto axis::y() const -> std::unique_ptr<matrix3d>
+	{
+		const auto& [from, to, _1, _2, _3] = axes_[1];
+
+		auto direction = (to - from)->norm();
+
+		direction->w() = 1;
+
+		return std::move(direction);
+	}
+
+	auto axis::z() const -> std::unique_ptr<matrix3d>
+	{
+		const auto& [from, to, _1, _2, _3] = axes_[2];
+
+		auto direction = (to - from)->norm();
+
+		direction->w() = 1;
+
+		return std::move(direction);
+	}
+
 	auto axis::draw(
 		const matrix& matrix_m,
 		const float x_center, const float y_center,

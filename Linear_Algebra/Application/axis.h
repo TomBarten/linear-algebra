@@ -27,6 +27,10 @@ namespace application
 		explicit axis(float axis_size);
 		auto move(const math::matrix& translation_matrix) -> void;
 		auto rotate(const math::matrix& matrix_m) -> void;
+
+		auto x() const -> std::unique_ptr<math::matrix3d>;
+		auto y() const -> std::unique_ptr<math::matrix3d>;
+		auto z() const -> std::unique_ptr<math::matrix3d>;
 		
 		auto draw(
 			const math::matrix& matrix_m,

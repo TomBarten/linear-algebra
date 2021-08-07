@@ -2,7 +2,9 @@
 
 #include "matrix.h"
 
+#include <sstream>
 #include <stdexcept>
+#include <string>
 
 namespace math
 {
@@ -76,6 +78,13 @@ namespace math
 	auto matrix::get_values() -> std::vector<float>&
 	{
 		return values_;
+	}
+
+	auto matrix::operator-() const -> std::unique_ptr<matrix>
+	{
+		auto negated_matrix = this->operator*(-1);
+
+		return std::move(negated_matrix);
 	}
 
 	auto matrix::operator()(const std::size_t row, const std::size_t col) -> float&
@@ -217,6 +226,25 @@ namespace math
 	auto matrix::operator*(const matrix& other) const -> std::unique_ptr<matrix>
 	{
 		return std::move(get_matrix_multiplication_result(other));
+	}
+
+	auto matrix::to_string() const -> std::string
+	{
+		std::stringstream ss;
+		
+		for (std::size_t row = 0; row < rows_; ++row)
+		{
+			for (std::size_t column = 0; column < columns_; ++column)
+			{
+				const auto this_value = (*this)(row, column);
+
+				ss << this_value << " ";
+			}
+
+			ss << std::endl;
+		}
+
+		return ss.str();
 	}
 
 	auto matrix::checkAdditiveRule(const matrix& other) const -> void

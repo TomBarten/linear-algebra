@@ -48,6 +48,13 @@ namespace math::base
 		{
 			return matrix_;
 		}
+
+		auto operator-() const -> std::unique_ptr<TMatrix>
+		{
+			auto new_negated_matrix = matrix_ * -1;
+
+			return std::move(new_negated_matrix);
+		}
 		
 		auto operator*=(const float scalar) -> dimensional_matrix<TMatrix>&
 		{
