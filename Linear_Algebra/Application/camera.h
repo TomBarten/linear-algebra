@@ -5,14 +5,18 @@ namespace application
 {
 	class camera final
 	{
-	private:		
+	private:
+		float modifier_ = 200.f;
+		
+		float yaw_degrees_ = 0.f;
+		float pitch_degrees_ = 0.f;
+		
 		math::matrix3d right_;
 		math::matrix3d up_;
 		math::matrix3d direction_;
 
-		// eye
-		math::matrix3d position_;
-		math::matrix3d lookat_;
+		// position
+		math::matrix3d eye_;
 
 		std::shared_ptr<math::matrix> camera_matrix_;
 	
@@ -20,10 +24,13 @@ namespace application
 		camera();
 
 		/*auto lookat(const math::matrix3d& point) -> void;*/
-		auto point_at(const math::matrix3d& target) -> void;
-		auto get_lookat() -> math::matrix3d&;
+		auto look_at(const math::matrix3d& lookat = math::matrix3d(0, 0, 0)) -> void;
+		auto get_direction() -> math::matrix3d&;
+		auto get_direction() const -> const math::matrix3d&;
 		auto position() -> math::matrix3d&;
 		auto position() const -> const math::matrix3d&;
+
+		auto invert_modifier(bool invert) const -> float;
 
 		auto update_camera_matrix() -> void;
 

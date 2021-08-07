@@ -4,15 +4,18 @@
 #include <iostream>
 #include <sstream>
 
+#include "matrix2d.h"
+#include "matrix_helper_3d.h"
+
 namespace application
 {
 	object::object()
-		: shape_(), location_(math::matrix3d(0, 0, 0)), x_center_(0), y_center_(0)
+		: shape_(), forward_(math::matrix3d(0, 0, 1)), location_(math::matrix3d(0, 0, 0)), x_center_(0), y_center_(0)
 	{
 	}
 
 	object::object(const std::string& obj_file_location)
-		: location_(math::matrix3d(0, 0, 0))
+		: object()
 	{
 		if(!parse_obj_file(obj_file_location))
 		{
@@ -56,14 +59,18 @@ namespace application
 		const draw_triangle_fn draw_triangle,
 		const draw_line_fn draw_line) -> void
 	{
-		shape_.draw(*camera_matrix_, *projection_matrix_, x_center_, y_center_, draw_triangle);
+		const auto matrix_m = *projection_matrix_ * *camera_matrix_;
 
+		shape_.draw(*matrix_m, x_center_, y_center_, draw_triangle);
+		
 		calc_bounding_box();
-
+		
 		if (debug)
 		{
-			print_location(draw_line);
-			bounding_box_.draw(*camera_matrix_, *projection_matrix_, x_center_, y_center_, draw_line);
+			print_location(*matrix_m);
+			
+			axis_.draw(*matrix_m, x_center_, y_center_, draw_line);
+			bounding_box_.draw(*matrix_m, x_center_, y_center_, draw_line);
 		}
 	}
 
@@ -172,20 +179,11 @@ namespace application
 		bounding_box_.vertices[7].z() = max_z;
 	}
 
-	auto object::print_location(std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line) -> void
+	auto object::print_location(math::matrix& matrix_m) -> void
 	{
-		const auto& x = location_.x();
-		const auto& y = location_.y();
-		const auto& z = location_.z();
-
-		//const auto location_projected = location_.get_projection(projection_matrix, x_center, y_center);
-
-		//draw_line(location_projected->x(), location_projected->y(), 0, 0, 255, 0, 0);
-		
 		std::cout
-		<< "space_ship: "
-		<< "x: \"" + std::to_string(x) + "\" "
-		<< "y: \"" + std::to_string(y) + "\" "
-		<< "z: \"" + std::to_string(z) + "\"" << std::endl;
+		<< "x: \"" + std::to_string(location_.x()) + "\" "
+		<< "y: \"" + std::to_string(location_.y()) + "\" "
+		<< "z: \"" + std::to_string(location_.z()) + "\"" << std::endl;
 	}
 }

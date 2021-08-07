@@ -14,7 +14,7 @@ namespace application::sdl
 	class sdl_manager
 	{
 	private:
-		typedef std::function<void(float, float, float, float, float, float)> draw_triangle_fn;
+		typedef std::function<void(float, float, float, float, float, float, int8_t, int8_t, int8_t)> draw_triangle_fn;
 		typedef std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn;
 		util::program_state* program_state_;
 		std::unique_ptr<SDL_Window, sdl_deleter> window_;
@@ -85,7 +85,7 @@ namespace application::sdl
 		auto draw_line(float x1, float y1, float x2, float y2, uint8_t r, uint8_t g, uint8_t b) const -> void;
 		auto draw_line(float x1, float y1, float x2, float y2) const -> void;
 
-		auto draw_triangle(float x1, float y1, float x2, float y2, float x3, float y3) const -> void;
+		auto draw_triangle(float x1, float y1, float x2, float y2, float x3, float y3, uint8_t r = 255, uint8_t g = 255, uint8_t b = 255) const -> void;
 		
 		auto draw_background() const -> void;
 		

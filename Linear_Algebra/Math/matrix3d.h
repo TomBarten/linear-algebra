@@ -33,7 +33,6 @@ namespace math
         auto z() const -> const float&;
         auto z() -> float&;
 
-    protected:
         auto w() const -> const float&;
         auto w() -> float&;
     };

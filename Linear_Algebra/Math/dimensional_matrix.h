@@ -1,4 +1,6 @@
 #pragma once
+#include <stdexcept>
+
 #include "matrix.h"
 
 namespace math::base
@@ -23,6 +25,22 @@ namespace math::base
 		explicit dimensional_matrix(const std::unique_ptr<matrix> matrix_init)
 		{
 			matrix_ = copy_matrix_values(*matrix_init);
+		}
+
+		auto set_values(const matrix& other)
+		{
+			if(matrix_.rows() != other.rows() || matrix_.columns() != other.columns())
+			{
+				throw std::runtime_error("Rows and/or columns are not equal, cannot set values");
+			}
+			
+			for (std::size_t row = 0; row < matrix_.rows(); ++row)
+			{
+				for (std::size_t column = 0; column < matrix_.columns(); ++column)
+				{
+					matrix_(row, column) = other(row, column);
+				}
+			}
 		}
 
 		// ReSharper disable once CppNonExplicitConversionOperator

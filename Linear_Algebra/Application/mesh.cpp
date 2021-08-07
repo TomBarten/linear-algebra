@@ -3,26 +3,21 @@
 namespace application
 {
 	auto mesh::draw(
-		const math::matrix& camera_matrix,
-		const math::matrix& projection_matrix,
+		const math::matrix& matrix_m,
 		const float x_center, 
 		const float y_center,
-		const std::function<void(float, float, float, float, float, float)> draw_triangle_fn) -> void
+		const draw_triangle_fn draw_triangle_fn) -> void
 	{
-		for (auto& [vertices] : triangles_)
+		for(auto& [vertices, r, g, b] : triangles_)
 		{
-			const auto point_1 = vertices[0].multiply_by_4X4(camera_matrix);
-			const auto point_2 = vertices[1].multiply_by_4X4(camera_matrix);
-			const auto point_3 = vertices[2].multiply_by_4X4(camera_matrix);
-
-			const auto point_1_proj = point_1->get_projection(projection_matrix, x_center, y_center);
-			const auto point_2_proj = point_2->get_projection(projection_matrix, x_center, y_center);
-			const auto point_3_proj = point_3->get_projection(projection_matrix, x_center, y_center);
+			const auto point_1_proj = vertices[0].get_projection(matrix_m, x_center, y_center);
+			const auto point_2_proj = vertices[1].get_projection(matrix_m, x_center, y_center);
+			const auto point_3_proj = vertices[2].get_projection(matrix_m, x_center, y_center);
 
 			draw_triangle_fn(
 				point_1_proj->x(), point_1_proj->y(),
 				point_2_proj->x(), point_2_proj->y(),
-				point_3_proj->x(), point_3_proj->y());
+				point_3_proj->x(), point_3_proj->y(), r, g, b);
 		}
 	}
 
@@ -76,7 +71,7 @@ namespace application
 		min_z_ = min_x_;
 		max_z_ = max_x_;
 
-		for (auto& [vertices] : triangles_)
+		for (auto& [vertices, _0, _1, _2] : triangles_)
 		{
 			for(auto& vertex : vertices)
 			{

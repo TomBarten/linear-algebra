@@ -72,6 +72,9 @@
     <ClCompile Include="cube.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="axis.cpp">
+      <Filter>Source Files\Shape</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console_helpers.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="cube.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="axis.h">
+      <Filter>Header Files\Shape</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

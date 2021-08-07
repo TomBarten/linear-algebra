@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "cube.h"
+#include "axis.h"
 #include "matrix_helper_3d.h"
 #include "space_ship.h"
 
@@ -48,79 +49,70 @@ namespace application
 	{
 		auto space_ship_obj = std::make_unique<space_ship>("space_ship_rblx.obj");
 
-		auto callback_w = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
+		auto space_ship_controls = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
 		{
 			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
 				return;
 			}
 
-			space_ship.pitch(true, elapsed_time);
-		};
+			const uint8_t* key_state = SDL_GetKeyboardState(nullptr);
 
-		auto callback_a = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			const auto& location = space_ship.location();
+
+			auto translate_to_origin = get_translation_matrix(-location.x(), -location.y(), -location.z());
+			auto translate_back_to_location = get_translation_matrix(location.x(), location.y(), location.z());
+
+			auto matrices = std::vector<std::unique_ptr<matrix>>();
+
+			matrices.push_back(std::move(translate_to_origin));
+
+			if (key_state[SDL_SCANCODE_W])
 			{
-				return;
+				matrices.push_back(std::move(space_ship.get_pitch_matrix(true, elapsed_time)));
 			}
 
-			space_ship.yaw(false, elapsed_time);
-		};
-
-		auto callback_s = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			if (key_state[SDL_SCANCODE_A])
 			{
-				return;
+				matrices.push_back(std::move(space_ship.get_yaw_matrix(false, elapsed_time)));
 			}
 
-			space_ship.pitch(false, elapsed_time);
-		};
-
-		auto callback_d = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			if (key_state[SDL_SCANCODE_S])
 			{
-				return;
+				matrices.push_back(std::move(space_ship.get_pitch_matrix(false, elapsed_time)));
 			}
 
-			space_ship.yaw(true, elapsed_time);
-		};
-
-		auto callback_q = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			if (key_state[SDL_SCANCODE_D])
 			{
-				return;
+				matrices.push_back(std::move(space_ship.get_yaw_matrix(true, elapsed_time)));
 			}
 
-			space_ship.roll(true, elapsed_time);
-		};
-
-		auto callback_e = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			if (key_state[SDL_SCANCODE_Q])
 			{
-				return;
+				matrices.push_back(std::move(space_ship.get_roll_matrix(true, elapsed_time)));
 			}
 
-			space_ship.roll(false, elapsed_time);
-		};
-
-		auto callback_space = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			if (key_state[SDL_SCANCODE_E])
 			{
-				return;
+				matrices.push_back(std::move(space_ship.get_roll_matrix(false, elapsed_time)));
 			}
-		};
 
-		auto callback_shift = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			matrices.push_back(std::move(translate_back_to_location));
+
+			const auto matrix_m = get_identity_matrix();
+
+			for(auto r_it = matrices.rbegin(); r_it != matrices.rend(); ++r_it)
 			{
-				return;
+				const auto& rot_matrix = (*r_it);
+				
+				*matrix_m *= *rot_matrix;
+			}
+
+			space_ship.calculate_rotation(*matrix_m);
+
+			if(key_state[SDL_SCANCODE_LSHIFT] || key_state[SDL_SCANCODE_RSHIFT])
+			{
+				space_ship.move(elapsed_time);
 			}
 		};
 
@@ -133,15 +125,15 @@ namespace application
 		};
 
 		// SPACECRAFT CONTROLS
-		sdl_manager_->add_input_listener(SDL_SCANCODE_W, callback_w);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_A, callback_a);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_S, callback_s);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_D, callback_d);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_Q, callback_q);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_E, callback_e);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_SPACE, callback_space);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_LSHIFT, callback_shift);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_RSHIFT, callback_shift);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_W, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_A, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_S, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_D, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_Q, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_E, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_SPACE, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_LSHIFT, space_ship_controls);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_RSHIFT, space_ship_controls);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_H, callback_h); // OPTIONAL
 
 		sdl_manager_->add_obj(std::move(space_ship_obj));
@@ -149,13 +141,7 @@ namespace application
 
 	auto program::setup_camera() -> void
 	{
-		const auto raw_target = std::make_unique<matrix3d>(0.f, 0.f, 0.01f);
-
-		const auto target = camera_->position() + *raw_target;
-
-		camera_->point_at(*target);
-		
-		camera_->update_camera_matrix();
+		camera_->look_at();
 		
 		// TODO: controls handling
 		/*
@@ -180,77 +166,56 @@ namespace application
 
 		// TODO move copy pasted code into functions; do this after functionality testing
 		
-		auto callback_up = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
+		auto callback_camera = [this](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			const uint8_t* key_state = SDL_GetKeyboardState(nullptr);
+			
+			const auto target = matrix3d(0, 0, 1);
+
+			auto& direction = camera_->get_direction();
+
+			const auto new_direction = direction * (200.f * elapsed_time);
+
+			if(key_state[SDL_SCANCODE_PAGEUP])
 			{
-				return;
+				camera_->position().y() += 200.f * elapsed_time;
 			}
 
-			camera_ref.position().z() += 200.0f * elapsed_time;
-			camera_->update_camera_matrix();
-		};
-
-		auto callback_down = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			if(key_state[SDL_SCANCODE_PAGEDOWN])
 			{
-				return;
+				camera_->position().y() -= 200.f * elapsed_time;
 			}
 
-			camera_ref.position().z() -= 200.0f * elapsed_time;
-			camera_->update_camera_matrix();
-		};
-
-		auto callback_left = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			if(key_state[SDL_SCANCODE_UP])
 			{
-				return;
+				camera_->position() = *(camera_->position() + *new_direction);
 			}
 
-			camera_ref.position().x() += 200.0f * elapsed_time;
-			camera_->update_camera_matrix();
-		};
-
-		auto callback_right = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			if (key_state[SDL_SCANCODE_DOWN])
 			{
-				return;
+				camera_->position() = *(camera_->position() - *new_direction);
 			}
 
-			camera_ref.position().x() -= 200.0f * elapsed_time;
-			camera_->update_camera_matrix();
-		};
-
-		auto callback_pgup = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			if(key_state[SDL_SCANCODE_LEFT])
 			{
-				return;
+				camera_->position().x() -= 200.f * elapsed_time;
 			}
 
-			camera_ref.position().y() += 200.0f * elapsed_time;
-			camera_->update_camera_matrix();
-		};
-		auto callback_pgdown = [&camera_ref = *camera_, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* camera_ptr = &camera_ref; camera_ptr == nullptr)
+			if(key_state[SDL_SCANCODE_RIGHT])
 			{
-				return;
+				camera_->position().x() += 200.f * elapsed_time;
 			}
 
-			camera_ref.position().y() -= 200.0f * elapsed_time;
 			camera_->update_camera_matrix();
+
 		};
 
 		// CAMERA CONTROLS
-		sdl_manager_->add_input_listener(SDL_SCANCODE_UP, callback_up);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_DOWN, callback_down);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_LEFT, callback_left);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_right);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_pgup);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_pgdown);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_UP, callback_camera);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_DOWN, callback_camera);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_LEFT, callback_camera);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_camera);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_camera);
+		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_camera);
 	}
 }

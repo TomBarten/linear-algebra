@@ -7,6 +7,7 @@ namespace math
 	matrix3d::matrix3d()
 		:dimensional_matrix<matrix3d>(4, 1)
 	{
+		// w
 		matrix_(3, 0) = 1;
 	}
 
@@ -16,6 +17,7 @@ namespace math
 		matrix_(0, 0) = x;
 		matrix_(1, 0) = y;
 		matrix_(2, 0) = z;
+		
 		// w
 		matrix_(3, 0) = 1;
 	}

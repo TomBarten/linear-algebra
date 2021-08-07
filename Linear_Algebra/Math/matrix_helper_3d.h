@@ -113,6 +113,19 @@ namespace math
 		return std::move(std::make_unique<matrix>(4, 4, projection_values));
 	}
 
+	inline auto get_identity_matrix() -> std::unique_ptr<matrix>
+	{
+		const std::vector<float> identity_values
+		{
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		};
+
+		return std::move(std::make_unique<matrix>(4, 4, identity_values));
+	}
+
 	/*
 	 * "In product"
 	 * VECTOR MULTIPLICATION; NOT MATRIX MULTIPLICATION

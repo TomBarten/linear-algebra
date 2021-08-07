@@ -103,9 +103,10 @@ namespace application::sdl
 		const auto draw_triangle_fn = [&](
 			const float x1, const float y1,
 			const float x2, const float y2,
-			const float x3, const float y3)
+			const float x3, const float y3,
+			const uint8_t r, const uint8_t g, const uint8_t b)
 		{
-			draw_triangle(x1, y1, x2, y2, x3, y3);
+			draw_triangle(x1, y1, x2, y2, x3, y3, r, g ,b);
 		};
 
 		proj_matrix_ = std::move(math::get_projection_matrix(fov_y_, z_near_, z_far_));
@@ -252,11 +253,11 @@ namespace application::sdl
 	auto sdl_manager::draw_triangle(
 		const float x1, const float y1, 
 		const float x2, const float y2, 
-		const float x3, const float y3) const -> void
+		const float x3, const float y3, const uint8_t r, const uint8_t g, const uint8_t b) const -> void
 	{
-		draw_line(x1, y1, x2, y2);
-		draw_line(x2, y2, x3, y3);
-		draw_line(x3, y3, x1, y1);
+		draw_line(x1, y1, x2, y2, r, g, b);
+		draw_line(x2, y2, x3, y3, r, g, b);
+		draw_line(x3, y3, x1, y1, r, g, b);
 	}
 	
 	auto sdl_manager::draw_background() const -> void

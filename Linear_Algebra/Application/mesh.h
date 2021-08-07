@@ -18,14 +18,16 @@ namespace application
 		float min_z_;
 		float max_z_;
 
+	protected:
+		typedef std::function<void(float, float, float, float, float, float, int8_t, int8_t, int8_t)> draw_triangle_fn;
+	
 	public:
 		mesh() = default;
 		
 		auto draw(
-			const math::matrix& camera_matrix,
-			const math::matrix& projection_matrix,
+			const math::matrix& matrix_m,
 			float x_center,
-			float y_center, std::function<void(float, float, float, float, float, float)> draw_triangle_fn) -> void;
+			float y_center, draw_triangle_fn draw_triangle_fn) -> void;
 
 		auto triangles() const -> const std::vector<triangle>&;
 

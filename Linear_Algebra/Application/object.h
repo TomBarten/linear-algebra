@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+#include "axis.h"
 #include "bounding_box.h"
 #include "mesh.h"
 
@@ -10,11 +11,14 @@ namespace application
 	{
 	protected:
 		typedef std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn;
-		typedef std::function<void(float, float, float, float, float, float)> draw_triangle_fn;
+		typedef std::function<void(float, float, float, float, float, float, int8_t, int8_t, int8_t)> draw_triangle_fn;
 		
 		mesh shape_;
 		bounding_box bounding_box_;
+		math::matrix3d forward_;
+		math::matrix3d direction_;
 		math::matrix3d location_;
+		axis axis_;
 
 		float x_center_;
 		float y_center_;
@@ -45,7 +49,7 @@ namespace application
 		auto parse_obj_file(const std::string& obj_file_location) -> bool;
 
 		auto calc_bounding_box() -> void;
-		auto print_location(draw_line_fn draw_line) -> void;
+		virtual auto print_location(math::matrix& matrix_m) -> void;
 	};
 }
 
