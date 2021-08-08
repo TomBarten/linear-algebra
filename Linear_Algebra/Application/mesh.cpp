@@ -2,6 +2,18 @@
 
 namespace application
 {
+	mesh::mesh():
+		min_x_(std::numeric_limits<float>::max()), max_x_(std::numeric_limits<float>::lowest()),
+		min_y_(min_x_), max_y_(max_x_), min_z_(min_x_), max_z_(max_x_)
+	{
+		triangles_ = std::vector<triangle>();
+	}
+
+	mesh::mesh(const int triangle_amount): mesh()
+	{
+		triangles_.resize(triangle_amount);
+	}
+
 	auto mesh::draw(
 		const math::matrix& matrix_m,
 		const float x_center, 

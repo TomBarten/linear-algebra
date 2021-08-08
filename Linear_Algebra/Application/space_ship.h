@@ -17,6 +17,7 @@ namespace application
 		auto get_roll_matrix(bool right, float elapsed_time) const -> std::unique_ptr<math::matrix>;
 		auto move(float elapsed_time) -> void;
 		auto calculate_rotation(const math::matrix& m_matrix) -> void;
+		auto shoot(const object& bullet) -> void;
 
 	private:
 		auto invert_modifier(bool invert) const -> float;

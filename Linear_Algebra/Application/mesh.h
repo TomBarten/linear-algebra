@@ -22,7 +22,8 @@ namespace application
 		typedef std::function<void(float, float, float, float, float, float, int8_t, int8_t, int8_t)> draw_triangle_fn;
 	
 	public:
-		mesh() = default;
+		mesh();
+		explicit mesh(int triangle_amount);
 		
 		auto draw(
 			const math::matrix& matrix_m,

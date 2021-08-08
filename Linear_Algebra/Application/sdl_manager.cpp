@@ -133,7 +133,7 @@ namespace application::sdl
 			
 			handle_input(elapsed_time);
 
-			render_meshes(draw_triangle_fn, draw_line_fn, debug_);
+			render_meshes(elapsed_time, draw_triangle_fn, draw_line_fn, debug_);
 			
 			present_renderer();
 		}
@@ -280,13 +280,14 @@ namespace application::sdl
 	}
 
 	auto sdl_manager::render_meshes(
+		const float elapsed_time,
 		const draw_triangle_fn draw_triangle_function,
 		const draw_line_fn draw_line_function,
 		const bool debug) const -> void
 	{
 		for(auto& object : objects_)
 		{
-			object->tick(debug, draw_triangle_function, draw_line_function);
+			object->tick(elapsed_time, debug, draw_triangle_function, draw_line_function);
 		}
 	}
 }

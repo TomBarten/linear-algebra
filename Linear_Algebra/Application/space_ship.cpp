@@ -26,8 +26,6 @@ namespace application
 
 		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.y(), modifier * elapsed_time);
 
-		const auto test = rot_matrix->to_string();
-
 		return std::move(rot_matrix);
 	}
 
@@ -52,7 +50,7 @@ namespace application
 
 		axis_.move(*move_translation);
 
-		for (auto& [points, _1, _2, _3] : shape_.triangles())
+		for (auto& [points, _0, _1, _2] : shape_.triangles())
 		{
 			for (auto& matrix : points)
 			{
@@ -76,6 +74,12 @@ namespace application
 				matrix.set_values(*result);
 			}
 		}
+	}
+
+	auto space_ship::shoot(const object& bullet) -> void
+	{
+		auto min_z = shape_.min_z();
+		auto max_z = shape_.max_z();
 	}
 
 	auto space_ship::invert_modifier(const bool invert) const -> float

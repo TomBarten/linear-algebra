@@ -55,7 +55,7 @@ namespace application
 	{
 		const auto& [from, to, _1, _2, _3] = axes_[0];
 
-		auto direction = (to - from)->norm();
+		auto direction = (to - from)->normalise();
 
 		direction->w() = 1;
 
@@ -66,7 +66,7 @@ namespace application
 	{
 		const auto& [from, to, _1, _2, _3] = axes_[1];
 
-		auto direction = (to - from)->norm();
+		auto direction = (to - from)->normalise();
 
 		direction->w() = 1;
 
@@ -77,7 +77,7 @@ namespace application
 	{
 		const auto& [from, to, _1, _2, _3] = axes_[2];
 
-		auto direction = (to - from)->norm();
+		auto direction = (to - from)->normalise();
 
 		direction->w() = 1;
 

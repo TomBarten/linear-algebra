@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "cube.h"
+#include "target_obj.h"
 #include "axis.h"
 #include "matrix_helper_3d.h"
 #include "space_ship.h"
@@ -36,8 +36,7 @@ namespace application
 		setup_camera();
 		
 		setup_spaceship();
-
-
+		setup_target();
 	}
 
 	auto program::start() -> void
@@ -208,5 +207,14 @@ namespace application
 		sdl_manager_->add_input_listener(SDL_SCANCODE_RIGHT, callback_camera);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEUP, callback_camera);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_PAGEDOWN, callback_camera);
+	}
+
+	auto program::setup_target() const -> void
+	{
+		const auto target_location = std::make_unique<matrix3d>(10, 10, 10);
+		
+		auto target = std::make_unique<target_obj>(*target_location);
+
+		sdl_manager_->add_obj(std::move(target));
 	}
 }

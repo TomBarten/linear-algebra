@@ -27,7 +27,7 @@ namespace application
 		
 		auto setup_spaceship() -> void;
 		auto setup_camera() -> void;
-		auto setup_target() -> void;
+		auto setup_target() const -> void;
 	};
 }
 

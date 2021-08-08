@@ -32,16 +32,16 @@ namespace math
 		return std::move(std::make_unique<matrix>(4, 4, translation_values));
 	}
 
-	inline auto create_scale_matrix_3d(const float scaling_x, const float scaling_y, const float scaling_z) -> std::unique_ptr<matrix>
+	inline auto create_scale_matrix_3d(const matrix3d& position, const float scaling_x, const float scaling_y, const float scaling_z) -> std::unique_ptr<matrix>
 	{
 		// T1
-		const auto t1_matrix = get_translation_matrix(-scaling_x, -scaling_y, -scaling_z);
+		const auto t1_matrix = get_translation_matrix(-position.x(), -position.y(), -position.z());
 
 		// S
 		const auto s_matrix = get_scaling_matrix_3d(scaling_x, scaling_y, scaling_z);
 
 		// T2
-		const auto t2_matrix = get_translation_matrix(scaling_x, scaling_y, scaling_z);
+		const auto t2_matrix = get_translation_matrix(position.x(), position.y(), position.z());
 
 		// T2 (S * T1)
 		auto m_matrix = (*t2_matrix) * *((*s_matrix) * (*t1_matrix));
@@ -49,9 +49,9 @@ namespace math
 		return std::move(m_matrix);
 	}
 
-	inline auto create_scale_matrix_3d(const float scaling) -> std::unique_ptr<matrix>
+	inline auto create_scale_matrix_3d(const matrix3d& position, const float scaling) -> std::unique_ptr<matrix>
 	{
-		return std::move(create_scale_matrix_3d(scaling, scaling, scaling));
+		return std::move(create_scale_matrix_3d(position, scaling, scaling, scaling));
 	}
 
 	inline auto get_rot_matrix_x(const float degrees) -> std::unique_ptr<matrix>

@@ -10,7 +10,7 @@
 namespace application
 {
 	object::object()
-		: shape_(), forward_(math::matrix3d(0, 0, 1)), location_(math::matrix3d(0, 0, 0)), x_center_(0), y_center_(0)
+		: shape_(), location_(math::matrix3d(0, 0, 0)), x_center_(0), y_center_(0)
 	{
 	}
 
@@ -55,6 +55,7 @@ namespace application
 	}
 
 	auto object::tick(
+		const float elapsed_time,
 		const bool debug, 
 		const draw_triangle_fn draw_triangle,
 		const draw_line_fn draw_line) -> void
@@ -63,7 +64,7 @@ namespace application
 
 		shape_.draw(*matrix_m, x_center_, y_center_, draw_triangle);
 		
-		calc_bounding_box();
+		calc_bounding_box(shape_);
 		
 		if (debug)
 		{
@@ -129,18 +130,18 @@ namespace application
 		return true;
 	}
 
-	auto object::calc_bounding_box() -> void
+	auto object::calc_bounding_box(mesh& shape) -> void
 	{
-		shape_.update_vertices_min_max();
+		shape.update_vertices_min_max();
 
-		const auto min_x = shape_.min_x();
-		const auto max_x = shape_.max_x();
+		const auto min_x = shape.min_x();
+		const auto max_x = shape.max_x();
 
-		const auto min_y = shape_.min_y();
-		const auto max_y = shape_.max_y();
+		const auto min_y = shape.min_y();
+		const auto max_y = shape.max_y();
 
-		const auto min_z = shape_.min_z();
-		const auto max_z = shape_.max_z();
+		const auto min_z = shape.min_z();
+		const auto max_z = shape.max_z();
 
 		// order for both front and back: bottom left -> top left -> top right -> bottom right
 		

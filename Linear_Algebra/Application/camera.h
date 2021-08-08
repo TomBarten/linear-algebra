@@ -8,9 +8,6 @@ namespace application
 	private:
 		float modifier_ = 200.f;
 		
-		float yaw_degrees_ = 0.f;
-		float pitch_degrees_ = 0.f;
-		
 		math::matrix3d right_;
 		math::matrix3d up_;
 		math::matrix3d direction_;

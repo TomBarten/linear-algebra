@@ -27,6 +27,11 @@ namespace math::base
 			matrix_ = copy_matrix_values(*matrix_init);
 		}
 
+		auto to_string() const -> std::string
+		{
+			return matrix_.to_string();
+		}
+
 		auto set_values(const matrix& other)
 		{
 			if(matrix_.rows() != other.rows() || matrix_.columns() != other.columns())

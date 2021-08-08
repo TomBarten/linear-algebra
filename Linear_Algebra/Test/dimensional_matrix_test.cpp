@@ -52,7 +52,7 @@ namespace dimensional_matrix
 
 		const auto expected_output = std::make_unique<math::matrix3d>(0.8f, 0.6f, 0.f);
 		
-		const auto result = vector3d->norm();
+		const auto result = vector3d->normalise();
 
 		REQUIRE(result->x() == Catch::Approx(expected_output->x()).epsilon(0.005));
 		REQUIRE(result->y() == Catch::Approx(expected_output->y()).epsilon(0.005));
@@ -65,7 +65,7 @@ namespace dimensional_matrix
 
 		const auto expected_output = std::make_unique<math::matrix3d>(0.464f, 0.348f, 0.813f);
 
-		const auto result = vector3d->norm();
+		const auto result = vector3d->normalise();
 
 		REQUIRE(result->x() == Catch::Approx(expected_output->x()).epsilon(0.005));
 		REQUIRE(result->y() == Catch::Approx(expected_output->y()).epsilon(0.005));

@@ -15,8 +15,6 @@ namespace application
 		
 		mesh shape_;
 		bounding_box bounding_box_;
-		math::matrix3d forward_;
-		math::matrix3d direction_;
 		math::matrix3d location_;
 		axis axis_;
 
@@ -41,14 +39,14 @@ namespace application
 		auto set_camera_matrix(std::shared_ptr<math::matrix> camera_matrix) -> void;
 		
 		virtual auto tick(
+			float elapsed_time,
 			bool debug,
-			draw_triangle_fn draw_triangle,
-			draw_line_fn draw_line) -> void;
+			draw_triangle_fn draw_triangle, draw_line_fn draw_line) -> void;
 
 	protected:
 		auto parse_obj_file(const std::string& obj_file_location) -> bool;
 
-		auto calc_bounding_box() -> void;
+		auto calc_bounding_box(mesh& shape) -> void;
 		virtual auto print_location(math::matrix& matrix_m) -> void;
 	};
 }

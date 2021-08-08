@@ -22,7 +22,7 @@ namespace math
         auto get_projection(const matrix& projection_matrix, int screen_center_x, int screen_center_y) const -> std::unique_ptr<matrix3d>;
 
         auto length() const -> float;
-        auto norm() const -> std::unique_ptr<matrix3d>;
+        auto normalise() const -> std::unique_ptr<matrix3d>;
 
         auto x() const -> const float&;
         auto x() -> float&;

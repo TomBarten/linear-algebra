@@ -70,7 +70,7 @@ namespace math
 		return sqrtf(x_squared + y_squared + z_squared);
 	}
 
-	auto matrix3d::norm() const -> std::unique_ptr<matrix3d>
+	auto matrix3d::normalise() const -> std::unique_ptr<matrix3d>
 	{
 		auto result = matrix_ / length();
 

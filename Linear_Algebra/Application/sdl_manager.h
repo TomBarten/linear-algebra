@@ -92,8 +92,8 @@ namespace application::sdl
 		auto clear_renderer() const -> void;
 		auto present_renderer() const -> void;
 		auto render_meshes(
+			float elapsed_time,
 			draw_triangle_fn draw_triangle_function,
-			draw_line_fn draw_line_function,
-			bool debug = false) const -> void;
+			draw_line_fn draw_line_function, const bool debug = false) const -> void;
 	};
 }

@@ -35,7 +35,7 @@ namespace application
 	
 	auto camera::look_at(const math::matrix3d& lookat) -> void
 	{		
-		const auto new_direction = (lookat - eye_)->norm();
+		const auto new_direction = (lookat - eye_)->normalise();
 
 		direction_.x() = new_direction->x();
 		direction_.y() = new_direction->y();
@@ -81,7 +81,7 @@ namespace application
 	{
 		const auto cross_product = get_cross_product(a, b);
 
-		auto normalised = cross_product->norm();
+		auto normalised = cross_product->normalise();
 
 		member.x() = normalised->x();
 		member.y() = normalised->y();
