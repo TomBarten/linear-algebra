@@ -51,7 +51,13 @@ namespace application
 		}
 	}
 
-	auto axis::x() const -> std::unique_ptr<matrix3d>
+    auto axis::is_valid() const -> bool
+    {
+		// If there are no axes, then the axis representation is not valid
+		return axes_.capacity() != 0;
+    }
+
+    auto axis::x() const -> std::unique_ptr<matrix3d>
 	{
 		const auto& [from, to, _1, _2, _3] = axes_[0];
 

@@ -28,6 +28,8 @@ namespace application
 		auto move(const math::matrix& translation_matrix) -> void;
 		auto rotate(const math::matrix& matrix_m) -> void;
 
+		auto is_valid() const -> bool;
+
 		auto x() const -> std::unique_ptr<math::matrix3d>;
 		auto y() const -> std::unique_ptr<math::matrix3d>;
 		auto z() const -> std::unique_ptr<math::matrix3d>;
@@ -37,11 +39,6 @@ namespace application
 			float x_center,
 			float y_center,
 			std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn) -> void;
-
-	private:
-		//auto update_axis_x(const math::matrix3d& new_location) -> void;
-		//auto update_axis_y(const math::matrix3d& new_location) -> void;
-		//auto update_axis_z(const math::matrix3d& new_location) -> void;
 	};
 }
 

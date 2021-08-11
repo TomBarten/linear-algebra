@@ -65,7 +65,7 @@ namespace application::sdl
 		auto set_alpha_value(uint8_t a) -> void;
 		
 		auto add_obj(std::unique_ptr<object> obj) -> void;
-		auto add_input_listener(SDL_Scancode code, input_handler_fn listener_callback) -> bool;
+		auto add_input_listener(const SDL_Scancode code, input_handler_fn listener_callback) -> bool;
 		auto add_input_listener(std::pair<SDL_Scancode, input_handler_fn> sdl_code_callback_pair) -> bool;
 
 		auto start_loop() -> void;
@@ -95,5 +95,6 @@ namespace application::sdl
 			float elapsed_time,
 			draw_triangle_fn draw_triangle_function,
 			draw_line_fn draw_line_function, const bool debug = false) const -> void;
+		auto check_collision() -> void;
 	};
 }

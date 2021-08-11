@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="axis.cpp" />
     <ClCompile Include="bounding_box.cpp" />
+    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="target_obj.cpp" />
     <ClCompile Include="main.cpp" />
@@ -192,6 +193,7 @@
   <ItemGroup>
     <ClInclude Include="axis.h" />
     <ClInclude Include="bounding_box.h" />
+    <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="console_helpers.h" />
     <ClInclude Include="target_obj.h" />

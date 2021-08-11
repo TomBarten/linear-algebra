@@ -31,17 +31,23 @@ namespace application
 
 		auto location() const -> const math::matrix3d&;
 		
-		auto shape() const -> const mesh&;
-		auto shape() -> mesh&;
+		virtual auto shape() const -> const mesh&;
+		virtual auto shape() -> mesh&;
 
 		auto set_xy_center(float x_center, float y_center) -> void;
 		auto set_proj_matrix(std::shared_ptr<math::matrix> projection_matrix) -> void;
 		auto set_camera_matrix(std::shared_ptr<math::matrix> camera_matrix) -> void;
+
+		auto is_valid() const -> bool;
+
+		auto has_collision(const object& other) const -> bool;
 		
 		virtual auto tick(
 			float elapsed_time,
 			bool debug,
 			draw_triangle_fn draw_triangle, draw_line_fn draw_line) -> void;
+
+		virtual auto remove_on_collide(const object& other) -> bool = 0;
 
 	protected:
 		auto parse_obj_file(const std::string& obj_file_location) -> bool;

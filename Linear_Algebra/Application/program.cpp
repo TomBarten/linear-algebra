@@ -48,9 +48,9 @@ namespace application
 	{
 		auto space_ship_obj = std::make_unique<space_ship>("space_ship_rblx.obj");
 
-		auto space_ship_controls = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
+		auto space_ship_controls = [space_ship = space_ship_obj.get()](const SDL_Event& e, const float elapsed_time) mutable
 		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
+			if (space_ship == nullptr || !space_ship->is_valid())
 			{
 				return;
 			}
@@ -61,32 +61,32 @@ namespace application
 
 			if (key_state[SDL_SCANCODE_W])
 			{
-				matrices.push_back(std::move(space_ship.get_pitch_matrix(true, elapsed_time)));
+				matrices.push_back(std::move(space_ship->get_pitch_matrix(true, elapsed_time)));
 			}
 
 			if (key_state[SDL_SCANCODE_A])
 			{
-				matrices.push_back(std::move(space_ship.get_yaw_matrix(false, elapsed_time)));
+				matrices.push_back(std::move(space_ship->get_yaw_matrix(false, elapsed_time)));
 			}
 
 			if (key_state[SDL_SCANCODE_S])
 			{
-				matrices.push_back(std::move(space_ship.get_pitch_matrix(false, elapsed_time)));
+				matrices.push_back(std::move(space_ship->get_pitch_matrix(false, elapsed_time)));
 			}
 
 			if (key_state[SDL_SCANCODE_D])
 			{
-				matrices.push_back(std::move(space_ship.get_yaw_matrix(true, elapsed_time)));
+				matrices.push_back(std::move(space_ship->get_yaw_matrix(true, elapsed_time)));
 			}
 
 			if (key_state[SDL_SCANCODE_Q])
 			{
-				matrices.push_back(std::move(space_ship.get_roll_matrix(true, elapsed_time)));
+				matrices.push_back(std::move(space_ship->get_roll_matrix(true, elapsed_time)));
 			}
 
 			if (key_state[SDL_SCANCODE_E])
 			{
-				matrices.push_back(std::move(space_ship.get_roll_matrix(false, elapsed_time)));
+				matrices.push_back(std::move(space_ship->get_roll_matrix(false, elapsed_time)));
 			}
 
 			const auto matrix_m = get_identity_matrix();
@@ -98,11 +98,11 @@ namespace application
 				*matrix_m *= *rot_matrix;
 			}
 
-			space_ship.calculate_rotation(*matrix_m);
+			space_ship->calculate_rotation(*matrix_m);
 
 			if(key_state[SDL_SCANCODE_LSHIFT] || key_state[SDL_SCANCODE_RSHIFT])
 			{
-				space_ship.move(elapsed_time);
+				space_ship->move(elapsed_time);
 			}
 		};
 
@@ -110,7 +110,7 @@ namespace application
 		{
 			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
 			{
-				return;
+				throw std::runtime_error("Space ship is null");
 			}
 		};
 
@@ -159,8 +159,6 @@ namespace application
 		auto callback_camera = [this](const SDL_Event& e, const float elapsed_time) mutable
 		{
 			const uint8_t* key_state = SDL_GetKeyboardState(nullptr);
-			
-			const auto target = matrix3d(0, 0, 1);
 
 			auto& direction = camera_->get_direction();
 
@@ -197,7 +195,6 @@ namespace application
 			}
 
 			camera_->update_camera_matrix();
-
 		};
 
 		// CAMERA CONTROLS

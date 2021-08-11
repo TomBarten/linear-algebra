@@ -37,9 +37,7 @@ namespace application
 	{		
 		const auto new_direction = (lookat - eye_)->normalise();
 
-		direction_.x() = new_direction->x();
-		direction_.y() = new_direction->y();
-		direction_.z() = new_direction->z();
+		direction_.set_values(*new_direction);
 
 		calc_cross_product_normalised(right_, up_, direction_);
 

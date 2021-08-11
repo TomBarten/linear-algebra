@@ -49,12 +49,27 @@ namespace application
 		projection_matrix_ = projection_matrix;
 	}
 
-	auto object::set_camera_matrix(const std::shared_ptr<math::matrix> camera_matrix) -> void
+    auto object::set_camera_matrix(const std::shared_ptr<math::matrix> camera_matrix) -> void
 	{
 		camera_matrix_ = camera_matrix;
 	}
 
-	auto object::tick(
+    auto object::is_valid() const -> bool
+    {
+		// No axes means that object no longer is valid
+		return axis_.is_valid();
+    }
+
+    auto object::has_collision(const object& other) const -> bool
+    {
+		const auto& other_shape = other.shape();
+
+		return (shape_.min_x() <= other_shape.max_x() && shape_.max_x() >= other_shape.min_x()) &&
+			(shape_.min_y() <= other_shape.max_y() && shape_.max_y() >= other_shape.min_y()) &&
+			(shape_.min_z() <= other_shape.max_z() && shape_.max_z() >= other_shape.min_z());
+    }
+
+    auto object::tick(
 		const float elapsed_time,
 		const bool debug, 
 		const draw_triangle_fn draw_triangle,

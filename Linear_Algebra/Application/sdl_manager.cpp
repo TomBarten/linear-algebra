@@ -112,7 +112,7 @@ namespace application::sdl
 		proj_matrix_ = std::move(math::get_projection_matrix(fov_y_, z_near_, z_far_));
 		camera_matrix_ = camera_.get_camera_matrix();
 
-		for(auto& object : objects_)
+		for(const auto& object : objects_)
 		{
 			object->set_proj_matrix(proj_matrix_);
 			object->set_camera_matrix(camera_matrix_);
@@ -128,6 +128,8 @@ namespace application::sdl
 			std::chrono::duration<float> elapsedTime = time_point_2 - time_point_1;
 			time_point_1 = time_point_2;
 			const float elapsed_time = elapsedTime.count();
+
+			check_collision();
 			
 			draw_background();
 			
@@ -290,4 +292,26 @@ namespace application::sdl
 			object->tick(elapsed_time, debug, draw_triangle_function, draw_line_function);
 		}
 	}
+
+    auto sdl_manager::check_collision() -> void
+    {
+        for (auto it = objects_.begin(), it_next = it + 1; it != objects_.end() - 1;)
+		{
+            const auto &obj = *it;
+
+			if(it_next >= objects_.end())
+			{
+				break;
+			}
+
+            if(auto& other_obj = *it_next; obj->has_collision(*other_obj) && obj->remove_on_collide(*other_obj))
+			{
+                it = objects_.erase(it);
+
+				continue;
+            }
+
+			++it;
+		}
+    }
 }

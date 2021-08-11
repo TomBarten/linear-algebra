@@ -1,4 +1,6 @@
 #include "target_obj.h"
+
+#include "bullet.h"
 #include "matrix_helper_3d.h"
 
 using namespace math;
@@ -56,17 +58,27 @@ namespace application
 		location_.set_values(location);
 	}
 
-	auto target_obj::tick(
+    mesh& target_obj::shape()
+    {
+		return scaled_shape_;
+    }
+
+    const mesh& target_obj::shape() const
+    {
+		return scaled_shape_;
+    }
+
+    auto target_obj::tick(
 		const float elapsed_time, const bool debug, 
 		const draw_triangle_fn draw_triangle, const draw_line_fn draw_line) -> void
 	{
 		const auto matrix_m = *projection_matrix_ * *camera_matrix_;
 		
-		auto scaled_shape = pulse(elapsed_time);
+		scaled_shape_ = pulse(elapsed_time);
 
-		scaled_shape.draw(*matrix_m, x_center_, y_center_, draw_triangle);
+		scaled_shape_.draw(*matrix_m, x_center_, y_center_, draw_triangle);
 
-		calc_bounding_box(scaled_shape);
+		calc_bounding_box(scaled_shape_);
 
 		if (debug)
 		{
@@ -77,7 +89,24 @@ namespace application
 		}
 	}
 
-	auto target_obj::pulse(const float elapsed_time) -> mesh
+    auto target_obj::remove_on_collide(const object& other) -> bool
+    {
+		if(dynamic_cast<const bullet*>(&other) == nullptr)
+		{
+			return false;
+		}
+
+		if(amount_times_hit_ >= max_hits_)
+		{
+			return true;
+		}
+
+		++amount_times_hit_;
+
+		return false;
+    }
+
+    auto target_obj::pulse(const float elapsed_time) -> mesh
 	{
 		const auto modifier = tick_scale_ * elapsed_time;
 

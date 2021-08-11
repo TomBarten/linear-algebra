@@ -19,6 +19,8 @@ namespace application
 		auto calculate_rotation(const math::matrix& m_matrix) -> void;
 		auto shoot(const object& bullet) -> void;
 
+		auto remove_on_collide(const object& other) -> bool override;
+
 	private:
 		auto invert_modifier(bool invert) const -> float;
 		auto print_location(math::matrix& matrix_m) -> void override;

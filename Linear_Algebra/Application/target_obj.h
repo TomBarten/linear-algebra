@@ -16,11 +16,21 @@ namespace application
 
 		float tick_scale_;
 		float current_scale_;
-	
+
+		int max_hits_ = 5;
+		int amount_times_hit_ = 0;
+
+		mesh scaled_shape_;
+
 	public:
 		explicit target_obj(const math::matrix3d& location);
 
+		auto shape() -> mesh& override;
+		auto shape() const -> const mesh& override;
+
 		auto tick(float elapsed_time, bool debug, draw_triangle_fn draw_triangle, draw_line_fn draw_line) -> void override;
+
+		auto remove_on_collide(const object& other) -> bool override;
 
 	private:
 		auto pulse(float elapsed_time) -> mesh;

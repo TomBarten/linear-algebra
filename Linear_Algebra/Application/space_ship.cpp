@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "matrix_helper_3d.h"
+#include "target_obj.h"
 
 namespace application
 {
@@ -78,11 +79,22 @@ namespace application
 
 	auto space_ship::shoot(const object& bullet) -> void
 	{
-		auto min_z = shape_.min_z();
-		auto max_z = shape_.max_z();
+		// TODO implement
+
+		throw std::runtime_error("Not implemented space_ship shoot");
 	}
 
-	auto space_ship::invert_modifier(const bool invert) const -> float
+    auto space_ship::remove_on_collide(const object& other) -> bool
+    {
+		if(dynamic_cast<const target_obj*>(&other) == nullptr)
+		{
+			return false;
+		}
+
+		return true;
+    }
+
+    auto space_ship::invert_modifier(const bool invert) const -> float
 	{
 		if (invert)
 		{
