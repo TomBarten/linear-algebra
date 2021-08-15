@@ -178,18 +178,111 @@ namespace math
 		return std::move(result_matrix);
 	}
 
+	// M1 rotate to xy plane (y rotation)
+	inline auto get_axis_rot_m1(
+		const float x, 
+		const float x_sq, 
+		const float z, 
+		const float z_sq) -> std::unique_ptr<matrix>
+	{
+		const float xz_sqrt = sqrtf(x_sq + z_sq);
+
+		if(xz_sqrt == 0)
+		{
+			return std::move(get_identity_matrix());
+		}
+		
+		std::vector<float> rot_to_xy_plane_values
+		{
+			(x / xz_sqrt), 0, (z / xz_sqrt), 0,
+			0, 1, 0, 0,
+			-(z / xz_sqrt), 0, (x / xz_sqrt), 0,
+			0, 0, 0, 1,
+		};
+
+		auto m1 = std::make_unique<matrix>(4, 4, rot_to_xy_plane_values);
+
+		return std::move(m1);
+	}
+
+	// M2 rotate to x axis (z rotation)
+	inline auto get_axis_rot_m2(
+		const float x_sq,
+		const float y,
+		const float y_sq,
+		const float z_sq) -> std::unique_ptr<matrix>
+	{
+		const float xz_sqrt = sqrtf(x_sq + z_sq);
+		const float xyz_sqrt = sqrtf(x_sq + y_sq + z_sq);
+
+		if(xz_sqrt == 0 || xyz_sqrt == 0)
+		{
+			return std::move(get_identity_matrix());
+		}
+
+		// M2 rotate to x axis (z rotation)
+		const std::vector<float> rot_to_x_values
+		{
+			(xz_sqrt / xyz_sqrt), (y / xyz_sqrt), 0, 0,
+			-(y / xyz_sqrt), (xz_sqrt / xyz_sqrt), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		};
+
+		auto m2 = std::make_unique<matrix>(4, 4, rot_to_x_values);
+
+		return std::move(m2);
+	}
+
+	// M4 opposite of M2 (rotate away from x axis) (z rotation)
+	inline auto get_axis_rot_m4(const float x_sq, const float y, const float y_sq, const float z_sq) -> std::unique_ptr<matrix>
+	{
+		const float xz_sqrt = sqrtf(x_sq + z_sq);
+		const float xyz_sqrt = sqrtf(x_sq + y_sq + z_sq);
+
+		if (xz_sqrt == 0 || xyz_sqrt == 0)
+		{
+			return std::move(get_identity_matrix());
+		}
+
+		const std::vector<float> rot_from_x_values
+		{
+			(xz_sqrt / xyz_sqrt), -(y / xyz_sqrt), 0, 0,
+			(y / xyz_sqrt), (xz_sqrt / xyz_sqrt), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		};
+
+		auto m4 = std::make_unique<matrix>(4, 4, rot_from_x_values);
+
+		return std::move(m4);
+	}
+
+	// M5 opposite of M1 (rotate out of xy plane) (y rotation)
+	inline auto get_axis_rot_m5(const float x, const float x_sq, const float z, const float z_sq) -> std::unique_ptr<matrix>
+	{
+		const float xz_sqrt = sqrtf(x_sq + z_sq);
+
+		if (xz_sqrt == 0)
+		{
+			return std::move(get_identity_matrix());
+		}
+
+		const std::vector<float> rot_from_xy_plane_values
+		{
+			(x / xz_sqrt), 0, -(z / xz_sqrt), 0,
+			0, 1, 0, 0,
+			(z / xz_sqrt), 0, (x / xz_sqrt), 0,
+			0, 0, 0, 1,
+		};
+
+		auto m5 = std::make_unique<matrix>(4, 4, rot_from_xy_plane_values);
+
+		return std::move(m5);
+	}
+
 	inline auto get_axis_rot_matrix(const matrix3d& position, const matrix3d& axis, const float degrees)
 	{
-		auto validate_val = [](const float val) -> float
-		{
-			if (std::isnan(val))
-			{
-				return 0.f;
-			}
-
-			return val;
-		};
-		
 		// T-Back
 		const auto t_back = get_translation_matrix(position.x(), position.y(), position.z());
 
@@ -205,66 +298,67 @@ namespace math
 		const auto z = axis.z();
 		const auto z_sq = (z * z);
 
-		// M1 rotate to xy plane (y rotation)
-		std::vector<float> rot_to_xy_plane_values
+		constexpr auto validate_result = [](matrix& result_matrix)
 		{
-			validate_val(x / sqrtf(x_sq + z_sq)), 0, validate_val(z / sqrtf(x_sq + z_sq)), 0,
-			0, 1, 0, 0,
-			-validate_val(z / sqrtf(x_sq + z_sq)), 0, validate_val(x / sqrtf(x_sq + z_sq)), 0,
-			0, 0, 0, 1,
+			if (auto& x_modifier = result_matrix.get(0, 0); x_modifier == 0.f)
+			{
+				x_modifier = 1.f;
+			}
+
+			if (auto& y_modifier = result_matrix.get(1, 1); y_modifier == 0.f)
+			{
+				y_modifier = 1.f;
+			}
+
+			if (auto& z_modifier = result_matrix.get(2, 2); z_modifier == 0.f)
+			{
+				z_modifier = 1.f;
+			}
 		};
-		const auto m1 = std::make_unique<matrix>(4, 4, rot_to_xy_plane_values);
+
+		// M1 rotate to xy plane (y rotation)
+		//std::vector<float> rot_to_xy_plane_values
+		//{
+		//	validate_val(x / sqrtf(x_sq + z_sq)), 0, validate_val(z / sqrtf(x_sq + z_sq)), 0,
+		//	0, 1, 0, 0,
+		//	-validate_val(z / sqrtf(x_sq + z_sq)), 0, validate_val(x / sqrtf(x_sq + z_sq)), 0,
+		//	0, 0, 0, 1,
+		//};
+		const auto m1 = get_axis_rot_m1(x, x_sq, z, z_sq);
 
 		// M2 rotate to x axis (z rotation)
-		const std::vector<float> rot_to_x_values
-		{
-			validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), validate_val(y / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
-			-validate_val(y / sqrtf(x_sq + y_sq + z_sq)), validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1,
-		};
-		const auto m2 = std::make_unique<matrix>(4, 4, rot_to_x_values);
+		//const std::vector<float> rot_to_x_values
+		//{
+		//	validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), validate_val(y / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
+		//	-validate_val(y / sqrtf(x_sq + y_sq + z_sq)), validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
+		//	0, 0, 1, 0,
+		//	0, 0, 0, 1,
+		//};
+		const auto m2 = get_axis_rot_m2(x_sq, y, y_sq, z_sq);
 
 		// M3 rotate around x axis
 		const auto m3 = get_rot_matrix_x(degrees);
 
 		// M4 opposite of M2 (rotate away from x axis) (z rotation)
-		const std::vector<float> rot_from_x_values
-		{
-			validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), -validate_val(y / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
-			validate_val(y / sqrtf(x_sq + y_sq + z_sq)), validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1,
-		};
-		const auto m4 = std::make_unique<matrix>(4, 4, rot_from_x_values);
+		//const std::vector<float> rot_from_x_values
+		//{
+		//	validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), -validate_val(y / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
+		//	validate_val(y / sqrtf(x_sq + y_sq + z_sq)), validate_val(sqrtf(x_sq + z_sq) / sqrtf(x_sq + y_sq + z_sq)), 0, 0,
+		//	0, 0, 1, 0,
+		//	0, 0, 0, 1,
+		//};
+		const auto m4 = get_axis_rot_m4(x_sq, y, y_sq, z_sq);
 
 		// M5 opposite of M1 (rotate out of xy plane) (y rotation)
-		const std::vector<float> rot_from_xy_plane_values
-		{
-			validate_val(x / sqrtf(x_sq + z_sq)), 0, -validate_val(z / sqrtf(x_sq + z_sq)), 0,
-			0, 1, 0, 0,
-			validate_val(z / sqrtf(x_sq + z_sq)), 0, validate_val(x / sqrtf(x_sq + z_sq)), 0,
-			0, 0, 0, 1,
-		};
-		const auto m5 = std::make_unique<matrix>(4, 4, rot_from_xy_plane_values);
+		//const std::vector<float> rot_from_xy_plane_values
+		//{
+		//	validate_val(x / sqrtf(x_sq + z_sq)), 0, -validate_val(z / sqrtf(x_sq + z_sq)), 0,
+		//	0, 1, 0, 0,
+		//	validate_val(z / sqrtf(x_sq + z_sq)), 0, validate_val(x / sqrtf(x_sq + z_sq)), 0,
+		//	0, 0, 0, 1,
+		//};
+		const auto m5 = get_axis_rot_m5(x, x_sq, z, z_sq);
 
-		const auto validate_result = [](matrix& result_matrix)
-		{
-			if(auto& x_modifier = result_matrix.get(0, 0); x_modifier == 0.f)
-			{
-				x_modifier = 1.f;
-			}
-
-			if(auto& y_modifier = result_matrix.get(1, 1); y_modifier == 0.f)
-			{
-				y_modifier = 1.f;
-			}
-
-			if(auto& z_modifier =  result_matrix.get(2, 2); z_modifier == 0.f)
-			{
-				z_modifier = 1.f;
-			}
-		};
 
 		// Tback * M5 * M4 * M3 * M2 * M1 * Tto
 		auto result = *(*(*t_back * *m5) * *(*m4 * *m3)) * *(*(*m2 * *m1) * *t_to);
