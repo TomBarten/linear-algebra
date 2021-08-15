@@ -2,13 +2,14 @@
 
 #include <iostream>
 
+#include "bullet.h"
 #include "matrix_helper_3d.h"
 #include "target_obj.h"
 
 namespace application
 {
 	space_ship::space_ship(const std::string& obj_file_location)
-		: object(obj_file_location), movement_speed_(150.f), rotation_modifier_(400.f)
+		: object(obj_file_location), movement_speed_(1.f), rotation_modifier_(1.f)
 	{
 	}
 
@@ -16,7 +17,7 @@ namespace application
 	{
 		const float modifier = invert_modifier(up);
 
-		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.x(), modifier * elapsed_time);
+		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.x(), modifier);
 
 		return std::move(rot_matrix);
 	}
@@ -25,7 +26,7 @@ namespace application
 	{
 		const float modifier = invert_modifier(right);
 
-		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.y(), modifier * elapsed_time);
+		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.y(), modifier);
 
 		return std::move(rot_matrix);
 	}
@@ -34,14 +35,14 @@ namespace application
 	{
 		const float modifier = invert_modifier(right);
 	
-		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.z(), modifier * elapsed_time);
+		auto rot_matrix = get_axis_rot_matrix(location_, *axis_.z(), modifier);
 
 		return std::move(rot_matrix);
 	}
 
 	auto space_ship::move(const float elapsed_time) -> void
 	{
-		const auto v_movement = (*axis_.z() * (elapsed_time * movement_speed_));
+		const auto v_movement = (*axis_.z() * (movement_speed_));
 
 		const auto move_translation = math::get_translation_matrix(v_movement->x(), v_movement->y(), v_movement->z());
 		
@@ -77,14 +78,27 @@ namespace application
 		}
 	}
 
-	auto space_ship::shoot(const object& bullet) -> void
+	auto space_ship::shoot() -> std::unique_ptr<bullet>
 	{
-		// TODO implement
+		const auto offset_matrix = get_offset_translation_matrix();
 
-		throw std::runtime_error("Not implemented space_ship shoot");
+		const auto projectile_location = location_.multiply_by_4X4(*offset_matrix);
+
+		// copy intended
+	    auto projectile_axis = axis_;
+
+		projectile_axis.move(*offset_matrix);
+
+		auto projectile = std::make_unique<bullet>(*projectile_location, projectile_axis, movement_speed_, "bullet_rblxV2.obj");
+
+		projectile->set_camera_matrix(camera_matrix_);
+		projectile->set_proj_matrix(projection_matrix_);
+		projectile->set_xy_center(x_center_, y_center_);
+
+		return std::move(projectile);
 	}
 
-    auto space_ship::remove_on_collide(const object& other) -> bool
+    auto space_ship::remove_on_collide(object& other) -> bool
     {
 		if(dynamic_cast<const target_obj*>(&other) == nullptr)
 		{
@@ -92,6 +106,15 @@ namespace application
 		}
 
 		return true;
+    }
+
+    auto space_ship::get_offset_translation_matrix() -> std::unique_ptr<math::matrix>
+    {
+        const auto offset = (*axis_.z() * (shape_.max_z() - location_.z()));
+
+	    auto offset_translation_m = math::get_translation_matrix(offset->x(), offset->y(), offset->z());
+
+		return std::move(offset_translation_m);
     }
 
     auto space_ship::invert_modifier(const bool invert) const -> float

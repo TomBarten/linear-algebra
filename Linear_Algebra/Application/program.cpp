@@ -4,6 +4,7 @@
 
 #include "target_obj.h"
 #include "axis.h"
+#include "bullet.h"
 #include "matrix_helper_3d.h"
 #include "space_ship.h"
 
@@ -46,9 +47,9 @@ namespace application
 
 	auto program::setup_spaceship() -> void
 	{
-		auto space_ship_obj = std::make_unique<space_ship>("space_ship_rblx.obj");
+		auto space_ship_obj = std::make_unique<space_ship>("space_ship_rblxV2.obj");
 
-		auto space_ship_controls = [space_ship = space_ship_obj.get()](const SDL_Event& e, const float elapsed_time) mutable
+		auto space_ship_controls = [space_ship = space_ship_obj.get(), this](const SDL_Event& e, const float elapsed_time) mutable
 		{
 			if (space_ship == nullptr || !space_ship->is_valid())
 			{
@@ -58,6 +59,13 @@ namespace application
 			const uint8_t* key_state = SDL_GetKeyboardState(nullptr);
 
 			auto matrices = std::vector<std::unique_ptr<matrix>>();
+
+			if (key_state[SDL_SCANCODE_SPACE])
+			{
+				auto projectile = space_ship->shoot();
+
+				sdl_manager_->add_obj(std::move(projectile));
+			}
 
 			if (key_state[SDL_SCANCODE_W])
 			{
@@ -106,14 +114,6 @@ namespace application
 			}
 		};
 
-		auto callback_h = [&space_ship = *space_ship_obj, this](const SDL_Event& e, const float elapsed_time) mutable
-		{
-			if (auto* mesh_ptr = &space_ship; mesh_ptr == nullptr)
-			{
-				throw std::runtime_error("Space ship is null");
-			}
-		};
-
 		// SPACECRAFT CONTROLS
 		sdl_manager_->add_input_listener(SDL_SCANCODE_W, space_ship_controls);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_A, space_ship_controls);
@@ -124,7 +124,6 @@ namespace application
 		sdl_manager_->add_input_listener(SDL_SCANCODE_SPACE, space_ship_controls);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_LSHIFT, space_ship_controls);
 		sdl_manager_->add_input_listener(SDL_SCANCODE_RSHIFT, space_ship_controls);
-		sdl_manager_->add_input_listener(SDL_SCANCODE_H, callback_h); // OPTIONAL
 
 		sdl_manager_->add_obj(std::move(space_ship_obj));
 	}
@@ -208,9 +207,9 @@ namespace application
 
 	auto program::setup_target() const -> void
 	{
-		const auto target_location = std::make_unique<matrix3d>(10, 10, 10);
+		const auto target_location = std::make_unique<matrix3d>(150, 150, -150);
 		
-		auto target = std::make_unique<target_obj>(*target_location);
+		auto target = std::make_unique<target_obj>(*target_location, "target_rblxV2.obj");
 
 		sdl_manager_->add_obj(std::move(target));
 	}

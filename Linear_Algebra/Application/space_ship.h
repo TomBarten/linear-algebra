@@ -1,4 +1,5 @@
 #pragma once
+#include "bullet.h"
 #include "object.h"
 
 namespace application
@@ -17,11 +18,12 @@ namespace application
 		auto get_roll_matrix(bool right, float elapsed_time) const -> std::unique_ptr<math::matrix>;
 		auto move(float elapsed_time) -> void;
 		auto calculate_rotation(const math::matrix& m_matrix) -> void;
-		auto shoot(const object& bullet) -> void;
+		auto shoot() -> std::unique_ptr<bullet>;
 
-		auto remove_on_collide(const object& other) -> bool override;
+		auto remove_on_collide(object& other) -> bool override;
 
 	private:
+		auto get_offset_translation_matrix() -> std::unique_ptr<math::matrix>;
 		auto invert_modifier(bool invert) const -> float;
 		auto print_location(math::matrix& matrix_m) -> void override;
 	};

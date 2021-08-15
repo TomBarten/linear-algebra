@@ -129,8 +129,6 @@ namespace application::sdl
 			time_point_1 = time_point_2;
 			const float elapsed_time = elapsedTime.count();
 
-			check_collision();
-			
 			draw_background();
 			
 			handle_input(elapsed_time);
@@ -285,33 +283,44 @@ namespace application::sdl
 		const float elapsed_time,
 		const draw_triangle_fn draw_triangle_function,
 		const draw_line_fn draw_line_function,
-		const bool debug) const -> void
+		const bool debug) -> void
 	{
-		for(auto& object : objects_)
+		for (auto it = objects_.begin(); it != objects_.end();)
 		{
-			object->tick(elapsed_time, debug, draw_triangle_function, draw_line_function);
-		}
-	}
+            const auto& object = *it;
 
-    auto sdl_manager::check_collision() -> void
-    {
-        for (auto it = objects_.begin(), it_next = it + 1; it != objects_.end() - 1;)
-		{
-            const auto &obj = *it;
-
-			if(it_next >= objects_.end())
+			if (check_collision(it) || !object->is_valid())
 			{
-				break;
-			}
-
-            if(auto& other_obj = *it_next; obj->has_collision(*other_obj) && obj->remove_on_collide(*other_obj))
-			{
-                it = objects_.erase(it);
+				it = objects_.erase(it);
 
 				continue;
-            }
+			}
+
+			object->tick(elapsed_time, debug, draw_triangle_function, draw_line_function);
 
 			++it;
 		}
+	}
+
+    auto sdl_manager::check_collision(std::vector<std::unique_ptr<object>>::iterator it) -> bool
+    {
+		const auto& current_obj = *it;
+
+		for (auto it_other = objects_.begin(); it_other != objects_.end(); ++it_other)
+		{
+			auto& other_obj = *it_other;
+
+			if (*it_other == *it)
+			{
+				continue;
+			}
+
+			if (current_obj->has_collision(*other_obj) && current_obj->remove_on_collide(*other_obj))
+			{
+				return true;
+			}
+		}
+
+		return false;
     }
 }

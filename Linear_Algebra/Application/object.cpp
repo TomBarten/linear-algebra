@@ -10,9 +10,9 @@
 namespace application
 {
 	object::object()
-		: shape_(), location_(math::matrix3d(0, 0, 0)), x_center_(0), y_center_(0)
-	{
-	}
+        : shape_(), location_(math::matrix3d(0, 0, 0)), x_center_(0), y_center_(0), should_be_removed_(false)
+    {
+    }
 
 	object::object(const std::string& obj_file_location)
 		: object()
@@ -57,16 +57,18 @@ namespace application
     auto object::is_valid() const -> bool
     {
 		// No axes means that object no longer is valid
-		return axis_.is_valid();
+		return axis_.is_valid() && !should_be_removed_;
     }
 
     auto object::has_collision(const object& other) const -> bool
     {
 		const auto& other_shape = other.shape();
 
-		return (shape_.min_x() <= other_shape.max_x() && shape_.max_x() >= other_shape.min_x()) &&
+		const auto has_collision = (shape_.min_x() <= other_shape.max_x() && shape_.max_x() >= other_shape.min_x()) &&
 			(shape_.min_y() <= other_shape.max_y() && shape_.max_y() >= other_shape.min_y()) &&
 			(shape_.min_z() <= other_shape.max_z() && shape_.max_z() >= other_shape.min_z());
+
+		return has_collision;
     }
 
     auto object::tick(

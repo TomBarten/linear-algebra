@@ -1,41 +1,39 @@
 #include "target_obj.h"
-
-#include "bullet.h"
 #include "matrix_helper_3d.h"
 
 using namespace math;
 
 namespace application
 {
-	target_obj::target_obj(): object(),
-		scale_up_(true), max_scale_(15.f), min_scale_(1.f), tick_scale_(5.f), current_scale_(1)
+	target_obj::target_obj(const std::string& obj_file_location): object(obj_file_location),
+		scale_up_(true), max_scale_(15.f), min_scale_(1.f), tick_scale_(0.2f), current_scale_(1)
 	{
-		auto& triangles = shape_.triangles();
+		//auto& triangles = shape_.triangles();
 
-		triangles =
-		{
-			{matrix3d(0.0f, 0.0f, 0.0f), matrix3d(0.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f)},
-			{matrix3d(0.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 0.0f, 0.0f)},
+		//triangles =
+		//{
+		//	{matrix3d(0.0f, 0.0f, 0.0f), matrix3d(0.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f)},
+		//	{matrix3d(0.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 0.0f, 0.0f)},
 
-			{matrix3d(1.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 1.0f)},
-			{matrix3d(1.0f, 0.0f, 0.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(1.0f, 0.0f, 1.0f)},
+		//	{matrix3d(1.0f, 0.0f, 0.0f), matrix3d(1.0f, 1.0f, 0.0f), matrix3d(1.0f, 1.0f, 1.0f)},
+		//	{matrix3d(1.0f, 0.0f, 0.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(1.0f, 0.0f, 1.0f)},
 
-			{matrix3d(1.0f, 0.0f, 1.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0f)},
-			{matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(0.0f, 0.0f, 1.0f)},
+		//	{matrix3d(1.0f, 0.0f, 1.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0f)},
+		//	{matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(0.0f, 0.0f, 1.0f)},
 
-			{matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(0.0f, 1.0f, 0.0f)},
-			{matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 0.0), matrix3d(0.0f, 0.0f, 0.0f)},
+		//	{matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(0.0f, 1.0f, 0.0f)},
+		//	{matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 1.0f, 0.0), matrix3d(0.0f, 0.0f, 0.0f)},
 
-			{matrix3d(0.0f, 1.0f, 0.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(1.0f, 1.0f, 1.0f)},
-			{matrix3d(0.0f, 1.0f, 0.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(1.0f, 1.0f, 0.0f)},
+		//	{matrix3d(0.0f, 1.0f, 0.0), matrix3d(0.0f, 1.0f, 1.0), matrix3d(1.0f, 1.0f, 1.0f)},
+		//	{matrix3d(0.0f, 1.0f, 0.0), matrix3d(1.0f, 1.0f, 1.0), matrix3d(1.0f, 1.0f, 0.0f)},
 
-			{matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0f)},
-			{matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0), matrix3d(1.0f, 0.0f, 0.0f)},
-		};
+		//	{matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0f)},
+		//	{matrix3d(1.0f, 0.0f, 1.0), matrix3d(0.0f, 0.0f, 0.0), matrix3d(1.0f, 0.0f, 0.0f)},
+		//};
 	}
 
-	target_obj::target_obj(const float x, const float y, const float z)
-		: target_obj()
+	target_obj::target_obj(const float x, const float y, const float z, const std::string& obj_file_location)
+		: target_obj(obj_file_location)
 	{
 		const auto translation_matrix = get_translation_matrix(x, y, z);
 		
@@ -52,11 +50,11 @@ namespace application
 		axis_.move(*translation_matrix);
 	}
 
-	target_obj::target_obj(const matrix3d& location)
-		: target_obj(location.x(), location.y(), location.z())
-	{
+    target_obj::target_obj(const math::matrix3d& location, const std::string& obj_file_location)
+		: target_obj(location.x(), location.y(), location.z(), obj_file_location)
+    {
 		location_.set_values(location);
-	}
+    }
 
     mesh& target_obj::shape()
     {
@@ -82,23 +80,18 @@ namespace application
 
 		if (debug)
 		{
-			print_location(*matrix_m);
-
 			axis_.draw(*matrix_m, x_center_, y_center_, draw_line);
 			bounding_box_.draw(*matrix_m, x_center_, y_center_, draw_line);
 		}
 	}
 
-    auto target_obj::remove_on_collide(const object& other) -> bool
+    auto target_obj::remove_on_collide(object& other) -> bool
     {
-		if(dynamic_cast<const bullet*>(&other) == nullptr)
-		{
-			return false;
-		}
-
 		if(amount_times_hit_ >= max_hits_)
 		{
-			return true;
+			should_be_removed_ = true;
+
+			return should_be_removed_;
 		}
 
 		++amount_times_hit_;
@@ -106,9 +99,14 @@ namespace application
 		return false;
     }
 
+    bool target_obj::is_valid() const
+    {
+		return !should_be_removed_;
+    }
+
     auto target_obj::pulse(const float elapsed_time) -> mesh
 	{
-		const auto modifier = tick_scale_ * elapsed_time;
+		const auto modifier = tick_scale_;
 
 		mesh result;
 

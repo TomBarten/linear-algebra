@@ -94,7 +94,8 @@ namespace application::sdl
 		auto render_meshes(
 			float elapsed_time,
 			draw_triangle_fn draw_triangle_function,
-			draw_line_fn draw_line_function, const bool debug = false) const -> void;
-		auto check_collision() -> void;
+			draw_line_fn draw_line_function, bool debug = false) -> void;
+
+		auto check_collision(std::vector<std::unique_ptr<object>>::iterator it) -> bool;
 	};
 }

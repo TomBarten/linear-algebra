@@ -21,6 +21,8 @@ namespace application
 		float x_center_;
 		float y_center_;
 
+		bool should_be_removed_;
+
 		std::shared_ptr<math::matrix> projection_matrix_;
 		std::shared_ptr<math::matrix> camera_matrix_;
 	
@@ -38,7 +40,7 @@ namespace application
 		auto set_proj_matrix(std::shared_ptr<math::matrix> projection_matrix) -> void;
 		auto set_camera_matrix(std::shared_ptr<math::matrix> camera_matrix) -> void;
 
-		auto is_valid() const -> bool;
+		virtual auto is_valid() const -> bool;
 
 		auto has_collision(const object& other) const -> bool;
 		
@@ -47,7 +49,7 @@ namespace application
 			bool debug,
 			draw_triangle_fn draw_triangle, draw_line_fn draw_line) -> void;
 
-		virtual auto remove_on_collide(const object& other) -> bool = 0;
+		virtual auto remove_on_collide(object& other) -> bool = 0;
 
 	protected:
 		auto parse_obj_file(const std::string& obj_file_location) -> bool;
