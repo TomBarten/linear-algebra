@@ -5,9 +5,10 @@
 namespace application
 {
 	camera::camera():
-		up_(0, 1, 0), eye_(0.f,0.f,5.f), camera_matrix_(std::make_shared<math::matrix>(4, 4))
+		up_(0, 1, 0), eye_(5.f,5.f,15.f), camera_matrix_(std::make_shared<math::matrix>(4, 4))
 	{
 	}
+
 	auto camera::get_direction() -> math::matrix3d&
 	{
 		return direction_;
@@ -32,10 +33,27 @@ namespace application
 	{
 		return camera_matrix_;
 	}
-	
-	auto camera::look_at(const math::matrix3d& lookat) -> void
-	{		
-		const auto new_direction = (lookat - eye_)->normalise();
+
+	auto camera::move_vertical(const bool up) -> void
+	{
+		calc_move_direction(up_, up);
+	}
+
+    auto camera::move_direction(const bool backward) -> void
+    {
+		calc_move_direction(direction_, backward);
+    }
+
+    auto camera::move_horizontal(const bool right) -> void
+    {
+		calc_move_direction(right_, right);
+    }
+
+    auto camera::look_at(const math::matrix3d& lookat) -> void
+	{
+		lookat_.set_values(lookat);
+
+		const auto new_direction = (lookat_ - eye_)->normalise();
 
 		direction_.set_values(*new_direction);
 
@@ -70,9 +88,22 @@ namespace application
 
 		const auto translation_matrix = math::get_translation_matrix(-eye_.x(), -eye_.y(), -eye_.z());
 
-		auto result = *inverse_image_matrix * *translation_matrix;
+        const auto result = *inverse_image_matrix * *translation_matrix;
 
 		camera_matrix_->set_values(result->get_values());
+	}
+
+	auto camera::calc_move_direction(math::matrix3d direction, const bool invert_mod) -> void
+	{
+		const auto modifier = invert_modifier(invert_mod);
+
+		eye_.x() = (eye_.x() + (direction.x() * modifier));
+		eye_.y() = (eye_.y() + (direction.y() * modifier));
+		eye_.z() = (eye_.z() + (direction.z() * modifier));
+
+		lookat_.x() = (lookat_.x() + (direction.x() * modifier));
+		lookat_.y() = (lookat_.y() + (direction.y() * modifier));
+		lookat_.z() = (lookat_.z() + (direction.z() * modifier));
 	}
 	
 	auto camera::calc_cross_product_normalised(math::matrix3d& member, const math::matrix3d& a, const math::matrix3d& b) const -> void
@@ -81,8 +112,6 @@ namespace application
 
 		auto normalised = cross_product->normalise();
 
-		member.x() = normalised->x();
-		member.y() = normalised->y();
-		member.z() = normalised->z();
+		member.set_values(*normalised);
 	}
 }

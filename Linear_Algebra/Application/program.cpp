@@ -3,8 +3,6 @@
 #include <algorithm>
 
 #include "target_obj.h"
-#include "axis.h"
-#include "bullet.h"
 #include "matrix_helper_3d.h"
 #include "space_ship.h"
 
@@ -159,38 +157,38 @@ namespace application
 		{
 			const uint8_t* key_state = SDL_GetKeyboardState(nullptr);
 
-			auto& direction = camera_->get_direction();
+            const auto& direction = camera_->get_direction();
 
-			const auto new_direction = direction * (200.f * elapsed_time);
+			const auto new_direction = direction * 1.5f;
 
 			if(key_state[SDL_SCANCODE_PAGEUP])
 			{
-				camera_->position().y() += 200.f * elapsed_time;
+				camera_->move_vertical(false);
 			}
 
 			if(key_state[SDL_SCANCODE_PAGEDOWN])
 			{
-				camera_->position().y() -= 200.f * elapsed_time;
+				camera_->move_vertical(true);
 			}
 
 			if(key_state[SDL_SCANCODE_UP])
 			{
-				camera_->position() = *(camera_->position() + *new_direction);
+				camera_->move_direction(false);
 			}
 
 			if (key_state[SDL_SCANCODE_DOWN])
 			{
-				camera_->position() = *(camera_->position() - *new_direction);
+				camera_->move_direction(true);
 			}
 
 			if(key_state[SDL_SCANCODE_LEFT])
 			{
-				camera_->position().x() -= 200.f * elapsed_time;
+				camera_->move_horizontal(false);
 			}
 
 			if(key_state[SDL_SCANCODE_RIGHT])
 			{
-				camera_->position().x() += 200.f * elapsed_time;
+				camera_->move_horizontal(true);
 			}
 
 			camera_->update_camera_matrix();
