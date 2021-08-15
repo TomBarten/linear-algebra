@@ -37,7 +37,7 @@ namespace application
 	private:
 		auto pulse(float elapsed_time) -> mesh;
 		auto get_scale_matrix(float scaling) const -> std::unique_ptr<math::matrix>;
-		auto scale(const math::matrix& scale_matrix) -> mesh;
+		auto scale(const math::matrix& scale_matrix) const -> mesh;
 		auto print_location(math::matrix& matrix_m) -> void override;
 		auto approach_val(float current, float target, float speed) const -> float;
 	};

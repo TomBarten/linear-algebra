@@ -35,7 +35,7 @@ static auto handle_exception(const std::exception_ptr& exception_ptr) -> void
 
 static auto run_program() -> void
 {
-    const auto program = std::make_unique<application::program>(WIDTH, HEIGHT, FOV_DEGREES, Z_NEAR, Z_FAR, true);
+    const auto program = std::make_unique<application::program>(WIDTH, HEIGHT, FOV_DEGREES, Z_NEAR, Z_FAR, false);
 
     try
     {

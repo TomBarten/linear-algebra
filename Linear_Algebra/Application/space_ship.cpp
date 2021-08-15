@@ -9,7 +9,7 @@
 namespace application
 {
 	space_ship::space_ship(const std::string& obj_file_location)
-		: object(obj_file_location), movement_speed_(1.f), rotation_modifier_(1.f)
+		: object(obj_file_location), movement_speed_(1.f), rotation_modifier_(1.5f)
 	{
 	}
 

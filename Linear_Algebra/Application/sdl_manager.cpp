@@ -208,6 +208,7 @@ namespace application::sdl
 			case SDL_QUIT:
 				*program_state_ = util::program_state::stopping;
 				break;
+			case SDL_KEYUP:
 			case SDL_KEYDOWN:
 				execute_input_listener(sdl_event.key.keysym.scancode, sdl_event, elapsed_time);
 				break;
@@ -226,7 +227,7 @@ namespace application::sdl
 		SDL_RenderDrawPointF(&(*renderer_), x, y);
 	}
 
-	auto sdl_manager::draw_pixel(float x, float y) const -> void
+	auto sdl_manager::draw_pixel(const float x, const float y) const -> void
 	{
 		SDL_RenderDrawPointF(&(*renderer_), x, y);
 	}

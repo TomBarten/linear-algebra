@@ -148,7 +148,7 @@ namespace application
 	}
 
 
-	auto target_obj::scale(const matrix& scale_matrix) -> mesh
+	auto target_obj::scale(const matrix& scale_matrix) const -> mesh
 	{
 		const auto amount_of_triangles = shape_.triangles().size();
 		
@@ -156,8 +156,7 @@ namespace application
 		
 		for(auto i = 0; i < amount_of_triangles; ++i)
 		{
-			// copy intended
-			const auto original_triangle = shape_.triangles()[i];
+			const auto& original_triangle = shape_.triangles()[i];
 			
 			scaled_shape.triangles()[i] = original_triangle;
 
@@ -171,18 +170,6 @@ namespace application
 		}
 
 		return scaled_shape;
-		
-		//for (auto triangle : shape_.triangles())
-		//{
-		//	scaled_shape->triangles().push_back(triangle);
-		//	
-		//	for (auto& matrix : triangle.vertices)
-		//	{
-		//		const auto result = matrix.multiply_by_4X4(scale_matrix);
-
-		//		matrix.set_values(*result);
-		//	}
-		//}
 	}
 
 	auto target_obj::print_location(matrix& matrix_m) -> void
