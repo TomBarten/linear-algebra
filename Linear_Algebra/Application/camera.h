@@ -37,6 +37,8 @@ namespace application
 
 		auto move_direction(bool backward) -> void;
 		auto move_horizontal(bool right) -> void;
+        auto yaw(float degrees) -> void;
+		auto pitch(float degrees) -> void;
 
 	private:
 		auto calc_move_direction(math::matrix3d direction, bool invert_mod) -> void;

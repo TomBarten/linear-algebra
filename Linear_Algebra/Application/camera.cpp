@@ -49,6 +49,24 @@ namespace application
 		calc_move_direction(right_, right);
     }
 
+    auto camera::yaw(const float degrees) -> void
+    {
+        const auto rot_matrix = get_axis_rot_matrix(eye_, *up_.normalise(), -degrees);
+
+        const auto new_lookat = math::matrix3d(*rot_matrix * lookat_);
+
+		look_at(new_lookat);
+    }
+
+    auto camera::pitch(const float degrees) -> void
+    {
+		const auto rot_matrix = get_axis_rot_matrix(eye_, *right_.normalise(), -degrees);
+
+		const auto new_lookat = math::matrix3d(*rot_matrix * lookat_);
+
+		look_at(new_lookat);
+    }
+
     auto camera::look_at(const math::matrix3d& lookat) -> void
 	{
 		lookat_.set_values(lookat);
@@ -101,9 +119,12 @@ namespace application
 		eye_.y() = (eye_.y() + (direction.y() * modifier));
 		eye_.z() = (eye_.z() + (direction.z() * modifier));
 
-		lookat_.x() = (lookat_.x() + (direction.x() * modifier));
-		lookat_.y() = (lookat_.y() + (direction.y() * modifier));
-		lookat_.z() = (lookat_.z() + (direction.z() * modifier));
+        const auto new_lookat = math::matrix3d(
+			(lookat_.x() + (direction.x() * modifier)),
+			(lookat_.y() + (direction.y() * modifier)),
+			(lookat_.z() + (direction.z() * modifier)));
+
+		look_at(new_lookat);
 	}
 	
 	auto camera::calc_cross_product_normalised(math::matrix3d& member, const math::matrix3d& a, const math::matrix3d& b) const -> void

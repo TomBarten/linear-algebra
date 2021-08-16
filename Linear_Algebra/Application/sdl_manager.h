@@ -16,6 +16,7 @@ namespace application::sdl
 	private:
 		typedef std::function<void(float, float, float, float, float, float, int8_t, int8_t, int8_t)> draw_triangle_fn;
 		typedef std::function<void(float, float, float, float, int8_t, int8_t, int8_t)> draw_line_fn;
+
 		util::program_state* program_state_;
 		std::unique_ptr<SDL_Window, sdl_deleter> window_;
 		std::unique_ptr<SDL_Renderer, sdl_deleter> renderer_;

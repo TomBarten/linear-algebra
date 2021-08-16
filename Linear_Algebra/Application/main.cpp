@@ -12,7 +12,7 @@ constexpr auto HEIGHT = WIDTH;
 
 constexpr float FOV_DEGREES = 90.f;
 constexpr float Z_NEAR = 0.1f;
-constexpr float Z_FAR = 100.f;
+constexpr float Z_FAR = 10000.f;
 
 static auto handle_exception(const std::exception_ptr& exception_ptr) -> void
 {

@@ -190,8 +190,6 @@ namespace application
 			{
 				camera_->move_horizontal(true);
 			}
-
-			camera_->update_camera_matrix();
 		};
 
 		// CAMERA CONTROLS

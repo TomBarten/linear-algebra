@@ -212,6 +212,18 @@ namespace application::sdl
 			case SDL_KEYDOWN:
 				execute_input_listener(sdl_event.key.keysym.scancode, sdl_event, elapsed_time);
 				break;
+			case SDL_MOUSEMOTION:
+			    {
+				if (sdl_event.button.button != SDL_BUTTON_LEFT)
+					break;
+						
+				    const auto x = sdl_event.motion.xrel;
+				    const auto y = sdl_event.motion.yrel;
+
+					camera_.yaw(x);
+					camera_.pitch(y);
+					break;
+			    }
 			default:
 				break;
 			}
