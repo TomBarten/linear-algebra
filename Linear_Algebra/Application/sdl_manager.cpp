@@ -214,15 +214,19 @@ namespace application::sdl
 				break;
 			case SDL_MOUSEMOTION:
 			    {
-				if (sdl_event.button.button != SDL_BUTTON_LEFT)
+                switch (sdl_event.button.button)
+                {
+                case SDL_BUTTON_LEFT:
+					camera_.yaw(sdl_event.motion.xrel);
 					break;
-						
-				    const auto x = sdl_event.motion.xrel;
-				    const auto y = sdl_event.motion.yrel;
 
-					camera_.yaw(x);
-					camera_.pitch(y);
+				case SDL_BUTTON_X1:
+					camera_.pitch(sdl_event.motion.yrel);
 					break;
+
+				default:
+					break;
+                }
 			    }
 			default:
 				break;
@@ -298,18 +302,21 @@ namespace application::sdl
 		const draw_line_fn draw_line_function,
 		const bool debug) -> void
 	{
-		for (auto it = objects_.begin(); it != objects_.end();)
+		for (auto it = objects_.begin(); it != objects_.end(); ++it)
 		{
             const auto& object = *it;
 
-			if (check_collision(it) || !object->is_valid())
+			object->tick(elapsed_time, debug, draw_triangle_function, draw_line_function);
+		}
+
+		for(auto it = objects_.begin(); it != objects_.end();)
+		{
+            if (const auto& object = *it; !object->is_valid() || check_collision(it))
 			{
 				it = objects_.erase(it);
 
 				continue;
 			}
-
-			object->tick(elapsed_time, debug, draw_triangle_function, draw_line_function);
 
 			++it;
 		}
